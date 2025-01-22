@@ -1,0 +1,16 @@
+#formulario1{
+	margin-top: 3rem;
+}
+
+#formulario1 .title{
+	font-size: 30px;
+	font-weight: bold;
+}
+
+#formulario1 div{
+	margin-top: 20px;
+}
+
+#formulario1 label{
+	font-size: 24px;
+}
