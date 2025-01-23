@@ -18,7 +18,19 @@ CREATE TABLE usuarios (
 	id INT AUTO_INCREMENT,
 	usuario VARCHAR(250) NOT NULL,
 	nombre VARCHAR(250) NOT NULL,
+	apellido VARCHAR(250) NOT NULL,
+	cedula VARCHAR(250) NOT NULL,
+	fechaNacimiento DATE NOT NULL,
+	genero VARCHAR(250) NOT NULL,
+	telefono VARCHAR(250) NOT NULL,
+	correo VARCHAR(250) NOT NULL,
+	direccion VARCHAR(250) NOT NULL,
+	fechaIngreso DATE NOT NULL,
+	fechaRetiro DATE NOT NULL,
+	salario INT NOT NULL,
 	password VARCHAR(250) NOT NULL,
+	cargo VARCHAR(250) NOT NULL,
+	estado VARCHAR(250) DEFAULT 'Activo',
 	rol INT NOT NULL,
 	PRIMARY KEY (id),
 	FOREIGN KEY (rol) REFERENCES roles (id) ON DELETE CASCADE ON UPDATE CASCADE
@@ -37,7 +49,7 @@ CREATE TABLE submodulos (
 ); ALTER TABLE submodulos CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
 INSERT INTO submodulos (nombre,idModulo,link) VALUES 
-('Gestionar',1,'turnos.php');
+('Colaboradores',1,'colaboradores.php');
 
 DROP TABLE IF EXISTS modulos;
 CREATE TABLE modulos (
@@ -47,7 +59,7 @@ CREATE TABLE modulos (
 ); ALTER TABLE modulos CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
 INSERT INTO modulos (nombre) VALUES 
-('Turnos');
+('Mantenimiento');
 
 DROP TABLE IF EXISTS permisos;
 CREATE TABLE permisos (

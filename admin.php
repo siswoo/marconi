@@ -24,7 +24,23 @@ if (!isset($_SESSION['marconiId'])) {
         <?php include("menu.php"); ?>
         <div id="content-wrapper" class="d-flex flex-column">
             <div id="content">
-                <?php include("header.php"); ?>
+                <?php 
+                    include("header.php");
+                    $sql1 = "SELECT * FROM usuarios WHERE id = ".$_SESSION['marconiId'];
+                    $proceso1 = mysqli_query($conexion,$sql1);
+                    while($row1=mysqli_fetch_array($proceso1)){
+                        $nombre = $row1["nombre"];
+                        $apellido = $row1["apellido"];
+                        $cedula = $row1["cedula"];
+                        $fechaNacimiento = $row1["fechaNacimiento"];
+                        $genero = $row1["genero"];
+                        $telefono = $row1["telefono"];
+                        $correo = $row1["correo"];
+                        $direccion = $row1["direccion"];
+                        $fechaIngreso = $row1["fechaIngreso"];
+                        $cargo = $row1["cargo"];
+                    }
+                ?>
 
                 <div class="container-fluid">
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -39,31 +55,28 @@ if (!isset($_SESSION['marconiId'])) {
                                     <div class="card-body">
                                         <div class="row">
                                             <div class="col-4 mt-3">
-                                                <label>Usuario</label>
-                                                <input type="text" id="usuario" name="usuario" class="form-control" autocomplete="off" readonly required>
-                                            </div>
-                                            <div class="col-4 mt-3">
                                                 <label>Nombre</label>
-                                                <input type="text" id="nombre" name="nombre" class="form-control" autocomplete="off" readonly required>
+                                                <input type="text" id="nombre" name="nombre" class="form-control" autocomplete="off" readonly value="<?php echo $nombre; ?>">
                                             </div>
                                             <div class="col-4 mt-3">
                                                 <label>Apellido</label>
-                                                <input type="text" id="apellido" name="apellido" class="form-control" autocomplete="off" readonly required>
+                                                <input type="text" id="apellido" name="apellido" class="form-control" autocomplete="off" readonly value="<?php echo $apellido; ?>">
                                             </div>
                                             <div class="col-4 mt-3">
-                                                <label>Tipo de documento</label>
-                                                <input type="text" id="tipoDocumento" name="tipoDocumento" class="form-control" autocomplete="off" readonly required>
-                                            </div>
-                                            <div class="col-4 mt-3">
-                                                <label>Número de documento</label>
-                                                <input type="number" id="numeroDocumento" name="numeroDocumento" class="form-control" autocomplete="off" readonly required>
+                                                <label>Cédula</label>
+                                                <input type="text" id="cedula" name="cedula" class="form-control" autocomplete="off" readonly value="<?php echo $cedula; ?>">
                                             </div>
                                             <div class="col-4 mt-3">
                                                 <label>Teléfono</label>
-                                                <input type="number" id="telefono" name="telefono" class="form-control" autocomplete="off" readonly required>
+                                                <input type="number" id="telefono" name="telefono" class="form-control" autocomplete="off" readonly value="<?php echo $telefono; ?>">
                                             </div>
-                                            <div class="col-12 mt-3 text-center">
-                                                <img src="img/undraw_profile.svg" class="img-fluid" style="max-width: 460px;">
+                                            <div class="col-4 mt-3">
+                                                <label>Correo</label>
+                                                <input type="text" id="correo" name="correo" class="form-control" autocomplete="off" readonly value="<?php echo $correo; ?>">
+                                            </div>
+                                            <div class="col-4 mt-3">
+                                                <label>Cargo</label>
+                                                <input type="text" id="cargo" name="cargo" class="form-control" autocomplete="off" readonly value="<?php echo $cargo; ?>">
                                             </div>
                                         </div>
                                     </div>

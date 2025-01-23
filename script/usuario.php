@@ -21,6 +21,16 @@ $asunto = $_POST['asunto'];
 			while($row1=mysqli_fetch_array($proceso1)){
 				$usuarioId = $row1["id"];
 				$rol = $row1["rol"];
+				$estado = $row1["estado"];
+			}
+
+			if($estado=="Inactivo"){
+				$datos = [
+					"estatus"	=> "error",
+					"msg"	=> "Usuario inactivo",
+				];
+				echo json_encode($datos);
+				exit;
 			}
 
 			$redireccion = "admin.php";
@@ -50,25 +60,15 @@ $asunto = $_POST['asunto'];
 		}
 
 		if($filtrado!=''){
-			$filtrado = ' and (usua.usuario LIKE "%'.$filtrado.'%" or usua.nombre LIKE "%'.$filtrado.'%")';
-		}
-
-		if($rol!=''){
-			$rol = ' and (usua.rol = '.$rol.')';
+			$filtrado = ' and (nombre LIKE "%'.$filtrado.'%" or apellido LIKE "%'.$filtrado.'%")';
 		}
 
 		$limit = $consultasporpagina;
 		$offset = ($pagina - 1) * $consultasporpagina;
 
-		$sql1 = "SELECT usua.id as usua_id, usua.usuario as usua_usuario, usua.nombre as usua_nombre, role.nombre as role_nombre FROM usuarios usua 
-			INNER JOIN roles role 
-			ON usua.rol = role.id  
-			WHERE usua.id != 1 ".$filtrado." ".$rol;
+		$sql1 = "SELECT * FROM usuarios WHERE rol = $rol ".$filtrado;
+		$sql2 = "SELECT * FROM usuarios WHERE rol = $rol ".$filtrado." ORDER BY id DESC LIMIT ".$limit." OFFSET ".$offset;
 
-		$sql2 = "SELECT usua.id as usua_id, usua.usuario as usua_usuario, usua.nombre as usua_nombre, role.nombre as role_nombre FROM usuarios usua 
-			INNER JOIN roles role 
-			ON usua.rol = role.id 
-			WHERE usua.id != 1 ".$filtrado." ".$rol." ORDER BY usua.id DESC LIMIT ".$limit." OFFSET ".$offset;
 		$proceso1 = mysqli_query($conexion,$sql1);
 		$proceso2 = mysqli_query($conexion,$sql2);
 		$conteo1 = mysqli_num_rows($proceso1);
@@ -81,33 +81,51 @@ $asunto = $_POST['asunto'];
 		        <table class="table table-bordered">
 		            <thead>
 		            <tr>
+						<th class="text-center">ID</th>
 						<th class="text-center">Nombre</th>
-						<th class="text-center">Usuario</th>
-						<th class="text-center">Rol</th>
-						<th class="text-center">Acciones</th>
+						<th class="text-center">Cédula</th>
+						<th class="text-center">Genero</th>
+						<th class="text-center">Teléfono</th>
+						<th class="text-center">Correo</th>
+						<th class="text-center">Dirección</th>
+						<th class="text-center">Ingreso</th>
+						<th class="text-center">Estado</th>
+						<th class="text-center">Opciones</th>
 		            </tr>
 		            </thead>
 		            <tbody>
 		';
 		if($conteo1>=1){
 			while($row2 = mysqli_fetch_array($proceso2)) {
-				$usua_id = $row2["usua_id"];
-				$usua_nombre = $row2["usua_nombre"];
-				$usua_usuario = $row2["usua_usuario"];
-				$role_nombre = $row2["role_nombre"];
+				$id = $row2["id"];
+				$nombre = $row2["nombre"]." ".$row2["apellido"];
+				$cedula = $row2["cedula"];
+				$genero = $row2["genero"];
+				$telefono = $row2["telefono"];
+				$correo = $row2["correo"];
+				$direccion = $row2["direccion"];
+				$fechaIngreso = $row2["fechaIngreso"];
+				$estado = $row2["estado"];
 				$html .= '
 			                <tr id="">
-			                    <td style="text-align:center;">'.$usua_nombre.'</td>
-			                    <td style="text-align:center;">'.$usua_usuario.'</td>
-			                    <td style="text-align:center;">'.$role_nombre.'</td>
-			                    <td style="text-align:center;">
-			                    	<button class="btn btn-primary" data-toggle="modal" data-target="#modificar" onclick="modificar('.$usua_id.');">Modificar</button>
+			                	<td style="text-align:center;">'.$id.'</td>
+			                    <td style="text-align:center;">'.$nombre.'</td>
+			                    <td style="text-align:center;">'.$cedula.'</td>
+			                    <td style="text-align:center;">'.$genero.'</td>
+			                    <td style="text-align:center;">'.$telefono.'</td>
+			                    <td style="text-align:center;">'.$correo.'</td>
+			                    <td style="text-align:center;">'.$direccion.'</td>
+			                    <td style="text-align:center;">'.$fechaIngreso.'</td>
+			                    <td style="text-align:center;">'.$estado.'</td>
+			                    <td style="text-align:center;" nowrap>
+			                    	<button class="btn btn-info" onclick=cambioEstatus('.$id.',"'.$estado.'");>Estatus</button>
+			                    	<button class="btn btn-primary" data-toggle="modal" data-target="#modificar" onclick="modificar('.$id.');">Modificar</button>
 			                    </td>
 			                </tr>
 				';
 			}
 		}else{
-			$html .= '<tr><td colspan="4" class="text-center" style="font-weight:bold;font-size:20px;">Sin Resultados</td></tr>';
+			$html .= '<tr><td colspan="10" class="text-center" style="font-weight:bold;font-size:20px;">Sin Resultados</td></tr>';
 		}
 
 		$html .= '
@@ -232,33 +250,56 @@ $asunto = $_POST['asunto'];
 	}
 
 	if($asunto=='crear'){
-		$usuario = $_POST['usuario'];
 		$nombre = $_POST['nombre'];
+		$apellido = $_POST['apellido'];
+		$cedula = $_POST['cedula'];
+		$fechaNacimiento = $_POST['fechaNacimiento'];
+		$genero = $_POST['genero'];
+		$telefono = $_POST['telefono'];
+		$correo = $_POST['correo'];
+		$direccion = $_POST['direccion'];
+		$fechaIngreso = $_POST['fechaIngreso'];
+		$salario = $_POST['salario'];
 		$password = md5($_POST['password']);
-		$rol = $_POST['rol'];
+		$cargo = $_POST['cargo'];
+		$usuario = $cedula;
 
-		$sql3 = "SELECT * FROM usuarios WHERE usuario = '$usuario'";
+		$sql3 = "SELECT * FROM usuarios WHERE cedula = '$cedula'";
 		$proceso3 = mysqli_query($conexion,$sql3);
 		$contador3 = mysqli_num_rows($proceso3);
 		if($contador3>0){
 			$datos = [
 				"estatus"	=> "error",
-				"msg"	=> "El usuario ya existe en otro registro",
+				"msg"	=> "El documento ya existe en otro registro",
 			];
 			echo json_encode($datos);
 			exit;
 		}
 		
-		$sql1 = "INSERT INTO usuarios (usuario,nombre,password,rol) VALUES ('$usuario','$nombre','$password',$rol)";
+		$sql1 = "INSERT INTO usuarios (nombre,usuario,apellido,cedula,fechaNacimiento,genero,telefono,correo,direccion,fechaIngreso,salario,password,cargo,rol) VALUES ('$nombre','$usuario','$apellido','$cedula','$fechaNacimiento','$genero','$telefono','$correo','$direccion','$fechaIngreso',$salario,'$password','$cargo',2)";
 		$proceso1 = mysqli_query($conexion,$sql1);
-
-		/******************/
-		auditoriaGeneral("Usuario = $usuario","Creado nuevo usuario");
-		/******************/
 
 		$datos = [
 			"estatus"	=> "ok",
 			"msg"	=> "Se ha creado exitosamente",
+		];
+		echo json_encode($datos);
+	}
+
+	if($asunto=='cambioEstatus'){
+		$id = $_POST['id'];
+		$estatus = $_POST['estatus'];
+
+		if($estatus=="Activo"){
+			$nuevoEstatus = "Inactivo";
+		}else{
+			$nuevoEstatus = "Activo";
+		}
+
+		$sql1 = "UPDATE usuarios SET estado = '$nuevoEstatus' WHERE id = ".$id;
+		$proceso1 = mysqli_query($conexion,$sql1);
+		$datos = [
+			"estatus"	=> "ok",
 		];
 		echo json_encode($datos);
 	}
@@ -270,15 +311,33 @@ $asunto = $_POST['asunto'];
 		$contador1 = mysqli_num_rows($proceso1);
 		if($contador1>=1){
 			while($row1=mysqli_fetch_array($proceso1)){
-				$usuario = $row1["usuario"];
 				$nombre = $row1["nombre"];
-				$rol = $row1["rol"];
+				$apellido = $row1["apellido"];
+				$cedula = $row1["cedula"];
+				$fechaNacimiento = $row1["fechaNacimiento"];
+				$genero = $row1["genero"];
+				$telefono = $row1["telefono"];
+				$correo = $row1["correo"];
+				$direccion = $row1["direccion"];
+				$fechaIngreso = $row1["fechaIngreso"];
+				$salario = $row1["salario"];
+				$password = $row1["password"];
+				$cargo = $row1["cargo"];
 			}
 			$datos = [
 				"estatus"	=> "ok",
-				"usuario"	=> $usuario,
 				"nombre"	=> $nombre,
-				"rol"		=> $rol,
+				"apellido"	=> $apellido,
+				"cedula"		=> $cedula,
+				"fechaNacimiento"	=> $fechaNacimiento,
+				"genero"	=> $genero,
+				"telefono"		=> $telefono,
+				"correo"	=> $correo,
+				"direccion"	=> $direccion,
+				"fechaIngreso"		=> $fechaIngreso,
+				"salario"	=> $salario,
+				"password"	=> $password,
+				"cargo"		=> $cargo,
 			];
 			echo json_encode($datos);
 		}
@@ -286,49 +345,30 @@ $asunto = $_POST['asunto'];
 
 	if($asunto=='modificar_guardar'){
 		$id = $_POST['id'];
-		$usuario = $_POST['usuario'];
 		$nombre = $_POST['nombre'];
-		$password = $_POST['password'];
-		$rol = $_POST['rol'];
-
-		$sql1 = "SELECT * FROM usuarios WHERE usuario = '$usuario' and id != ".$id;
-		$proceso1 = mysqli_query($conexion,$sql1);
-		$contador1 = mysqli_num_rows($proceso1);
-		if($contador1>=1){
-			$datos = [
-				"estatus"	=> "error",
-				"msg"	=> "Usuario ya existe en otro registro",
-			];
-			echo json_encode($datos);
+		$apellido = $_POST['apellido'];
+		$cedula = $_POST['cedula'];
+		$fechaNacimiento = $_POST['fechaNacimiento'];
+		$genero = $_POST['genero'];
+		$telefono = $_POST['telefono'];
+		$correo = $_POST['correo'];
+		$direccion = $_POST['direccion'];
+		$fechaIngreso = $_POST['fechaIngreso'];
+		$salario = $_POST['salario'];
+		if($_POST['password']!=""){
+			$password = md5($_POST['password']);
+			$password = "password = '$password',";
 		}else{
-			if($password==''){
-				$sql2 = "UPDATE usuarios SET usuario = '$usuario', nombre = '$nombre', rol = $rol WHERE id = ".$id;
-			}else{
-				$password = md5($password);
-				$sql2 = "UPDATE usuarios SET usuario = '$usuario', nombre = '$nombre', password = '$password', rol = $rol WHERE id = ".$id;
-			}
-			$proceso2 = mysqli_query($conexion,$sql2);
-			/******************/
-			auditoriaGeneral("Usuario = $usuario","Actualizado Usuario");
-			/******************/
-			$datos = [
-				"estatus"	=> "ok",
-				"msg"	=> "Se ha modificado exitosamente",
-			];
-			echo json_encode($datos);
+			$password = "";
 		}
-	}
+		$cargo = $_POST['cargo'];
+		$usuario = $cedula;
 
-	if($asunto=='eliminar'){
-		$id = $_POST["id"];
-		$sql1 = "DELETE FROM usuarios WHERE id = ".$id;
+		$sql1 = "UPDATE usuarios SET nombre = '$nombre', usuario = '$usuario', apellido = '$apellido', cedula = '$cedula', fechaNacimiento = '$fechaNacimiento', genero = '$genero', telefono = '$telefono', correo = '$correo', direccion = '$direccion', fechaIngreso = '$fechaIngreso', salario = $salario, $password cargo = '$cargo' WHERE id = ".$id;
 		$proceso1 = mysqli_query($conexion,$sql1);
-		/******************/
-		auditoriaGeneral("Usuario id = $id","Eliminado Usuario");
-		/******************/
 		$datos = [
 			"estatus"	=> "ok",
-			"msg"	=> "Se ha eliminado exitosamente",
+			"msg"	=> "Actualizado correctamente",
 		];
 		echo json_encode($datos);
 	}
