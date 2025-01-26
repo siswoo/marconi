@@ -79,6 +79,14 @@
 		 				position: 'center',
 		 				timer: 5000
 					});
+				}else if(respuesta["estatus"]=="info"){
+					Swal.fire({
+		 				title: 'Info',
+		 				text: respuesta["msg"],
+		 				icon: 'info',
+		 				position: 'center',
+		 				timer: 5000
+					});
 				}
 			},
 

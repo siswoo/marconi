@@ -5,64 +5,11 @@ $fecha_creacion = date('Y-m-d');
 $hora_creacion = date('h:i:s');
 $asunto = $_POST['asunto'];
 
-	if($asunto=="login"){
-		$usuario = $_POST['usuario'];
-		$password = md5($_POST['password']);
-		$sql1 = "SELECT * FROM usuarios WHERE usuario = '$usuario' and password = '$password' LIMIT 1";
-		$proceso1 = mysqli_query($conexion,$sql1);
-		$contador1 = mysqli_num_rows($proceso1);
-		if($contador1==0){
-			$datos = [
-				"estatus"	=> "error",
-				"msg"	=> "Credenciales Incorrectas",
-			];
-			echo json_encode($datos);
-			exit;
-		}else if($contador1>=1){
-			while($row1=mysqli_fetch_array($proceso1)){
-				$usuarioId = $row1["id"];
-				$rol = $row1["rol"];
-				$estado = $row1["estado"];
-			}
-
-			if($estado=="Inactivo"){
-				$datos = [
-					"estatus"	=> "error",
-					"msg"	=> "Usuario inactivo",
-				];
-				echo json_encode($datos);
-				exit;
-			}
-
-			$turnoCierre = validarCierre($conexion,$usuarioId,$fecha_creacion);
-			if($turnoCierre==false){
-				$datos = [
-					"estatus"	=> "info",
-					"msg"	=> "Turno finalizado",
-				];
-				echo json_encode($datos);
-				exit;
-			}
-
-			iniciarTurno($conexion,$usuarioId,$fecha_creacion,$hora_creacion);
-
-			$redireccion = "admin.php";
-			$_SESSION["marconiId"] = $usuarioId;
-			$_SESSION["marconiRol"] = $rol;
-			
-			$datos = [
-				"estatus"	=> "ok",
-				"redireccion"	=> $redireccion,
-			];
-			echo json_encode($datos);
-		}
-	}
-
 	if($asunto=='table1'){
 		$pagina = $_POST["pagina"];
 		$consultasporpagina = $_POST["consultasporpagina"];
 		$filtrado = $_POST["filtrado"];
-		$rol = $_POST["rol"];
+		$fecha = $_POST["fecha"];
 
 		if($pagina==0 or $pagina==''){
 			$pagina = 1;
@@ -73,14 +20,25 @@ $asunto = $_POST['asunto'];
 		}
 
 		if($filtrado!=''){
-			$filtrado = ' and (nombre LIKE "%'.$filtrado.'%" or apellido LIKE "%'.$filtrado.'%")';
+			$filtrado = ' and (usu.nombre LIKE "%'.$filtrado.'%" or usu.apellido LIKE "%'.$filtrado.'%")';
+		}
+
+		if($fecha!=''){
+			$fecha = ' and tur.fechaInicio LIKE "%'.$fecha.'%"';
 		}
 
 		$limit = $consultasporpagina;
 		$offset = ($pagina - 1) * $consultasporpagina;
 
-		$sql1 = "SELECT * FROM usuarios WHERE rol = $rol ".$filtrado;
-		$sql2 = "SELECT * FROM usuarios WHERE rol = $rol ".$filtrado." ORDER BY id DESC LIMIT ".$limit." OFFSET ".$offset;
+		$sql1 = "SELECT tur.tipo as tipo, tur.id as id, usu.cedula as cedula, usu.nombre as nombre, usu.apellido as apellido, tur.fechaInicio as fechaInicio, tur.horaInicio as horaInicio, tur.horaFin as horaFin, tur.fechaFin as fechaFin, tur.estatusExtras as estatusExtras FROM turnos tur
+		INNER JOIN usuarios usu
+		ON tur.usuarioId = usu.id 
+		WHERE usu.rol > 1".$filtrado.$fecha;
+
+		$sql2 = "SELECT tur.tipo as tipo, tur.id as id, usu.cedula as cedula, usu.nombre as nombre, usu.apellido as apellido, tur.fechaInicio as fechaInicio, tur.horaInicio as horaInicio, tur.horaFin as horaFin, tur.fechaFin as fechaFin, tur.estatusExtras as estatusExtras FROM turnos tur
+		INNER JOIN usuarios usu
+		ON tur.usuarioId = usu.id 
+		WHERE usu.rol > 1".$filtrado.$fecha." ORDER BY tur.id DESC LIMIT ".$limit." OFFSET ".$offset;
 
 		$proceso1 = mysqli_query($conexion,$sql1);
 		$proceso2 = mysqli_query($conexion,$sql2);
@@ -94,15 +52,12 @@ $asunto = $_POST['asunto'];
 		        <table class="table table-bordered">
 		            <thead>
 		            <tr>
-						<th class="text-center">ID</th>
-						<th class="text-center">Nombre</th>
-						<th class="text-center">Cédula</th>
-						<th class="text-center">Genero</th>
-						<th class="text-center">Teléfono</th>
-						<th class="text-center">Correo</th>
-						<th class="text-center">Dirección</th>
-						<th class="text-center">Ingreso</th>
-						<th class="text-center">Estado</th>
+						<th class="text-center">Identificación</th>
+						<th class="text-center">Empleado</th>
+						<th class="text-center">Tipo</th>
+						<th class="text-center">Aceptada</th>
+						<th class="text-center">Fecha Inicio</th>
+						<th class="text-center">Fecha Fin</th>
 						<th class="text-center">Opciones</th>
 		            </tr>
 		            </thead>
@@ -111,34 +66,67 @@ $asunto = $_POST['asunto'];
 		if($conteo1>=1){
 			while($row2 = mysqli_fetch_array($proceso2)) {
 				$id = $row2["id"];
-				$nombre = $row2["nombre"]." ".$row2["apellido"];
 				$cedula = $row2["cedula"];
-				$genero = $row2["genero"];
-				$telefono = $row2["telefono"];
-				$correo = $row2["correo"];
-				$direccion = $row2["direccion"];
-				$fechaIngreso = $row2["fechaIngreso"];
-				$estado = $row2["estado"];
+				$nombre = $row2["nombre"]." ".$row2["apellido"];
+				$tipo = $row2["tipo"];
+				$fechaInicio = $row2["fechaInicio"];
+				$horaInicio = $row2["horaInicio"];
+				$fechaFin = $row2["fechaFin"];
+				$horaFin = $row2["horaFin"];
+				$estatusExtras = $row2["estatusExtras"];
+				if($fechaFin=="0000-00-00"){
+					$fin = "";
+				}else{
+					$fin = $fechaFin.' '.$horaFin;
+				}
+
+				if($tipo!="Extras"){
+					$aceptada = "";
+				}else if($estatusExtras==0){
+					$aceptada = "No";
+				}else{
+					$aceptada = "Si";
+				}
+
 				$html .= '
 			                <tr id="">
-			                	<td style="text-align:center;">'.$id.'</td>
-			                    <td style="text-align:center;">'.$nombre.'</td>
 			                    <td style="text-align:center;">'.$cedula.'</td>
-			                    <td style="text-align:center;">'.$genero.'</td>
-			                    <td style="text-align:center;">'.$telefono.'</td>
-			                    <td style="text-align:center;">'.$correo.'</td>
-			                    <td style="text-align:center;">'.$direccion.'</td>
-			                    <td style="text-align:center;">'.$fechaIngreso.'</td>
-			                    <td style="text-align:center;">'.$estado.'</td>
+			                    <td style="text-align:center;">'.$nombre.'</td>
+			                    <td style="text-align:center;">'.$tipo.'</td>
+			                    <td style="text-align:center;">'.$aceptada.'</td>
+			                    <td style="text-align:center;">'.$fechaInicio.' '.$horaInicio.'</td>
+			                    <td style="text-align:center;">'.$fin.'</td>
 			                    <td style="text-align:center;" nowrap>
-			                    	<button class="btn btn-info" onclick=cambioEstatus('.$id.',"'.$estado.'");>Estatus</button>
-			                    	<button class="btn btn-primary" data-toggle="modal" data-target="#modificar" onclick="modificar('.$id.');">Modificar</button>
+				';
+				if($tipo=="Salida"){
+					$html .= '
+						<button class="btn btn-danger" onclick="eliminar('.$id.');">Eliminar</button>
+					';
+				}else if($tipo=="Extras"){
+					if($aceptada=="No"){
+						$html .= '
+							<button class="btn btn-success" onclick="cambioExtras('.$id.','.$estatusExtras.');">Aceptar</button>
+						';
+					}else{
+						$html .= '
+							<button class="btn btn-info" onclick="cambioExtras('.$id.','.$estatusExtras.');">Rechazar</button>
+						';
+					}
+					$html .= '
+						<button class="btn btn-danger" onclick="eliminar('.$id.');">Eliminar</button>
+					';
+				}else if($tipo=="Entrada"){
+					$html .= '
+						<button class="btn btn-primary" data-toggle="modal" data-target="#modificar" onclick="modificar('.$id.');">Modificar</button>
+					';
+				}
+				$html .= '
 			                    </td>
 			                </tr>
 				';
 			}
 		}else{
-			$html .= '<tr><td colspan="10" class="text-center" style="font-weight:bold;font-size:20px;">Sin Resultados</td></tr>';
+			$html .= '<tr><td colspan="7" class="text-center" style="font-weight:bold;font-size:20px;">Sin Resultados</td></tr>';
 		}
 
 		$html .= '
@@ -386,41 +374,91 @@ $asunto = $_POST['asunto'];
 		echo json_encode($datos);
 	}
 
-	if($asunto=='listadoUsuarios'){
-		$options = '<option value="">Seleccione</option>';
-		$sql1 = "SELECT * FROM usuarios";
+	if($asunto=='cerrarTurno'){
+		$id = $_POST['id'];
+		$sql1 = "INSERT INTO turnos (usuarioId,tipo,fechaInicio,horaInicio) VALUES ($id,'Salida','$fecha_creacion','$hora_creacion')";
 		$proceso1 = mysqli_query($conexion,$sql1);
-		while ($row1 = mysqli_fetch_array($proceso1)) {
-			$usuarioId = $row1["id"];
-			$usuarioNombre = $row1["nombre"];
-			$options .= '<option value="'.$usuarioId.'">'.$usuarioNombre.'</option>';
-		}
 		$datos = [
 			"estatus"	=> "ok",
-			"options"	=> $options,
+			"msg"	=> "Turno Cerrado",
 		];
 		echo json_encode($datos);
 	}
 
-	function validarCierre($conexion,$usuarioId,$fecha_creacion){
-		$sql1 = "SELECT * FROM turnos WHERE usuarioId = $usuarioId and tipo = 'Salida' and fechaInicio = '$fecha_creacion'";
+	if($asunto=='agregarExtras'){
+		$id = $_POST['id'];
+		$fecha = $_POST['fecha'];
+		$desde = $_POST['desde'];
+		$hasta = $_POST['hasta'];
+
+		$timestamp1 = strtotime($desde);
+		$timestamp2 = strtotime($hasta);
+		$diferencia = abs($timestamp2 - $timestamp1);
+
+		if($timestamp1>=$timestamp2){
+			$datos = [
+				"estatus"	=> "error",
+				"msg"	=> "La primera hora debe ser menor a la segunda",
+			];
+			echo json_encode($datos);
+			exit;
+		}else if($diferencia < 3600){
+			$datos = [
+				"estatus"	=> "error",
+				"msg"	=> "Deben tener un mínimo de 1 hora de diferencias",
+			];
+			echo json_encode($datos);
+			exit;
+		}
+
+		$sql1 = "SELECT * FROM turnos WHERE usuarioId = $id and fechaInicio = '$fecha' and tipo = 'Extras'";
 		$proceso1 = mysqli_query($conexion,$sql1);
 		$contador1 = mysqli_num_rows($proceso1);
-		if($contador1==0){
-			return true;
-		}else{
-			return false;
+		if($contador1>0){
+			$datos = [
+				"estatus"	=> "error",
+				"msg"	=> "Fecha ya solicitada",
+			];
+			echo json_encode($datos);
+			exit;
 		}
+		$sql2 = "INSERT INTO turnos (usuarioId,tipo,fechaInicio,horaInicio,fechaFin,horaFin) VALUES ($id,'Extras','$fecha','$desde','$fecha','$hasta')";
+		$proceso2 = mysqli_query($conexion,$sql2);
+		$datos = [
+			"estatus"	=> "ok",
+			"msg"	=> "Se ha creado satisfactoriamente",
+		];
+		echo json_encode($datos);
 	}
 
-	function iniciarTurno($conexion,$usuarioId,$fecha_creacion,$hora_creacion){
-		$sql1 = "SELECT * FROM turnos WHERE usuarioId = $usuarioId and fechaInicio = '$fecha_creacion'";
-		$proceso1 = mysqli_query($conexion,$sql1);
-		$contador1 = mysqli_num_rows($proceso1);
-		if($contador1==0){
-			$sql2 = "INSERT INTO turnos (usuarioId,tipo,fechaInicio,horaInicio) VALUES ($usuarioId,'Entrada','$fecha_creacion','$hora_creacion')";
-			$proceso2 = mysqli_query($conexion,$sql2);
+	if($asunto=='cambioExtras'){
+		$id = $_POST['id'];
+		$estatus = $_POST['estatus'];
+		if($estatus==0){
+			$cambio = 1;
+		}else{
+			$cambio = 0;
 		}
+		$sql1 = "UPDATE turnos SET estatusExtras = $cambio WHERE id = $id";
+		$proceso1 = mysqli_query($conexion,$sql1);
+		$datos = [
+			"estatus"	=> "ok",
+			"msg"	=> "",
+		];
+		echo json_encode($datos);
 	}
+
+	if($asunto=='eliminar'){
+		$id = $_POST['id'];
+		$sql1 = "DELETE FROM turnos WHERE id = $id";
+		$proceso1 = mysqli_query($conexion,$sql1);
+		$datos = [
+			"estatus"	=> "ok",
+			"msg"	=> "",
+		];
+		echo json_encode($datos);
+	}
+
+
 
 ?>

@@ -49,7 +49,9 @@ CREATE TABLE submodulos (
 ); ALTER TABLE submodulos CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
 INSERT INTO submodulos (nombre,idModulo,link) VALUES 
-('Colaboradores',1,'colaboradores.php');
+('Colaboradores',1,'colaboradores.php'),
+('Gestionar',2,'turnosGestionar.php'),
+('Gestionar',3,'permisosGestionar.php');
 
 DROP TABLE IF EXISTS modulos;
 CREATE TABLE modulos (
@@ -59,7 +61,9 @@ CREATE TABLE modulos (
 ); ALTER TABLE modulos CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
 INSERT INTO modulos (nombre) VALUES 
-('Mantenimiento');
+('Mantenimiento'),
+('Turnos'),
+('Permisos');
 
 DROP TABLE IF EXISTS permisos;
 CREATE TABLE permisos (
@@ -70,4 +74,34 @@ CREATE TABLE permisos (
 ); ALTER TABLE permisos CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
 INSERT INTO permisos (rolId,submoduloId) VALUES 
-(1,1);
+(1,1),
+(1,2),
+(1,3),
+(2,3);
+
+DROP TABLE IF EXISTS turnos;
+CREATE TABLE turnos (
+	id INT AUTO_INCREMENT,
+	usuarioId INT NOT NULL,
+	tipo VARCHAR(250) NOT NULL,
+	fechaInicio DATE NOT NULL,
+	horaInicio TIME NOT NULL,
+	fechaFin DATE NOT NULL,
+	horaFin TIME NOT NULL,
+	estatusExtras BOOLEAN DEFAULT 0,
+	PRIMARY KEY (id)
+); ALTER TABLE turnos CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+
+DROP TABLE IF EXISTS permisosLaborales;
+CREATE TABLE permisosLaborales (
+	id INT AUTO_INCREMENT,
+	usuarioId INT NOT NULL,
+	tipo VARCHAR(250) NOT NULL,
+	fechaInicio DATE NOT NULL,
+	horaInicio TIME NOT NULL,
+	horaFin TIME NOT NULL,
+	observacion TEXT NOT NULL,
+	estatus BOOLEAN DEFAULT 0,
+	PRIMARY KEY (id)
+); ALTER TABLE permisosLaborales CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+
