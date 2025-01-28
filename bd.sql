@@ -51,7 +51,9 @@ CREATE TABLE submodulos (
 INSERT INTO submodulos (nombre,idModulo,link) VALUES 
 ('Colaboradores',1,'colaboradores.php'),
 ('Gestionar',2,'turnosGestionar.php'),
-('Gestionar',3,'permisosGestionar.php');
+('Gestionar',3,'permisosGestionar.php'),
+('Gestionar',4,'vacacionesGestionar.php'),
+('Gestionar',5,'incapacidadesGestionar.php');
 
 DROP TABLE IF EXISTS modulos;
 CREATE TABLE modulos (
@@ -63,7 +65,9 @@ CREATE TABLE modulos (
 INSERT INTO modulos (nombre) VALUES 
 ('Mantenimiento'),
 ('Turnos'),
-('Permisos');
+('Permisos'),
+('Vacaciones'),
+('Incapacidades');
 
 DROP TABLE IF EXISTS permisos;
 CREATE TABLE permisos (
@@ -77,7 +81,11 @@ INSERT INTO permisos (rolId,submoduloId) VALUES
 (1,1),
 (1,2),
 (1,3),
-(2,3);
+(2,3),
+(1,4),
+(2,4),
+(1,5),
+(2,5);
 
 DROP TABLE IF EXISTS turnos;
 CREATE TABLE turnos (
@@ -105,3 +113,23 @@ CREATE TABLE permisosLaborales (
 	PRIMARY KEY (id)
 ); ALTER TABLE permisosLaborales CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
+DROP TABLE IF EXISTS vacaciones;
+CREATE TABLE vacaciones (
+	id INT AUTO_INCREMENT,
+	usuarioId INT NOT NULL,
+	fechaInicio DATE NOT NULL,
+	observacion TEXT NOT NULL,
+	estatus BOOLEAN DEFAULT 0,
+	PRIMARY KEY (id)
+); ALTER TABLE vacaciones CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+
+DROP TABLE IF EXISTS incapacidades;
+CREATE TABLE incapacidades (
+	id INT AUTO_INCREMENT,
+	usuarioId INT NOT NULL,
+	fechaInicio DATE NOT NULL,
+	fechaFin DATE NOT NULL,
+	observacion TEXT NOT NULL,
+	estatus BOOLEAN DEFAULT 0,
+	PRIMARY KEY (id)
+); ALTER TABLE incapacidades CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;
