@@ -1,0 +1,91 @@
+liquidacion
+
+****************Opciones*******************
+
+Despido con justa causa | Renuncia voluntaria
+	-> salario pendiente
+	-> vacaciones no disfrutadas
+	-> Aguinaldo proporcional
+
+Despido sin justa causa | Despido justificada
+	-> salario pendiente
+	-> vacaciones no disfrutadas
+	-> Aguinaldo proporcional
+	-> Preaviso
+	-> Cesantía
+
+-> todos los usuarios 
+
+* pre-aviso
+-> menos de 3 meses: no aplica
+-> de 3 a 6 meses: 1 semana
+-> 6 meses a 1 año: 15 dias
+-> mas de 1 año: 1 mes de salario
+
+
+****************Cesantias*******************
+
+-> menos de 3 meses: no aplica
+-> de 3 a 1 año: 1 semana
+-> 6 meses a 1 año: 15 dias
+-> mas de 1 año: 1 mes de salario
+
+anotar el calculo 
+if ($motivos->aplica_cesantia === "Si") {
+    // Calcular los años completos de trabajo
+    $añosTrabajados = floor($diasTotales / 365); 
+
+    // Si tiene menos de 1 año de trabajo, no hay cesantía
+    if ($añosTrabajados < 1) {
+        $montoCesantias = 0;
+    } 
+    // Si tiene entre 1 y 5 años, 1 mes de salario por año trabajado
+    elseif ($añosTrabajados >= 1 && $añosTrabajados < 5) {
+        $montoCesantias = $valor_dia * 30 * $añosTrabajados; 
+    } 
+    // Si tiene entre 5 y 10 años, 2 meses por los primeros 5 años + 1 mes por cada año adicional
+    elseif ($añosTrabajados >= 5 && $añosTrabajados < 10) {
+        $montoCesantias = $valor_dia * 30 * 5 + ($valor_dia * 30 * ($añosTrabajados - 5));
+    } 
+    // Si tiene más de 10 años, seguir la misma fórmula de 2 meses por los primeros 5 años
+    // y 1 mes por cada año adicional
+    else {
+        $montoCesantias = $valor_dia * 30 * 5 + ($valor_dia * 30 * ($añosTrabajados - 5));
+    }
+
+
+************************************************
+
+****************Aguinaldos*******************
+
+La sumatoria de todos los meses pagados en planilla (total de cada mes con las faltas y las horas extras lo que sea) entre 12
+
+
+************************************************
+
+****************Vacaciones*******************
+
+La sumatoria que ya tengo anteriormente en el calculo y se suman por dias disponibles contra el salario actual
+
+
+************************************************
+
+Un input mostrando el total
+
+************************************************
+
+button de confirmar
+pero para darle confirmar necesito validar que no se me ha pagado ese mes la planilla
+
+
+************************************************
+
+pasa el usuario a inactivo
+
+************************************************
+
+
+
+- colocar si es permiso con goce se le coloca la entrada en fecha cuando se acepta
+- acomodar el aguinaldo ya que va desde noviembre del año pasado al fin de noviembre
+- modulo de reportes

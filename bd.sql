@@ -53,7 +53,9 @@ INSERT INTO submodulos (nombre,idModulo,link) VALUES
 ('Gestionar',2,'turnosGestionar.php'),
 ('Gestionar',3,'permisosGestionar.php'),
 ('Gestionar',4,'vacacionesGestionar.php'),
-('Gestionar',5,'incapacidadesGestionar.php');
+('Gestionar',5,'incapacidadesGestionar.php'),
+('Gestionar',6,'liquidacionesGestionar.php'),
+('Gestionar',7,'planillasGestionar.php');
 
 DROP TABLE IF EXISTS modulos;
 CREATE TABLE modulos (
@@ -67,7 +69,9 @@ INSERT INTO modulos (nombre) VALUES
 ('Turnos'),
 ('Permisos'),
 ('Vacaciones'),
-('Incapacidades');
+('Incapacidades'),
+('Liquidaciones'),
+('Planillas');
 
 DROP TABLE IF EXISTS permisos;
 CREATE TABLE permisos (
@@ -85,7 +89,10 @@ INSERT INTO permisos (rolId,submoduloId) VALUES
 (1,4),
 (2,4),
 (1,5),
-(2,5);
+(2,5),
+(1,6),
+(2,6),
+(1,7);
 
 DROP TABLE IF EXISTS turnos;
 CREATE TABLE turnos (
@@ -133,3 +140,50 @@ CREATE TABLE incapacidades (
 	estatus BOOLEAN DEFAULT 0,
 	PRIMARY KEY (id)
 ); ALTER TABLE incapacidades CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+
+DROP TABLE IF EXISTS diasFeriados;
+CREATE TABLE diasFeriados (
+	id INT AUTO_INCREMENT,
+	descripcion VARCHAR(255) NOT NULL,
+	mes VARCHAR(2) NOT NULL,
+	dia VARCHAR(2) NOT NULL,
+	PRIMARY KEY (id)
+); ALTER TABLE diasFeriados CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+
+INSERT INTO diasFeriados (descripcion,mes,dia) VALUES 
+('Reyes','01','08');
+
+DROP TABLE IF EXISTS planillas;
+CREATE TABLE planillas (
+	id INT AUTO_INCREMENT,
+	usuarioId INT NOT NULL,
+	fecha DATE NOT NULL,
+	diasNoLaborados INT NOT NULL,
+	pagoDia DOUBLE(11,2) NOT NULL,
+	pagoHora DOUBLE(11,2) NOT NULL,
+	horasExtras INT NOT NULL,
+	diasFeriadosLaborados INT NOT NULL,
+	aguinaldos DOUBLE(11,2) NOT NULL,
+	ccss DOUBLE(11,2) NOT NULL,
+	isr DOUBLE(11,2) NOT NULL,
+	total DOUBLE(11,2) NOT NULL,
+	estatus BOOLEAN DEFAULT 0,
+	PRIMARY KEY (id)
+); ALTER TABLE planillas CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+
+DROP TABLE IF EXISTS liquidaciones;
+CREATE TABLE liquidaciones (
+	id INT AUTO_INCREMENT,
+	usuarioId INT NOT NULL,
+	opcion VARCHAR(255) NOT NULL,
+	fechaInicio DATE NOT NULL,
+	preaviso INT NOT NULL,
+	cesantias INT NOT NULL,
+	aguinaldos INT NOT NULL,
+	vacaciones INT NOT NULL,
+	total INT NOT NULL,
+	estatus BOOLEAN DEFAULT 0,
+	PRIMARY KEY (id)
+); ALTER TABLE liquidaciones CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+
+
