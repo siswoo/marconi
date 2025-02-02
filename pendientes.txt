@@ -16,7 +16,8 @@ Despido sin justa causa | Despido justificada
 
 -> todos los usuarios 
 
-* pre-aviso
+
+****************pre-aviso*******************
 -> menos de 3 meses: no aplica
 -> de 3 a 6 meses: 1 semana
 -> 6 meses a 1 año: 15 dias

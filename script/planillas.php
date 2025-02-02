@@ -340,68 +340,6 @@ $asunto = $_POST['asunto'];
 		echo json_encode($datos);
 	}
 
-	if($asunto=='diasDisponibles'){
-		$id = $_POST['id'];
-		$disponibles = calcularDiasDisponibles($conexion,$id);
-		$datos = [
-			"estatus"	=> "ok",
-			"diasDisponibles" => $disponibles,
-		];
-		echo json_encode($datos);
-	}
-
-	if($asunto=='calcular'){
-		$usuarioId = $_POST['usuarioId'];
-		$fecha = $_POST['fecha'];
-		$value = $_POST['value'];
-		$pagoSalario = false;
-		$montoSalario = 0;
-		$pagoVacaciones = false;
-		$montoVacaciones = 0;
-		$pagoAguinaldo = false;
-		$montoAguinaldo = 0;
-		$pagoPreaviso = false;
-		$pagoCesantia = false;
-
-		$sql1 = "SELECT * FROM usuarios WHERE id = $usuarioId and estado = 'Inactivo'";
-		$proceso1 = mysqli_query($conexion,$sql1);
-		$contador1 = mysqli_num_rows($proceso1);
-
-		if($contador1>0){
-			$datos = [
-				"estatus"	=> "error",
-				"msg"	=> "Usuario inactivo",
-			];
-			echo json_encode($datos);
-			exit;
-		}
-
-		if($value=="Despido con justa causa" or $value="Renuncia voluntaria"){
-			$pagoSalario = true;
-			$pagoVacaciones = true;
-			$pagoAguinaldo = true;
-		}else if($value=="Despido sin justa causa" or $value="Despido justificada"){
-			$pagoSalario = true;
-			$pagoVacaciones = true;
-			$pagoAguinaldo = true;
-			$pagoPreaviso = true;
-			$pagoCesantia = true;
-		}
-
-		if($pagoSalario==true){
-			$montoSalario = calcularSalario($conexion,$usuarioId,$fecha);
-		}
-
-		if($pagoVacaciones==true){
-			$montoVacaciones = calcularVacaciones($conexion,$usuarioId);
-		}
-
-		if($pagoAguinaldo==true){
-			$montoAguinaldo = calcularAguinaldo($conexion,$usuarioId);
-		}
-		exit;
-	}
-
 	if($asunto=='detalle'){
 		$id = $_POST['id'];
 		$sql1 = "SELECT pla.id as plaId, pla.ccss, pla.isr, pla.diasNoLaborados, pla.horasExtras, pla.diasFeriadosLaborados, pla.aguinaldos, pla.total, usu.nombre, usu.apellido, usu.cedula, usu.salario, usu.id as usuarioId
@@ -498,22 +436,21 @@ $asunto = $_POST['asunto'];
 		$aguinaldo = 0;
 		if($mes!=12){
 			return $aguinaldo;
-		}else{
-			for($i==1;$i<=12;$i++){
-				if($i<10){
-					$primerDiaMes = $anio."-0".$i."-01";
-				}else{
-					$primerDiaMes = $anio."-".$i."-01";
-				}
-				$ultimoDiaMes = date("Y-m-t", strtotime($primerDiaMes));
-				$sql1 = "SELECT * FROM planillas WHERE usuarioId = $usuarioId and fecha = '$ultimoDiaMes'";
-				$proceso1 = mysqli_query($conexion,$sql1);
-				while($row1=mysqli_fetch_array($proceso1)){
-					$aguinaldo += $row1['total'];
-				}
-			}
-			return $aguinaldo;
 		}
+
+		$fechaInicio = ($anio - 1) . "-11-01";
+		$date = new DateTime($fechaInicio);
+
+		for($i=1;$i<=12;$i++){
+			$date->modify('+1 month');
+			$fechaResult = $date->format('Y-m-t');
+			$sql1 = "SELECT * FROM planillas WHERE usuarioId = $usuarioId and fecha = '$fechaResult'";
+			$proceso1 = mysqli_query($conexion,$sql1);
+			while($row1=mysqli_fetch_array($proceso1)){
+				$aguinaldo += $row1['total'];
+			}
+		}
+		return $aguinaldo;
 	}
 
 	function isr($total){

@@ -22,7 +22,7 @@ $asunto = $_POST['asunto'];
 		}
 
 		if($filtrado!=''){
-			$filtrado = ' and (nombre LIKE "%'.$filtrado.'%" or apellido LIKE "%'.$filtrado.'%")';
+			$filtrado = ' and (nombre LIKE "%'.$filtrado.'%" or apellido LIKE "%'.$filtrado.'%" or cedula LIKE "%'.$filtrado.'%")';
 		}
 
 		$limit = $consultasporpagina;
@@ -51,6 +51,7 @@ $asunto = $_POST['asunto'];
 		            <thead>
 		            <tr>
 						<th class="text-center">Empleado</th>
+						<th class="text-center">Cédula</th>
 						<th class="text-center">Fecha Ingreso</th>
 						<th class="text-center">Fecha Retiro</th>
 						<th class="text-center">Estatus</th>
@@ -64,11 +65,12 @@ $asunto = $_POST['asunto'];
 			while($row2 = mysqli_fetch_array($proceso2)) {
 				$id = $row2["id"];
 				$nombre = $row2["nombre"]." ".$row2["apellido"];
+				$cedula = $row2["cedula"];
 				$fechaIngreso = $row2["fechaIngreso"];
 				$fechaRetiro = $row2["fechaRetiro"];
 				$estado = $row2["estado"];
 				$salario = $row2["salario"];
-				$sql3 = "SELECT * FROM liquidaciones WHERE usuarioId = $usuario";
+				$sql3 = "SELECT * FROM liquidaciones WHERE usuarioId = $id";
 				$proceso3 = mysqli_query($conexion,$sql3);
 				$conteo3 = mysqli_num_rows($proceso3);
 				if($fechaRetiro=="0000-00-00"){
@@ -86,13 +88,14 @@ $asunto = $_POST['asunto'];
 						if($estatus==0){
 							$button = '<button class="btn btn-info ml-2" onclick="cambioEstatus('.$id.',1);">Aceptar</button>';
 						}else{
-							$button = '<button class="btn btn-danger ml-2" data-toggle="modal" data-target="#crear" onclick="resumen('.$id.');">Resumen</button>';
+							$button = '<button class="btn btn-primary ml-2" data-toggle="modal" data-target="#detalle" onclick="detalle('.$id.');">Detalle</button>';
 						}
 					}
 				}
 				$html .= '
 			                <tr id="">
 			                    <td style="text-align:center;">'.$nombre.'</td>
+			                    <td style="text-align:center;">'.$cedula.'</td>
 			                    <td style="text-align:center;">'.$fechaIngreso.'</td>
 			                    <td style="text-align:center;">'.$fechaRetiro.'</td>
 			                    <td style="text-align:center;">'.$estado.'</td>
@@ -102,7 +105,7 @@ $asunto = $_POST['asunto'];
 				';
 			}
 		}else{
-			$html .= '<tr><td colspan="6" class="text-center" style="font-weight:bold;font-size:20px;">Sin Resultados</td></tr>';
+			$html .= '<tr><td colspan="7" class="text-center" style="font-weight:bold;font-size:20px;">Sin Resultados</td></tr>';
 		}
 
 		$html .= '
@@ -229,30 +232,31 @@ $asunto = $_POST['asunto'];
 	if($asunto=='crear'){
 		$usuario = $_POST['usuario'];
 		$fecha = $_POST['fecha'];
-		$observacion = $_POST['observacion'];
-
-		if(calcularDiasDisponibles($conexion,$usuario)==0){
-			$datos = [
-				"estatus"	=> "error",
-				"msg"	=> "No tienes días disponibles",
-			];
-			echo json_encode($datos);
-			exit;
-		}
-
-		$sql1 = "SELECT * FROM liquidaciones WHERE usuarioId = $usuario and fechaInicio = '$fecha'";
+		$opcion = $_POST['opcion'];
+		
+		$sql1 = "SELECT * FROM liquidaciones WHERE usuarioId = $usuario";
 		$proceso1 = mysqli_query($conexion,$sql1);
 		$contador1 = mysqli_num_rows($proceso1);
 		if($contador1>0){
 			$datos = [
 				"estatus"	=> "error",
-				"msg"	=> "Fecha ya solicitada",
+				"msg"	=> "El usuario ya ha solicitado antes",
 			];
 			echo json_encode($datos);
 			exit;
 		}
-		$sql2 = "INSERT INTO liquidaciones (usuarioId,fechaInicio,observacion) VALUES ($usuario,'$fecha','$observacion')";
+		
+		$datos = calcularTodo($usuario,$fecha,$opcion,$conexion);
+		$salario = $datos["montoSalario"];
+		$vacaciones = $datos["montoVacaciones"];
+		$aguinaldos = $datos["montoAguinaldo"];
+		$preaviso = $datos["montoPreaviso"];
+		$cesantias = $datos["montoCesantia"];
+		$total = $datos["total"];
+
+		$sql2 = "INSERT INTO liquidaciones (usuarioId,opcion,fechaInicio,salario,vacaciones,aguinaldos,preaviso,cesantias,total) VALUES ($usuario,'$opcion','$fecha','$salario','$vacaciones','$aguinaldos','$preaviso','$cesantias','$total')";
 		$proceso2 = mysqli_query($conexion,$sql2);
+
 		$datos = [
 			"estatus"	=> "ok",
 			"msg"	=> "Se ha creado satisfactoriamente",
@@ -265,6 +269,10 @@ $asunto = $_POST['asunto'];
 		$estatus = $_POST['estatus'];
 		$sql1 = "UPDATE liquidaciones SET estatus = $estatus WHERE id = ".$id;
 		$proceso1 = mysqli_query($conexion,$sql1);
+		if($estatus==1){
+			$sql2 = "UPDATE usuarios SET estado = 'Inactivo' WHERE id = ".$id;
+			$proceso2 = mysqli_query($conexion,$sql2);
+		}
 		$datos = [
 			"estatus"	=> "ok",
 		];
@@ -282,20 +290,54 @@ $asunto = $_POST['asunto'];
 		echo json_encode($datos);
 	}
 
-	if($asunto=='diasDisponibles'){
-		$id = $_POST['id'];
-		$disponibles = calcularDiasDisponibles($conexion,$id);
-		$datos = [
-			"estatus"	=> "ok",
-			"diasDisponibles" => $disponibles,
-		];
-		echo json_encode($datos);
-	}
-
 	if($asunto=='calcular'){
 		$usuarioId = $_POST['usuarioId'];
 		$fecha = $_POST['fecha'];
 		$value = $_POST['value'];
+		$datos = calcularTodo($usuarioId,$fecha,$value,$conexion);
+		echo json_encode($datos);
+	}
+
+	if($asunto=='detalle'){
+		$id = $_POST['id'];
+		$sql1 = "SELECT liq.id as liqId, liq.opcion, liq.fechaInicio, liq.salario, liq.vacaciones, liq.aguinaldos, liq.preaviso, liq.cesantias, liq.total, usu.nombre, usu.apellido, usu.cedula, usu.id as usuarioId
+		FROM liquidaciones liq
+		INNER JOIN usuarios usu
+		ON liq.usuarioId = usu.id 
+		WHERE liq.id = $id";
+		$proceso1 = mysqli_query($conexion,$sql1);
+		while($row1=mysqli_fetch_array($proceso1)){
+			$liqId = $row1['liqId'];
+			$opcion = $row1['opcion'];
+			$fechaInicio = $row1['fechaInicio'];
+			$salario = $row1['salario'];
+			$vacaciones = $row1['vacaciones'];
+			$aguinaldos = $row1['aguinaldos'];
+			$preaviso = $row1['preaviso'];
+			$cesantias = $row1['cesantias'];
+			$total = $row1['total'];
+			$nombre = $row1['nombre'];
+			$apellido = $row1['apellido'];
+			$cedula = $row1['cedula'];
+		}
+		$datos = [
+			"estatus"	=> "ok",
+			"nombre"	=> $nombre,
+			"apellido"	=> $apellido,
+			"cedula"	=> $cedula,
+			"opcion"	=> $opcion,
+			"fechaInicio"	=> $fechaInicio,
+			"salario"	=> $salario,
+			"vacaciones"	=> $vacaciones,
+			"aguinaldos"	=> $aguinaldos,
+			"preaviso"	=> $preaviso,
+			"cesantias"	=> $cesantias,
+			"total"	=> $total,
+		];
+		echo json_encode($datos);
+	}
+
+	function calcularTodo($usuarioId,$fecha,$value,$conexion){
 		$pagoSalario = false;
 		$montoSalario = 0;
 		$pagoVacaciones = false;
@@ -303,7 +345,10 @@ $asunto = $_POST['asunto'];
 		$pagoAguinaldo = false;
 		$montoAguinaldo = 0;
 		$pagoPreaviso = false;
+		$montoPreaviso = 0;
 		$pagoCesantia = false;
+		$montoCesantia = 0;
+		$total = 0;
 
 		$sql1 = "SELECT * FROM usuarios WHERE id = $usuarioId and estado = 'Inactivo'";
 		$proceso1 = mysqli_query($conexion,$sql1);
@@ -339,29 +384,29 @@ $asunto = $_POST['asunto'];
 		}
 
 		if($pagoAguinaldo==true){
-			$montoAguinaldo = calcularAguinaldo($conexion,$usuarioId);
-		}
-		exit;
-	}
-
-	function calcularDiasDisponibles($conexion,$usuarioId){
-		$sql1 = "SELECT * FROM usuarios WHERE id = ".$usuarioId;
-		$proceso1 = mysqli_query($conexion,$sql1);
-
-		while($row1=mysqli_fetch_array($proceso1)){
-			$fechaIngreso = $row1["fechaIngreso"];
+			$montoAguinaldo = calcularAguinaldo($conexion,$usuarioId,$fecha);
 		}
 
-		$sql2 = "SELECT id FROM liquidaciones WHERE usuarioId = ".$usuarioId;
-		$proceso2 = mysqli_query($conexion,$sql2);
-		$contador2 = mysqli_num_rows($proceso2);
+		if($pagoPreaviso==true){
+			$montoPreaviso = calcularPreaviso($conexion,$usuarioId,$fecha);
+		}
 
-		$fecha_objetivo = new DateTime($fechaIngreso);
-		$fecha_actual = new DateTime();
-		$diferencia = $fecha_actual->diff($fecha_objetivo);
-		$meses = ($diferencia->y * 12) + $diferencia->m;
-		$meses = $meses-$contador2;
-		return $meses;
+		if($pagoCesantia==true){
+			$montoCesantia = calcularCesantia($conexion,$usuarioId,$fecha);
+		}
+
+		$total = round($montoSalario+$montoVacaciones+$montoAguinaldo+$montoPreaviso+$montoCesantia,2);
+		
+		$datos = [
+			"estatus"	=> "ok",
+			"montoSalario" => $montoSalario,
+			"montoVacaciones" => $montoVacaciones,
+			"montoAguinaldo" => $montoAguinaldo,
+			"montoPreaviso" => $montoPreaviso,
+			"montoCesantia" => $montoCesantia,
+			"total" => $total,
+		];
+		return $datos;
 	}
 
 	function calcularSalario($conexion,$usuarioId,$fecha){
@@ -398,7 +443,7 @@ $asunto = $_POST['asunto'];
 			$salario = $row1["salario"];
 		}
 
-		$sql2 = "SELECT id FROM vacaciones WHERE usuarioId = ".$usuarioId;
+		$sql2 = "SELECT id FROM vacaciones WHERE usuarioId = $usuarioId and estatus = 1";
 		$proceso2 = mysqli_query($conexion,$sql2);
 		$contador2 = mysqli_num_rows($proceso2);
 
@@ -408,52 +453,78 @@ $asunto = $_POST['asunto'];
 		$meses = ($diferencia->y * 12) + $diferencia->m;
 		$meses = $meses-$contador2;
 
-		$pagoDiario = ceil($salario/30);
-		$montoVacaciones = $pagoDiario*$meses;
+		$pagoDiario = round(($salario/30),2);
+		$montoVacaciones = round($pagoDiario*$meses,2);
 
 		return $montoVacaciones;
 	}
 
-	function calcularAguinaldo($conexion,$usuarioId){
-		$sql1 = "SELECT * FROM usuarios WHERE id = ".$usuarioId;
-		$proceso1 = mysqli_query($conexion,$sql1);
-
-		while($row1=mysqli_fetch_array($proceso1)){
-			$fechaIngreso = $row1["fechaIngreso"];
+	function calcularAguinaldo($conexion,$usuarioId,$fecha){
+		$aguinaldo = 0;
+		$fechaArray = explode('-',$fecha);
+		$anio = $fechaArray[0];
+		$fechaInicio = ($anio - 1) . "-11-01";
+		$date = new DateTime($fechaInicio);
+		for($i=1;$i<=12;$i++){
+			$date->modify('+1 month');
+			$fechaResult = $date->format('Y-m-t');
+			$sql1 = "SELECT * FROM planillas WHERE usuarioId = $usuarioId and fecha = '$fechaResult'";
+			$proceso1 = mysqli_query($conexion,$sql1);
+			while($row1=mysqli_fetch_array($proceso1)){
+				$aguinaldo += $row1['total'];
+			}
 		}
-
-		mesesPlanilla($conexion,$usuarioId);
-
-		///NECESITO TENER EL MODULO DE PLANILLA LISTO
-		return 0;
+		return $aguinaldo;
 	}
 
-	function mesesPlanilla($conexion,$usuarioId){
-		$mesesTrabajados = [];
-		$sql1 = "SELECT * FROM turnos WHERE usuarioId = $usuarioId and tipo = 'Entrada' ORDER BY fechaInicio";
+	function calcularPreaviso($conexion,$usuarioId,$fecha){
+		$preaviso = 0;
+		$sql1 = "SELECT * FROM usuarios WHERE id = $usuarioId";
 		$proceso1 = mysqli_query($conexion,$sql1);
 		while($row1=mysqli_fetch_array($proceso1)){
-			$fecha = $row1['fechaInicio'];
-			$mes = date("Y-m", strtotime($fecha));
-			$mesSolo = date("m", strtotime($fecha));
-			$anio = date("Y", strtotime($fecha));
-			$diasDelMes = cal_days_in_month(CAL_GREGORIAN, $mesSolo, $anio);
-			if (!isset($mesesTrabajados[$mes])) {
-        		$mesesTrabajados[$mes] = [];
-    		}
-    		$mesesTrabajados[$mes][$fecha] = true;
+			$fechaIngreso = $row1['fechaIngreso'];
+			$salarioActual = $row1['salario'];
 		}
+		$pagoAlDia = round($salarioActual/30,2);
+		$pagoHora = round($pagoAlDia/8,2);
+		$date1 = new DateTime($fecha);
+		$date2 = new DateTime($fechaIngreso);
+		$diff = $date1->diff($date2);
+		$mesesDiferencia = ($diff->y * 12) + $diff->m;
+		if($mesesDiferencia>3 and $mesesDiferencia<=6){
+			$preaviso = $pagoAlDia*7;
+		}else if($mesesDiferencia>6 and $mesesDiferencia<=12){
+			$preaviso = $pagoAlDia*15;
+		}else if($mesesDiferencia>12){
+			$preaviso = $pagoAlDia*30;
+		}
+		return $preaviso;
+	}
 
-		$resultadoFinal = [];
-		foreach ($mesesTrabajados as $mes => $dias) {
-		    $diasLaborados = count($dias);
-		    $resultadoFinal[] = [
-		        "mes" => $mes,
-		        "diasTrabajados" => min($diasLaborados, 30)
-		    ];
+	function calcularCesantia($conexion,$usuarioId,$fecha){
+		$cesantia = 0;
+		$sql1 = "SELECT * FROM usuarios WHERE id = $usuarioId";
+		$proceso1 = mysqli_query($conexion,$sql1);
+		while($row1=mysqli_fetch_array($proceso1)){
+			$fechaIngreso = $row1['fechaIngreso'];
+			$salarioActual = $row1['salario'];
 		}
-		echo json_encode($resultadoFinal, JSON_PRETTY_PRINT);
-		exit;
+		$pagoAlDia = round($salarioActual/30,2);
+		$pagoHora = round($pagoAlDia/8,2);
+		$date1 = new DateTime($fecha);
+		$date2 = new DateTime($fechaIngreso);
+		$diff = $date1->diff($date2);
+		$mesesDiferencia = ($diff->y * 12) + $diff->m;
+		if($mesesDiferencia>3 and $mesesDiferencia<=12){
+			$cesantia = ($pagoAlDia*7)*$mesesDiferencia;
+		}else if($mesesDiferencia>12){
+			if($mesesDiferencia>96){
+				$mesesDiferencia = 96;
+			}
+			$cesantia = ($pagoAlDia*19.5)*$mesesDiferencia;
+			$cesantia = ($pagoAlDia*7)*$mesesDiferencia;
+		}
+		return $cesantia;
 	}
 
 

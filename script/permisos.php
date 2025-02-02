@@ -289,6 +289,24 @@ $asunto = $_POST['asunto'];
 		$estatus = $_POST['estatus'];
 		$sql1 = "UPDATE permisosLaborales SET estatus = $estatus WHERE id = ".$id;
 		$proceso1 = mysqli_query($conexion,$sql1);
+		if($estatus==1){
+			$sql2 = "SELECT * FROM permisosLaborales WHERE id = $id";
+			$proceso2 = mysqli_query($conexion,$sql2);
+			while($row2=mysqli_fetch_array($proceso2)){
+				$tipo = $row2["tipo"];
+				$usuarioId = $row2["usuarioId"];
+				$fechaInicio = $row2["fechaInicio"];
+				if($tipo=="Goce de salario"){
+					$sql3 = "SELECT * FROM turnos WHERE usuarioId = $usuarioId and tipo = 'Entrada' and fechaInicio = '$fechaInicio'";
+					$proceso3 = mysqli_query($conexion,$sql3);
+					$contador3 = mysqli_num_rows($proceso3);
+					if($contador3==0){
+						$sql4 = "INSERT INTO turnos (usuarioId,tipo,fechaInicio,horaInicio,fechaFin,horaFin) VALUES ($usuarioId,'Entrada','$fechaInicio','07:30:00','0000-00-00','00:00:00')";
+						$proceso4 = mysqli_query($conexion,$sql4);
+					}
+				}
+			}
+		}
 		$datos = [
 			"estatus"	=> "ok",
 		];

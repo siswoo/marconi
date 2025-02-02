@@ -99,7 +99,7 @@ if (!isset($_SESSION['marconiId'])) {
 
 <input type="hidden" id="hiddenId" name="hiddenId" value="">
 
-<!-- Modal Modificar -->
+<!-- Modal Detalles -->
     <div class="modal fade" id="detalle" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
                 <div class="modal-content">

@@ -55,18 +55,6 @@ if (!isset($_SESSION['marconiId'])) {
                     <div class="row">
                         <div class="col-12">
                             <div class="card shadow mb-4">
-                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Listado de Usuarios</h6>
-                                        <div class="dropdown no-arrow">
-                                            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                            </a>
-                                            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
-                                                <a class="dropdown-item" data-toggle="modal" <?php if($esAdmin==true){ echo 'onclick="listadoUsuarios(1)" data-target="#crear"';}else{ echo ' data-target="#crear2"'; } ?> href="#">Crear Nuevo</a>
-                                            </div>
-                                        </div>
-                                </div>
                                 <div class="row ml-3 mr-3" style="margin-top: 2rem;">
                                     <input type="hidden" name="datatables" id="datatables" data-pagina="1" data-consultasporpagina="10" data-filtrado="" data-fechafiltro="" data-sucursal="">
                                     <div class="col-xl-3 col-lg-12 form-group form-check">
@@ -120,6 +108,7 @@ if (!isset($_SESSION['marconiId'])) {
 
 <input type="hidden" id="hiddenId" name="hiddenId" value="<?php echo $_SESSION['marconiId']; ?>">
 <input type="hidden" id="hiddenRol" name="hiddenRol" value="<?php echo $rolId; ?>">
+<input type="hidden" id="hiddenId2" name="hiddenId2" value="">
 
 <!-- Modal Crear -->
     <div class="modal fade" id="crear" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -149,6 +138,18 @@ if (!isset($_SESSION['marconiId'])) {
                                 </select>
                             </div>
                             <div class="col-md-6 form-group form-check">
+                                <label for="salario1" style="font-weight: bold;">Salario</label>
+                                <input type="text" id="salario1" name="salario1" class="form-control" readonly>
+                            </div>
+                            <div class="col-md-6 form-group form-check">
+                                <label for="vacaciones1" style="font-weight: bold;">Vacaciones</label>
+                                <input type="text" id="vacaciones1" name="vacaciones1" class="form-control" readonly>
+                            </div>
+                            <div class="col-md-6 form-group form-check">
+                                <label for="aguinaldos1" style="font-weight: bold;">Aguinaldos</label>
+                                <input type="text" id="aguinaldos1" name="aguinaldos1" class="form-control" readonly>
+                            </div>
+                            <div class="col-md-6 form-group form-check">
                                 <label for="preaviso1" style="font-weight: bold;">Preaviso</label>
                                 <input type="text" id="preaviso1" name="preaviso1" class="form-control" readonly>
                             </div>
@@ -157,11 +158,7 @@ if (!isset($_SESSION['marconiId'])) {
                                 <input type="text" id="cesantias1" name="cesantias1" class="form-control" readonly>
                             </div>
                             <div class="col-md-6 form-group form-check">
-                                <label for="aguinaldos1" style="font-weight: bold;">Aguinaldos</label>
-                                <input type="text" id="aguinaldos1" name="aguinaldos1" class="form-control" readonly>
-                            </div>
-                            <div class="col-md-6 form-group form-check">
-                                <label for="vacaciones" style="font-weight: bold;">Vacaciones</label>
+                                <label for="vacaciones" style="font-weight: bold;">Total</label>
                                 <input type="text" id="vacaciones" name="vacaciones" class="form-control" readonly>
                             </div>
                         </div>
@@ -176,43 +173,69 @@ if (!isset($_SESSION['marconiId'])) {
     </div>
 <!----------------->
 
-<!-- Modal Crear2 -->
-    <div class="modal fade" id="crear2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+<!-- Modal Detalles -->
+    <div class="modal fade" id="detalle" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
-            <form action="#" method="POST" id="formulario2" style="">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Crear Registro</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Detalles Liquidación</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
                         <div class="row">
-                            <div class="col-md-12 form-group form-check">
-                                <label for="fechaInicio2" style="font-weight: bold;">Fecha Inicio *</label>
-                                <input type="date" id="fechaInicio2" name="fechaInicio2" class="form-control" required>
+                            <div class="col-md-6 form-group form-check">
+                                <label for="nombre2" style="font-weight: bold;">Nombre</label>
+                                <input type="text" id="nombre2" name="nombre2" class="form-control" readonly>
+                            </div>
+                            <div class="col-md-6 form-group form-check">
+                                <label for="apellido2" style="font-weight: bold;">Apellido</label>
+                                <input type="text" id="apellido2" name="apellido2" class="form-control" readonly>
+                            </div>
+                            <div class="col-md-6 form-group form-check">
+                                <label for="cedula2" style="font-weight: bold;">Cédula</label>
+                                <input type="text" id="cedula2" name="cedula2" class="form-control" readonly>
+                            </div>
+                            <div class="col-md-6 form-group form-check">
+                                <label for="opcion2" style="font-weight: bold;">Opción</label>
+                                <input type="text" id="opcion2" name="opcion2" class="form-control" readonly>
+                            </div>
+                            <div class="col-md-6 form-group form-check">
+                                <label for="fechaInicio2" style="font-weight: bold;">Fecha</label>
+                                <input type="text" id="fechaInicio2" name="fechaInicio2" class="form-control" readonly>
+                            </div>
+                            <div class="col-md-6 form-group form-check">
+                                <label for="salario2" style="font-weight: bold;">Salario</label>
+                                <input type="text" id="salario2" name="salario2" class="form-control" readonly>
+                            </div>
+                            <div class="col-md-6 form-group form-check">
+                                <label for="vacaciones2" style="font-weight: bold;">Vacaciones</label>
+                                <input type="text" id="vacaciones2" name="vacaciones2" class="form-control" readonly>
+                            </div>
+                            <div class="col-md-6 form-group form-check">
+                                <label for="aguinaldos2" style="font-weight: bold;">Aguinaldos</label>
+                                <input type="text" id="aguinaldos2" name="aguinaldos2" class="form-control" readonly>
+                            </div>
+                            <div class="col-md-6 form-group form-check">
+                                <label for="preaviso2" style="font-weight: bold;">Preaviso</label>
+                                <input type="text" id="preaviso2" name="preaviso2" class="form-control" readonly>
+                            </div>
+                            <div class="col-md-6 form-group form-check">
+                                <label for="cesantias2" style="font-weight: bold;">Cesantias</label>
+                                <input type="text" id="cesantias2" name="cesantias2" class="form-control" readonly>
                             </div>
                             <div class="col-md-12 form-group form-check">
-                                <label for="fechaFin2" style="font-weight: bold;">Fecha Fin *</label>
-                                <input type="date" id="fechaFin2" name="fechaFin2" class="form-control" required>
-                            </div>
-                            <div class="col-md-12 form-group form-check">
-                                <label for="observacion2" style="font-weight: bold;">Observación *</label>
-                                <textarea class="form-control" name="observacion2" id="observacion2" required></textarea>
+                                <label for="total2" style="font-weight: bold;">Total</label>
+                                <input type="text" id="total2" name="total2" class="form-control" readonly>
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-success">Guardar</button>
-                    </div>
-                </form>
             </div>
         </div>
     </div>
 <!----------------->
-
 
 <script type="text/javascript">
     $(document).ready(function() {
@@ -275,19 +298,17 @@ if (!isset($_SESSION['marconiId'])) {
 
     $("#formulario1").on("submit", function(e){
         e.preventDefault();
-        var usuario = $('#usuario1').val();
-        var desde = $('#fechaInicio1').val();
-        var hasta = $('#fechaFin1').val();
-        var observacion = $('#observacion1').val();
+        var usuario = $('#hiddenId2').val();
+        var fecha = $('#fecha1').val();
+        var opcion = $('#opcion1').val();
         $.ajax({
             type: 'POST',
             url: 'script/liquidaciones.php',
             dataType: "JSON",
             data: {
                 "usuario": usuario,
-                "desde": desde,
-                "hasta": hasta,
-                "observacion": observacion,
+                "fecha": fecha,
+                "opcion": opcion,
                 "asunto": "crear",
             },
 
@@ -301,60 +322,14 @@ if (!isset($_SESSION['marconiId'])) {
                         position: 'center',
                         timer: 5000
                     });
-                    $('#usuario1').val("");
-                    $('#fechaInicio1').val("");
-                    $('#fechaFin1').val("");
-                    $('#observacion1').val("");
-                    filtrar1();
-                }else if(respuesta["estatus"]=="error"){
-                    Swal.fire({
-                        title: 'Error',
-                        text: respuesta["msg"],
-                        icon: 'error',
-                        position: 'center',
-                        timer: 5000
-                    });
-                }
-            },
-
-            error: function(respuesta) {
-                console.log(respuesta['responseText']);
-            }
-        });
-    });
-
-    $("#formulario2").on("submit", function(e){
-        e.preventDefault();
-        var usuario = $('#hiddenId').val();
-        var desde = $('#fechaInicio2').val();
-        var hasta = $('#fechaFin2').val();
-        var observacion = $('#observacion2').val();
-        $.ajax({
-            type: 'POST',
-            url: 'script/liquidaciones.php',
-            dataType: "JSON",
-            data: {
-                "usuario": usuario,
-                "desde": desde,
-                "hasta": hasta,
-                "observacion": observacion,
-                "asunto": "crear",
-            },
-
-            success: function(respuesta) {
-                console.log(respuesta);
-                if(respuesta["estatus"]=="ok"){
-                    Swal.fire({
-                        title: 'Ok',
-                        text: respuesta["msg"],
-                        icon: 'success',
-                        position: 'center',
-                        timer: 5000
-                    });
-                    $('#usuario2').val("");
-                    $('#fechaInicio2').val("");
-                    $('#fechaFin2').val("");
-                    $('#observacion2').val("");
+                    $('#fecha1').val("");
+                    $('#opcion1').val("");
+                    $('#salario1').val("");
+                    $('#vacaciones1').val("");
+                    $('#aguinaldos1').val("");
+                    $('#preaviso1').val("");
+                    $('#cesantias1').val("");
+                    $('#total1').val("");
                     filtrar1();
                 }else if(respuesta["estatus"]=="error"){
                     Swal.fire({
@@ -451,11 +426,19 @@ if (!isset($_SESSION['marconiId'])) {
     }
 
     function hiddenId(usuarioId){
-        $('#hiddenId').val(usuarioId);
+        $('#hiddenId2').val(usuarioId);
+        $('#fecha1').val("");
+        $('#opcion1').val("");
+        $('#salario1').val("");
+        $('#vacaciones1').val("");
+        $('#aguinaldos1').val("");
+        $('#preaviso1').val("");
+        $('#cesantias1').val("");
+        $('#total1').val("");
     }
 
     function calcular(value){
-        var usuarioId = $('#hiddenId').val();
+        var usuarioId = $('#hiddenId2').val();
         var fecha = $('#fecha1').val();
         if(fecha==""){
             Swal.fire({
@@ -483,6 +466,13 @@ if (!isset($_SESSION['marconiId'])) {
 
             success: function(respuesta) {
                 console.log(respuesta);
+                $('#salario1').val(respuesta["montoSalario"]);
+                $('#vacaciones1').val(respuesta["montoVacaciones"]);
+                $('#aguinaldos1').val(respuesta["montoAguinaldo"]);
+                $('#preaviso1').val(respuesta["montoPreaviso"]);
+                $('#cesantias1').val(respuesta["montoCesantia"]);
+                $('#total1').val(respuesta["total"]);
+                filtrar1();
             },
 
             error: function(respuesta) {
@@ -504,6 +494,37 @@ if (!isset($_SESSION['marconiId'])) {
             success: function(respuesta) {
                 console.log(respuesta);
                 $('#usuario'+idSelect).html(respuesta["options"]);
+            },
+
+            error: function(respuesta) {
+                console.log(respuesta['responseText']);
+            }
+        });
+    }
+
+    function detalle(id){
+        $.ajax({
+            type: 'POST',
+            url: 'script/liquidaciones.php',
+            dataType: "JSON",
+            data: {
+                "id": id,
+                "asunto": "detalle",
+            },
+
+            success: function(respuesta) {
+                console.log(respuesta);
+                $('#nombre2').val(respuesta['nombre']);
+                $('#apellido2').val(respuesta['apellido']);
+                $('#cedula2').val(respuesta['cedula']);
+                $('#opcion2').val(respuesta['opcion']);
+                $('#fechaInicio2').val(respuesta['fechaInicio']);
+                $('#salario2').val(respuesta['salario']);
+                $('#vacaciones2').val(respuesta['vacaciones']);
+                $('#aguinaldos2').val(respuesta['aguinaldos']);
+                $('#preaviso2').val(respuesta['preaviso']);
+                $('#cesantias2').val(respuesta['cesantias']);
+                $('#total2').val(respuesta['total']);
             },
 
             error: function(respuesta) {
