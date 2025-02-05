@@ -91,7 +91,6 @@ INSERT INTO permisos (rolId,submoduloId) VALUES
 (1,5),
 (2,5),
 (1,6),
-(2,6),
 (1,7);
 
 DROP TABLE IF EXISTS turnos;
