@@ -120,15 +120,15 @@ if (!isset($_SESSION['marconiId'])) {
                         <div class="row">
                             <div class="col-md-6 form-group form-check">
                                 <label for="nombre1" style="font-weight: bold;">Nombre *</label>
-                                <input type="text" id="nombre1" name="nombre1" class="form-control" autocomplete="off" required>
+                                <input type="text" id="nombre1" name="nombre1" class="form-control" oninput="soloLetras(this)" autocomplete="off" required>
                             </div>
                             <div class="col-md-6 form-group form-check">
                                 <label for="apellido1" style="font-weight: bold;">Apellido *</label>
-                                <input type="text" id="apellido1" name="apellido1" class="form-control" autocomplete="off" required>
+                                <input type="text" id="apellido1" name="apellido1" class="form-control" oninput="soloLetras(this)" autocomplete="off" required>
                             </div>
                             <div class="col-md-6 form-group form-check">
                                 <label for="cedula1" style="font-weight: bold;">Cédula *</label>
-                                <input type="text" id="cedula1" name="cedula1" class="form-control" autocomplete="off" required>
+                                <input type="text" id="cedula1" name="cedula1" class="form-control" oninput="soloNumeros(this)" autocomplete="off" required>
                             </div>
                             <div class="col-md-6 form-group form-check">
                                 <label for="fechaNacimiento1" style="font-weight: bold;">Fecha Nacimiento *</label>
@@ -144,7 +144,7 @@ if (!isset($_SESSION['marconiId'])) {
                             </div>
                             <div class="col-md-6 form-group form-check">
                                 <label for="telefono1" style="font-weight: bold;">Teléfono *</label>
-                                <input type="number" id="telefono1" name="telefono1" class="form-control" autocomplete="off" required>
+                                <input type="number" id="telefono1" name="telefono1" oninput="soloNumeros(this)" class="form-control" autocomplete="off" required>
                             </div>
                             <div class="col-md-12 form-group form-check">
                                 <label for="correo1" style="font-weight: bold;">Correo *</label>
@@ -160,7 +160,7 @@ if (!isset($_SESSION['marconiId'])) {
                             </div>
                             <div class="col-md-6 form-group form-check">
                                 <label for="salario1" style="font-weight: bold;">Salario *</label>
-                                <input type="number" id="salario1" name="salario1" class="form-control" autocomplete="off" required>
+                                <input type="number" id="salario1" name="salario1" min="0" oninput="soloNumeros(this)" class="form-control" autocomplete="off" required>
                             </div>
                             <div class="col-md-6 form-group form-check">
                                 <label for="password1" style="font-weight: bold;">Contraseña *</label>
@@ -202,15 +202,15 @@ if (!isset($_SESSION['marconiId'])) {
                         <div class="row">
                             <div class="col-md-6 form-group form-check">
                                 <label for="nombre2" style="font-weight: bold;">Nombre *</label>
-                                <input type="text" id="nombre2" name="nombre2" class="form-control" autocomplete="off" required>
+                                <input type="text" id="nombre2" name="nombre2" class="form-control" oninput="soloLetras(this)" autocomplete="off" required>
                             </div>
                             <div class="col-md-6 form-group form-check">
                                 <label for="apellido2" style="font-weight: bold;">Apellido *</label>
-                                <input type="text" id="apellido2" name="apellido2" class="form-control" autocomplete="off" required>
+                                <input type="text" id="apellido2" name="apellido2" class="form-control" oninput="soloLetras(this)" autocomplete="off" required>
                             </div>
                             <div class="col-md-6 form-group form-check">
                                 <label for="cedula2" style="font-weight: bold;">Cédula *</label>
-                                <input type="text" id="cedula2" name="cedula2" class="form-control" autocomplete="off" required>
+                                <input type="text" id="cedula2" name="cedula2" class="form-control" oninput="soloNumeros(this)" autocomplete="off" required>
                             </div>
                             <div class="col-md-6 form-group form-check">
                                 <label for="fechaNacimiento2" style="font-weight: bold;">Fecha Nacimiento *</label>
@@ -226,7 +226,7 @@ if (!isset($_SESSION['marconiId'])) {
                             </div>
                             <div class="col-md-6 form-group form-check">
                                 <label for="telefono2" style="font-weight: bold;">Teléfono *</label>
-                                <input type="number" id="telefono2" name="telefono2" class="form-control" autocomplete="off" required>
+                                <input type="number" id="telefono2" name="telefono2" oninput="soloNumeros(this)" class="form-control" autocomplete="off" required>
                             </div>
                             <div class="col-md-12 form-group form-check">
                                 <label for="correo2" style="font-weight: bold;">Correo *</label>
@@ -246,7 +246,7 @@ if (!isset($_SESSION['marconiId'])) {
                             </div>
                             <div class="col-md-6 form-group form-check">
                                 <label for="salario2" style="font-weight: bold;">Salario *</label>
-                                <input type="number" id="salario2" name="salario2" class="form-control" autocomplete="off" required>
+                                <input type="number" id="salario2" name="salario2" min="0" oninput="soloNumeros(this)" class="form-control" autocomplete="off" required>
                             </div>
                             <div class="col-md-6 form-group form-check">
                                 <label for="cargo2" style="font-weight: bold;">Cargo *</label>
@@ -393,6 +393,26 @@ if (!isset($_SESSION['marconiId'])) {
         var salario = $('#salario1').val();
         var password = $('#password1').val();
         var cargo = $('#cargo1').val();
+        if(salario<=0){
+            Swal.fire({
+                title: 'Info',
+                text: "Salario debe ser mayor a cero",
+                icon: 'info',
+                position: 'center',
+                timer: 5000
+            });
+            return false;
+        }
+        if(telefono.length != 8){
+            Swal.fire({
+                title: 'Info',
+                text: "Teléfono debe tener ocho caracteres",
+                icon: 'info',
+                position: 'center',
+                timer: 5000
+            });
+            return false;
+        }
         $.ajax({
             type: 'POST',
             url: 'script/usuario.php',
@@ -468,6 +488,26 @@ if (!isset($_SESSION['marconiId'])) {
         var salario = $('#salario2').val();
         var password = $('#password2').val();
         var cargo = $('#cargo2').val();
+        if(salario<=0){
+            Swal.fire({
+                title: 'Info',
+                text: "Salario debe ser mayor a cero",
+                icon: 'info',
+                position: 'center',
+                timer: 5000
+            });
+            return false;
+        }
+        if(telefono.length != 8){
+            Swal.fire({
+                title: 'Info',
+                text: "Teléfono debe tener ocho caracteres",
+                icon: 'info',
+                position: 'center',
+                timer: 5000
+            });
+            return false;
+        }
         $.ajax({
             type: 'POST',
             url: 'script/usuario.php',
@@ -516,5 +556,26 @@ if (!isset($_SESSION['marconiId'])) {
             }
         });
     });
+
+    function soloLetras(input) {
+        input.value = input.value.replace(/[^A-Za-z\s]/g, '');
+    }
+
+    function sinCaracteresEspeciales(input) {
+        input.value = input.value.replace(/[^A-Za-z0-9\s]/g, '');
+    }
+
+    function sinNumeros(input) {
+        input.value = input.value.replace(/[0-9]/g, '');
+    }
+
+    function sinEspacios(input) {
+        input.value = input.value.replace(/\s/g, '');
+    }
+
+    function soloNumeros(input) {
+        input.value = input.value.replace(/[^0-9]/g, '');
+    }
+
 
 </script>
