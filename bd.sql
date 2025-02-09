@@ -36,8 +36,8 @@ CREATE TABLE usuarios (
 	FOREIGN KEY (rol) REFERENCES roles (id) ON DELETE CASCADE ON UPDATE CASCADE
 ); ALTER TABLE usuarios CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
-INSERT INTO usuarios (usuario,nombre,password,rol) VALUES 
-('admin','Juan Maldonado','d964173dc44da83eeafa3aebbee9a1a0',1);
+INSERT INTO usuarios (usuario,nombre,apellido,password,rol) VALUES 
+('admin','Juan','Maldonado','d964173dc44da83eeafa3aebbee9a1a0',1);
 
 DROP TABLE IF EXISTS submodulos;
 CREATE TABLE submodulos (
@@ -157,7 +157,6 @@ CREATE TABLE planillas (
 	id INT AUTO_INCREMENT,
 	usuarioId INT NOT NULL,
 	fecha DATE NOT NULL,
-	diasNoLaborados INT NOT NULL,
 	pagoDia DOUBLE(11,2) NOT NULL,
 	pagoHora DOUBLE(11,2) NOT NULL,
 	horasExtras INT NOT NULL,
@@ -165,6 +164,7 @@ CREATE TABLE planillas (
 	aguinaldos DOUBLE(11,2) NOT NULL,
 	ccss DOUBLE(11,2) NOT NULL,
 	isr DOUBLE(11,2) NOT NULL,
+	subTotal DOUBLE(11,2) NOT NULL,
 	total DOUBLE(11,2) NOT NULL,
 	estatus BOOLEAN DEFAULT 0,
 	PRIMARY KEY (id)

@@ -356,7 +356,7 @@ if (!isset($_SESSION['marconiId'])) {
         });
     });
 
-    function cambioEstatus(id,estatus){
+    function cambioEstatus(id,estatus,usuarioId){
         $.ajax({
             type: 'POST',
             url: 'script/vacaciones.php',
@@ -364,6 +364,7 @@ if (!isset($_SESSION['marconiId'])) {
             data: {
                 "id": id,
                 "estatus": estatus,
+                "usuarioId": usuarioId,
                 "asunto": "cambioEstatus",
             },
               

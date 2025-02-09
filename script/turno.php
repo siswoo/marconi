@@ -115,10 +115,6 @@ $asunto = $_POST['asunto'];
 					$html .= '
 						<button class="btn btn-danger" onclick="eliminar('.$id.');">Eliminar</button>
 					';
-				}else if($tipo=="Entrada"){
-					$html .= '
-						<button class="btn btn-primary" data-toggle="modal" data-target="#modificar" onclick="modificar('.$id.');">Modificar</button>
-					';
 				}
 				$html .= '
 			                    </td>

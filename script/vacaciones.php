@@ -39,12 +39,12 @@ $asunto = $_POST['asunto'];
 		}
 
 
-		$sql1 = "SELECT vac.id as id, usu.cedula as cedula, usu.nombre as nombre, usu.apellido as apellido, vac.fechaInicio as fechaInicio, vac.observacion as observacion, vac.estatus as estatus FROM vacaciones vac
+		$sql1 = "SELECT vac.id as id, usu.cedula as cedula, usu.nombre as nombre, usu.apellido as apellido, vac.fechaInicio as fechaInicio, vac.observacion as observacion, vac.estatus as estatus, usu.id as usuarioId FROM vacaciones vac
 		INNER JOIN usuarios usu
 		ON vac.usuarioId = usu.id 
 		WHERE ".$rolCon.$filtrado.$fecha;
 
-		$sql2 = "SELECT vac.id as id, usu.cedula as cedula, usu.nombre as nombre, usu.apellido as apellido, vac.fechaInicio as fechaInicio, vac.observacion as observacion, vac.estatus as estatus FROM vacaciones vac
+		$sql2 = "SELECT vac.id as id, usu.cedula as cedula, usu.nombre as nombre, usu.apellido as apellido, vac.fechaInicio as fechaInicio, vac.observacion as observacion, vac.estatus as estatus, usu.id as usuarioId FROM vacaciones vac
 		INNER JOIN usuarios usu
 		ON vac.usuarioId = usu.id 
 		WHERE ".$rolCon.$filtrado.$fecha." ORDER BY vac.id DESC LIMIT ".$limit." OFFSET ".$offset;
@@ -77,6 +77,7 @@ $asunto = $_POST['asunto'];
 				$estatus = $row2["estatus"];
 				$fechaInicio = $row2["fechaInicio"];
 				$observacion = $row2["observacion"];
+				$usuarioId = $row2["usuarioId"];
 				if($estatus==0){
 					$estatusText = "No";
 					$button = '<button class="btn btn-danger" onclick="eliminar('.$id.');">Eliminar</button>';
@@ -86,9 +87,9 @@ $asunto = $_POST['asunto'];
 				}
 				if($rol==1){
 					if($estatus==0){
-						$button = '<button class="btn btn-success ml-2" onclick="cambioEstatus('.$id.',1);">Aceptar</button>';
+						$button = '<button class="btn btn-success ml-2" onclick="cambioEstatus('.$id.',1,'.$usuarioId.');">Aceptar</button>';
 					}else{
-						$button = '<button class="btn btn-info ml-2" onclick="cambioEstatus('.$id.',0);">Rechazar</button>';
+						$button = '<button class="btn btn-info ml-2" onclick="cambioEstatus('.$id.',0,'.$usuarioId.');">Rechazar</button>';
 					}
 					$button .= '<button class="btn btn-danger ml-2" onclick="eliminar('.$id.');">Eliminar</button>';
 				}
@@ -264,8 +265,20 @@ $asunto = $_POST['asunto'];
 	if($asunto=='cambioEstatus'){
 		$id = $_POST['id'];
 		$estatus = $_POST['estatus'];
+		$usuarioId = $_POST['usuarioId'];
+
 		$sql1 = "UPDATE vacaciones SET estatus = $estatus WHERE id = ".$id;
 		$proceso1 = mysqli_query($conexion,$sql1);
+
+		$sql2 = "SELECT * FROM vacaciones WHERE id = $id";
+		$proceso2 = mysqli_query($conexion,$sql2);
+		while($row2=mysqli_fetch_array($proceso2)){
+			$fecha = $row2["fechaInicio"];
+		}
+
+		$sql3 = "INSERT INTO turnos (usuarioId,tipo,fechaInicio,horaInicio) VALUES ($usuarioId,'Entrada','$fecha','08:00:00')";
+		$proceso3 = mysqli_query($conexion,$sql3);
+
 		$datos = [
 			"estatus"	=> "ok",
 		];

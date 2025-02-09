@@ -392,7 +392,7 @@ $asunto = $_POST['asunto'];
 		$proceso1 = mysqli_query($conexion,$sql1);
 		while ($row1 = mysqli_fetch_array($proceso1)) {
 			$usuarioId = $row1["id"];
-			$usuarioNombre = $row1["nombre"];
+			$usuarioNombre = $row1["nombre"]." ".$row1["apellido"];
 			$options .= '<option value="'.$usuarioId.'">'.$usuarioNombre.'</option>';
 		}
 		$datos = [

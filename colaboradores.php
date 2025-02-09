@@ -393,6 +393,17 @@ if (!isset($_SESSION['marconiId'])) {
         var salario = $('#salario1').val();
         var password = $('#password1').val();
         var cargo = $('#cargo1').val();
+        var validarTelefono = primerNumero(telefono);
+        if(validarTelefono>=2 && validarTelefono!=3 && validarTelefono<=8){}else{
+            Swal.fire({
+                title: 'Info',
+                text: "Teléfono debe iniciar con 2, 4, 5, 6, 7 u 8",
+                icon: 'info',
+                position: 'center',
+                timer: 5000
+            });
+            return false;
+        }
         if(salario<=0){
             Swal.fire({
                 title: 'Info',
@@ -575,6 +586,11 @@ if (!isset($_SESSION['marconiId'])) {
 
     function soloNumeros(input) {
         input.value = input.value.replace(/[^0-9]/g, '');
+    }
+
+    function primerNumero(cadena) {
+        let match = cadena.match(/\d/);
+        return match ? match[0] : null;
     }
 
 

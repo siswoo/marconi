@@ -32,13 +32,13 @@ $asunto = $_POST['asunto'];
 		$limit = $consultasporpagina;
 		$offset = ($pagina - 1) * $consultasporpagina;
 
-		$sql1 = "SELECT pla.id as plaId, pla.diasNoLaborados, pla.horasExtras, pla.diasFeriadosLaborados, pla.aguinaldos, pla.total, usu.nombre, usu.apellido, usu.cedula, usu.salario, usu.id as usuarioId
+		$sql1 = "SELECT pla.id as plaId, pla.horasExtras, pla.diasFeriadosLaborados, pla.aguinaldos, pla.subTotal, pla.total, pla.ccss, pla.isr, usu.nombre, usu.apellido, usu.cedula, usu.salario, usu.id as usuarioId
 		FROM planillas pla 
 		INNER JOIN usuarios usu
 		ON pla.usuarioId = usu.id 
 		WHERE usu.estado = 'Activo' and pla.fecha = '$finMes' ".$filtrado;
 
-		$sql2 = "SELECT pla.id as plaId, pla.diasNoLaborados, pla.horasExtras, pla.diasFeriadosLaborados, pla.aguinaldos, pla.total, usu.nombre, usu.apellido, usu.cedula, usu.salario, usu.id as usuarioId
+		$sql2 = "SELECT pla.id as plaId, pla.horasExtras, pla.diasFeriadosLaborados, pla.aguinaldos, pla.subTotal, pla.total, pla.ccss, pla.isr, usu.nombre, usu.apellido, usu.cedula, usu.salario, usu.id as usuarioId
 		FROM planillas pla 
 		INNER JOIN usuarios usu
 		ON pla.usuarioId = usu.id 
@@ -59,10 +59,12 @@ $asunto = $_POST['asunto'];
 						<th class="text-center">Usuario</th>
 						<th class="text-center">Cédula</th>
 						<th class="text-center">Salario</th>
-						<th class="text-center">No laborados</th>
 						<th class="text-center">Horas extras</th>
 						<th class="text-center">Feriados</th>
 						<th class="text-center">Aguinaldos</th>
+						<th class="text-center">Sub-Total</th>
+						<th class="text-center">Ccss</th>
+						<th class="text-center">Isr</th>
 						<th class="text-center">Total</th>
 						<th class="text-center">Opciones</th>
 		            </tr>
@@ -76,20 +78,24 @@ $asunto = $_POST['asunto'];
 				$nombre = $row2["nombre"]." ".$row2["apellido"];
 				$cedula = $row2["cedula"];
 				$salario = $row2["salario"];
-				$diasNoLaborados = $row2["diasNoLaborados"];
 				$horasExtras = $row2["horasExtras"];
 				$diasFeriadosLaborados = $row2["diasFeriadosLaborados"];
 				$aguinaldos = $row2["aguinaldos"];
+				$subTotal = $row2["subTotal"];
+				$ccss = $row2["ccss"];
+				$isr = $row2["isr"];
 				$total = $row2["total"];
 				$html .= '
 			                <tr id="">
 			                    <td style="text-align:center;">'.$nombre.'</td>
 			                    <td style="text-align:center;">'.$cedula.'</td>
 			                    <td style="text-align:center;">'.$salario.'</td>
-			                    <td style="text-align:center;">'.$diasNoLaborados.'</td>
 			                    <td style="text-align:center;">'.$horasExtras.'</td>
 			                    <td style="text-align:center;">'.$diasFeriadosLaborados.'</td>
 			                    <td style="text-align:center;">'.$aguinaldos.'</td>
+			                    <td style="text-align:center;">'.$subTotal.'</td>
+			                    <td style="text-align:center;">'.$ccss.'</td>
+			                    <td style="text-align:center;">'.$isr.'</td>
 			                    <td style="text-align:center;">'.$total.'</td>
 			                    <td style="text-align:center;" nowrap>
 			                    	<button class="btn btn-primary" data-toggle="modal" data-target="#detalle" onclick="detalle('.$plaId.')">Detalle</button>
@@ -98,7 +104,7 @@ $asunto = $_POST['asunto'];
 				';
 			}
 		}else{
-			$html .= '<tr><td colspan="9" class="text-center" style="font-weight:bold;font-size:20px;">Sin Resultados</td></tr>';
+			$html .= '<tr><td colspan="8" class="text-center" style="font-weight:bold;font-size:20px;">Sin Resultados</td></tr>';
 		}
 
 		$html .= '
@@ -266,6 +272,7 @@ $asunto = $_POST['asunto'];
 		$inicioMes = $fecha . "-01";
 		$ultimoDia = date("t", strtotime($inicioMes));
 		$finMes = $fecha . "-" . $ultimoDia;
+		//$sql1 = "SELECT * FROM usuarios WHERE estado = 'Activo'";
 		$sql1 = "SELECT * FROM usuarios WHERE estado = 'Activo'";
 		$proceso1 = mysqli_query($conexion,$sql1);
 		$contador1 = mysqli_num_rows($proceso1);
@@ -284,20 +291,44 @@ $asunto = $_POST['asunto'];
 			$pagoDiaFeriado = $pagoAlDia*2;
 			$pagoHora = round($pagoAlDia/8,2);
 			$pagoHoraExtra = round($pagoHora*1.5,2);
-			$diasNoTrabajados = diasNoLaborados($conexion,$usuarioId,$inicioMes,$finMes);
-			$calculoDiasNoTrabajados = $diasNoTrabajados*$pagoAlDia;
+			$diasTrabajados = diasLaborados($conexion,$usuarioId,$inicioMes,$finMes);
+			$diasMesDiferencia = $diasTrabajados["diasMesDiferencia"];
+			$diasLaborados = $diasTrabajados["diasLaborados"];
+			//$diasNoTrabajados = diasNoLaborados($conexion,$usuarioId,$inicioMes,$finMes);
+			//$calculoDiasNoTrabajados = $diasNoTrabajados*$pagoAlDia;
+
 			$horasExtras = horasExtras($conexion,$usuarioId,$inicioMes,$finMes);
 			$calculoHorasExtras = $horasExtras*$pagoHoraExtra;
 			$diasFeriadosLaborados = diasFeriados($conexion,$usuarioId,$inicioMes,$finMes);
 			$calculoDiasFeriadosLaborados = $diasFeriadosLaborados*$pagoDiaFeriado;
 			$montoAguinaldo = aguinaldo($conexion,$usuarioId,$anio,$mes);
-			$total = (($pagoAlDia*30)-$calculoDiasNoTrabajados)+$calculoHorasExtras+$calculoDiasFeriadosLaborados+$montoAguinaldo;
+			$permisosHorasSinGoce = permisosSinGoce($conexion,$usuarioId,$inicioMes,$finMes);
+			$calculoHorasSinGoce = $pagoHora*$permisosHorasSinGoce;
+
+			if($diasMesDiferencia>0 and $diasLaborados>0){
+				$diasLaborados += $diasMesDiferencia;
+			}else if($diasLaborados>30){
+				$diasLaborados = 30;
+			}
+
+			$pagoDiasLaborados = $diasLaborados*$pagoAlDia;
+
+			if($pagoDiasLaborados==0){
+				$calculoHorasSinGoce = 0;
+			}
+
+			$subTotal = ($pagoDiasLaborados+$calculoHorasExtras+$calculoDiasFeriadosLaborados);
+			$total = $subTotal-$calculoHorasSinGoce;
+
 			//seguro social
-			$ccss = round(($total*9.34)/100,2);
+			$ccss = round(($total*10.5)/100,2);
 			//impuesto sobre la renta
 			$isr = isr(round($total,2));
 			$total = round($total-($ccss+$isr),2);
-			$sql2 = "INSERT INTO planillas (usuarioId,fecha,diasNoLaborados,pagoDia,pagoHora,horasExtras,diasFeriadosLaborados,aguinaldos,total,estatus,ccss,isr) VALUES ($usuarioId,'$finMes',$diasNoTrabajados,'$pagoAlDia','$pagoHora',$horasExtras,$diasFeriadosLaborados,'$montoAguinaldo','$total',0,'$ccss','$isr')";
+
+			$total += $montoAguinaldo;
+
+			$sql2 = "INSERT INTO planillas (usuarioId,fecha,pagoDia,pagoHora,horasExtras,diasFeriadosLaborados,aguinaldos,subTotal,total,estatus,ccss,isr) VALUES ($usuarioId,'$finMes','$pagoAlDia','$pagoHora',$horasExtras,$diasFeriadosLaborados,'$montoAguinaldo','$subTotal','$total',0,'$ccss','$isr')";
 			$proceso2 = mysqli_query($conexion,$sql2);
 		}
 		$datos = [
@@ -342,14 +373,13 @@ $asunto = $_POST['asunto'];
 
 	if($asunto=='detalle'){
 		$id = $_POST['id'];
-		$sql1 = "SELECT pla.id as plaId, pla.ccss, pla.isr, pla.diasNoLaborados, pla.horasExtras, pla.diasFeriadosLaborados, pla.aguinaldos, pla.total, usu.nombre, usu.apellido, usu.cedula, usu.salario, usu.id as usuarioId
+		$sql1 = "SELECT pla.id as plaId, pla.ccss, pla.isr, pla.horasExtras, pla.diasFeriadosLaborados, pla.aguinaldos, pla.total, usu.nombre, usu.apellido, usu.cedula, usu.salario, usu.id as usuarioId
 		FROM planillas pla 
 		INNER JOIN usuarios usu
 		ON pla.usuarioId = usu.id 
 		WHERE pla.id = $id";
 		$proceso1 = mysqli_query($conexion,$sql1);
 		while($row1=mysqli_fetch_array($proceso1)){
-			$diasNoLaborados = $row1['diasNoLaborados'];
 			$horasExtras = $row1['horasExtras'];
 			$diasFeriadosLaborados = $row1['diasFeriadosLaborados'];
 			$aguinaldos = $row1['aguinaldos'];
@@ -363,7 +393,6 @@ $asunto = $_POST['asunto'];
 		}
 		$datos = [
 			"estatus"	=> "ok",
-			"diasNoLaborados"	=> $diasNoLaborados,
 			"horasExtras"	=> $horasExtras,
 			"diasFeriadosLaborados"	=> $diasFeriadosLaborados,
 			"aguinaldos"	=> $aguinaldos,
@@ -388,6 +417,23 @@ $asunto = $_POST['asunto'];
 		$contador1 = mysqli_num_rows($proceso1);
 		$diasNoLaborados = ($diferenciaDias-$contador1);
 		return $diasNoLaborados;
+	}
+
+	function diasLaborados($conexion,$usuarioId,$inicioMes,$finMes){
+		$fechaInicio = new DateTime($inicioMes);
+		$fechaFin = new DateTime($finMes);
+		$diferencia = $fechaInicio->diff($fechaFin);
+		$diasMes = ($diferencia->days)+1;
+		$sql1 = "SELECT * FROM turnos WHERE usuarioId = $usuarioId and fechaInicio BETWEEN '$inicioMes' AND '$finMes' and tipo = 'Entrada'";
+		$proceso1 = mysqli_query($conexion,$sql1);
+		$contador1 = mysqli_num_rows($proceso1);
+		$diasLaborados = $contador1;
+		$diasMesDiferencia = 30-$diasMes;
+		$datos = [
+			"diasMesDiferencia"	=> $diasMesDiferencia,
+			"diasLaborados"	=> $diasLaborados,
+		];
+		return $datos;
 	}
 
 	function horasExtras($conexion,$usuarioId,$inicioMes,$finMes){
@@ -466,6 +512,21 @@ $asunto = $_POST['asunto'];
 			$resultado = ($total*25)/100;
 		}
 		return $resultado;
+	}
+
+	function permisosSinGoce($conexion,$usuarioId,$inicioMes,$finMes){
+		$horasRestar = 0;
+		$sql1 = "SELECT * FROM permisosLaborales WHERE usuarioId = $usuarioId and tipo = 'Sin goce de salario' and fechaInicio BETWEEN '$inicioMes' AND '$finMes' and estatus = 1";
+		$proceso1 = mysqli_query($conexion,$sql1);
+		$contador1 = mysqli_num_rows($proceso1);
+		if($contador1>0){
+			while($row1=mysqli_fetch_array($proceso1)){
+				$horaInicio = $row1["horaInicio"];
+				$horaFin = $row1["horaFin"];
+				$horasRestar -= diferenciaHoras($horaInicio,$horaFin);
+			}
+		}
+		return abs($horasRestar);
 	}
 
 

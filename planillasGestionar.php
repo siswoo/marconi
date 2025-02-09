@@ -124,10 +124,6 @@ if (!isset($_SESSION['marconiId'])) {
                                 <input type="text" id="cedula1" name="cedula1" class="form-control" readonly>
                             </div>
                             <div class="col-md-6 form-group form-check">
-                                <label for="diasNoLaborados1" style="font-weight: bold;">No laborados</label>
-                                <input type="text" id="diasNoLaborados1" name="diasNoLaborados1" class="form-control" readonly>
-                            </div>
-                            <div class="col-md-6 form-group form-check">
                                 <label for="horasExtras1" style="font-weight: bold;">Horas Extras</label>
                                 <input type="text" id="horasExtras1" name="horasExtras1" class="form-control" readonly>
                             </div>
@@ -151,7 +147,7 @@ if (!isset($_SESSION['marconiId'])) {
                                 <label for="isr1" style="font-weight: bold;">Isr</label>
                                 <input type="text" id="isr1" name="isr1" class="form-control" readonly>
                             </div>
-                            <div class="col-md-12 form-group form-check">
+                            <div class="col-md-6 form-group form-check">
                                 <label for="total1" style="font-weight: bold;">Total</label>
                                 <input type="text" id="total1" name="total1" class="form-control" readonly>
                             </div>
@@ -382,7 +378,6 @@ if (!isset($_SESSION['marconiId'])) {
                 $('#nombre1').val(respuesta['nombre']);
                 $('#apellido1').val(respuesta['apellido']);
                 $('#cedula1').val(respuesta['cedula']);
-                $('#diasNoLaborados1').val(respuesta['diasNoLaborados']);
                 $('#horasExtras1').val(respuesta['horasExtras']);
                 $('#feriados1').val(respuesta['diasFeriadosLaborados']);
                 $('#aguinaldos1').val(respuesta['aguinaldos']);

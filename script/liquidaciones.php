@@ -363,11 +363,11 @@ $asunto = $_POST['asunto'];
 			exit;
 		}
 
-		if($value=="Despido con justa causa" or $value="Renuncia voluntaria"){
+		if($value=="Despido con justa causa" or $value=="Renuncia voluntaria"){
 			$pagoSalario = true;
 			$pagoVacaciones = true;
 			$pagoAguinaldo = true;
-		}else if($value=="Despido sin justa causa" or $value="Despido justificada"){
+		}else if($value=="Despido sin justa causa" or $value=="Despido justificada"){
 			$pagoSalario = true;
 			$pagoVacaciones = true;
 			$pagoAguinaldo = true;
@@ -515,16 +515,18 @@ $asunto = $_POST['asunto'];
 		$date2 = new DateTime($fechaIngreso);
 		$diff = $date1->diff($date2);
 		$mesesDiferencia = ($diff->y * 12) + $diff->m;
-		if($mesesDiferencia>3 and $mesesDiferencia<=12){
-			$cesantia = ($pagoAlDia*7)*$mesesDiferencia;
-		}else if($mesesDiferencia>12){
-			if($mesesDiferencia>96){
-				$mesesDiferencia = 96;
+		$aniosDiferencia = $mesesDiferencia/12;
+		if($mesesDiferencia<12){
+			$cesantia = $mesesDiferencia*($pagoAlDia*1.66);
+		}else if($mesesDiferencia>=12 and $mesesDiferencia<=60){
+			$cesantia = $aniosDiferencia*($pagoAlDia*20);
+		}else if($mesesDiferencia>60){
+			if($aniosDiferencia>8){
+				$aniosDiferencia = 8;
 			}
-			$cesantia = ($pagoAlDia*19.5)*$mesesDiferencia;
-			$cesantia = ($pagoAlDia*7)*$mesesDiferencia;
+			$cesantia = $aniosDiferencia*($pagoAlDia*10);
 		}
-		return $cesantia;
+		return round($cesantia,2);
 	}
 
 

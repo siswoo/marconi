@@ -158,8 +158,8 @@ if (!isset($_SESSION['marconiId'])) {
                                 <input type="text" id="cesantias1" name="cesantias1" class="form-control" readonly>
                             </div>
                             <div class="col-md-6 form-group form-check">
-                                <label for="vacaciones" style="font-weight: bold;">Total</label>
-                                <input type="text" id="vacaciones" name="vacaciones" class="form-control" readonly>
+                                <label for="total1" style="font-weight: bold;">Total</label>
+                                <input type="text" id="total1" name="total1" class="form-control" readonly>
                             </div>
                         </div>
                     </div>
@@ -462,7 +462,7 @@ if (!isset($_SESSION['marconiId'])) {
                 "fecha": fecha,
                 "value": value,
                 "asunto": "calcular",
-            },
+            }, 
 
             success: function(respuesta) {
                 console.log(respuesta);
