@@ -358,18 +358,18 @@ $asunto = $_POST['tipo'];
 		$hojaActiva = $excel->getActiveSheet();
 		$hojaActiva->setCellValue('A1','Nombre');
 		$hojaActiva->setCellValue('B1','Cedula');
-		$hojaActiva->setCellValue('C1','Enero');
-		$hojaActiva->setCellValue('D1','Febrero');
-		$hojaActiva->setCellValue('E1','Marzo');
-		$hojaActiva->setCellValue('F1','Abril');
-		$hojaActiva->setCellValue('G1','Mayo');
-		$hojaActiva->setCellValue('H1','Junio');
-		$hojaActiva->setCellValue('I1','Julio');
-		$hojaActiva->setCellValue('J1','Agosto');
-		$hojaActiva->setCellValue('K1','Septiembre');
-		$hojaActiva->setCellValue('L1','Octubre');
-		$hojaActiva->setCellValue('M1','Noviembre');
-		$hojaActiva->setCellValue('N1','Diciembre');
+		$hojaActiva->setCellValue('C1','Diciembre');
+		$hojaActiva->setCellValue('D1','Enero');
+		$hojaActiva->setCellValue('E1','Febrero');
+		$hojaActiva->setCellValue('F1','Marzo');
+		$hojaActiva->setCellValue('G1','Abril');
+		$hojaActiva->setCellValue('H1','Mayo');
+		$hojaActiva->setCellValue('I1','Junio');
+		$hojaActiva->setCellValue('J1','Julio');
+		$hojaActiva->setCellValue('K1','Agosto');
+		$hojaActiva->setCellValue('L1','Septiembre');
+		$hojaActiva->setCellValue('M1','Octubre');
+		$hojaActiva->setCellValue('N1','Noviembre');
 		$fila = 2;
 		$sql1 = "SELECT * FROM usuarios";
 		$proceso1 = mysqli_query($conexion,$sql1);
@@ -385,13 +385,15 @@ $asunto = $_POST['tipo'];
 				$hojaActiva->setCellValue('B'.$fila,$cedula);
 
 				for ($i=1;$i<=12;$i++) { 
-					
-					if($i<10){
-						$mesInicio = $anio."-0".$i."-01";
-						$mesFin = $anio."-0".$i."-31";
+					if($i==1){
+						$mesInicio = ($anio-1)."-12"."-01";
+						$mesFin = ($anio-1)."-12-31";
+					}else if($i<=10){
+						$mesInicio = $anio."-0".($i-1)."-01";
+						$mesFin = $anio."-0".($i-1)."-31";
 					}else{
-						$mesInicio = $anio."-0".$i."-01";
-						$mesFin = $anio."-".$i."-31";
+						$mesInicio = $anio."-0".($i-1)."-01";
+						$mesFin = $anio."-".($i-1)."-31";
 					}
 
 					$sql2 = "SELECT * FROM planillas WHERE usuarioId = $usuarioId and fecha BETWEEN '$mesInicio' AND '$mesFin'";
