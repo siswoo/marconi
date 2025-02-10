@@ -55,7 +55,8 @@ INSERT INTO submodulos (nombre,idModulo,link) VALUES
 ('Gestionar',4,'vacacionesGestionar.php'),
 ('Gestionar',5,'incapacidadesGestionar.php'),
 ('Gestionar',6,'liquidacionesGestionar.php'),
-('Gestionar',7,'planillasGestionar.php');
+('Gestionar',7,'planillasGestionar.php'),
+('Gestionar',8,'reportesGestionar.php');
 
 DROP TABLE IF EXISTS modulos;
 CREATE TABLE modulos (
@@ -71,7 +72,8 @@ INSERT INTO modulos (nombre) VALUES
 ('Vacaciones'),
 ('Incapacidades'),
 ('Liquidaciones'),
-('Planillas');
+('Planillas'),
+('Reportes');
 
 DROP TABLE IF EXISTS permisos;
 CREATE TABLE permisos (
@@ -91,7 +93,8 @@ INSERT INTO permisos (rolId,submoduloId) VALUES
 (1,5),
 (2,5),
 (1,6),
-(1,7);
+(1,7),
+(1,8);
 
 DROP TABLE IF EXISTS turnos;
 CREATE TABLE turnos (
@@ -185,5 +188,4 @@ CREATE TABLE liquidaciones (
 	estatus BOOLEAN DEFAULT 0,
 	PRIMARY KEY (id)
 ); ALTER TABLE liquidaciones CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;
-
 
