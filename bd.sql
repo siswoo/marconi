@@ -19,6 +19,7 @@ CREATE TABLE usuarios (
 	usuario VARCHAR(250) NOT NULL,
 	nombre VARCHAR(250) NOT NULL,
 	apellido VARCHAR(250) NOT NULL,
+	apellido2 VARCHAR(250) NOT NULL,
 	cedula VARCHAR(250) NOT NULL,
 	fechaNacimiento DATE NOT NULL,
 	genero VARCHAR(250) NOT NULL,
@@ -32,12 +33,14 @@ CREATE TABLE usuarios (
 	cargo VARCHAR(250) NOT NULL,
 	estado VARCHAR(250) DEFAULT 'Activo',
 	rol INT NOT NULL,
+	horarios INT NOT NULL,
 	PRIMARY KEY (id),
-	FOREIGN KEY (rol) REFERENCES roles (id) ON DELETE CASCADE ON UPDATE CASCADE
+	FOREIGN KEY (rol) REFERENCES roles (id) ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (horarios) REFERENCES horarios (id) ON DELETE CASCADE ON UPDATE CASCADE
 ); ALTER TABLE usuarios CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
-INSERT INTO usuarios (usuario,nombre,apellido,password,rol) VALUES 
-('admin','Juan','Maldonado','d964173dc44da83eeafa3aebbee9a1a0',1);
+INSERT INTO usuarios (usuario,nombre,apellido,password,rol,horarios) VALUES 
+('admin','Juan','Maldonado','d964173dc44da83eeafa3aebbee9a1a0',1,1);
 
 DROP TABLE IF EXISTS submodulos;
 CREATE TABLE submodulos (
@@ -189,3 +192,14 @@ CREATE TABLE liquidaciones (
 	PRIMARY KEY (id)
 ); ALTER TABLE liquidaciones CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
+DROP TABLE IF EXISTS horarios;
+CREATE TABLE horarios (
+	id INT AUTO_INCREMENT,
+	entrada TIME NOT NULL,
+	salida TIME NOT NULL,
+	entradaMaxima TIME NOT NULL,
+	PRIMARY KEY (id)
+); ALTER TABLE horarios CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+
+INSERT INTO horarios (entrada,salida,entradaMaxima) VALUES 
+('09:00:00','17:00:00','09:15:00');

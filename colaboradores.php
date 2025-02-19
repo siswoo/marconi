@@ -120,11 +120,15 @@ if (!isset($_SESSION['marconiId'])) {
                         <div class="row">
                             <div class="col-md-6 form-group form-check">
                                 <label for="nombre1" style="font-weight: bold;">Nombre *</label>
-                                <input type="text" id="nombre1" name="nombre1" class="form-control" oninput="soloLetras(this)" autocomplete="off" required>
+                                <input type="text" id="nombre1" name="nombre1" class="form-control" oninput="soloLetras(this); limpiarEspacios(this)" autocomplete="off" required>
                             </div>
                             <div class="col-md-6 form-group form-check">
                                 <label for="apellido1" style="font-weight: bold;">Apellido *</label>
-                                <input type="text" id="apellido1" name="apellido1" class="form-control" oninput="soloLetras(this)" autocomplete="off" required>
+                                <input type="text" id="apellido1" name="apellido1" class="form-control" oninput="soloLetras(this); limpiarEspacios(this)" autocomplete="off" required>
+                            </div>
+                            <div class="col-md-6 form-group form-check">
+                                <label for="apellido1_2" style="font-weight: bold;">Segundo Apellido *</label>
+                                <input type="text" id="apellido1_2" name="apellido1_2" class="form-control" oninput="soloLetras(this); limpiarEspacios(this)" autocomplete="off" required>
                             </div>
                             <div class="col-md-6 form-group form-check">
                                 <label for="cedula1" style="font-weight: bold;">Cédula *</label>
@@ -132,12 +136,12 @@ if (!isset($_SESSION['marconiId'])) {
                             </div>
                             <div class="col-md-6 form-group form-check">
                                 <label for="fechaNacimiento1" style="font-weight: bold;">Fecha Nacimiento *</label>
-                                <input type="date" id="fechaNacimiento1" name="fechaNacimiento1" class="form-control" autocomplete="off">
+                                <input type="date" id="fechaNacimiento1" name="fechaNacimiento1" class="form-control" autocomplete="off" required>
                             </div>
                             <div class="col-md-6 form-group form-check">
                                 <label for="genero1" style="font-weight: bold;">Género *</label>
                                 <select class="form-control" name="genero1" id="genero1" required>
-                                    <option>Seleccione</option>
+                                    <option value="">Seleccione</option>
                                     <option value="Masculino">Masculino</option>
                                     <option value="Femenino">Femenino</option>
                                 </select>
@@ -146,17 +150,17 @@ if (!isset($_SESSION['marconiId'])) {
                                 <label for="telefono1" style="font-weight: bold;">Teléfono *</label>
                                 <input type="number" id="telefono1" name="telefono1" oninput="soloNumeros(this)" class="form-control" autocomplete="off" required>
                             </div>
-                            <div class="col-md-12 form-group form-check">
+                            <div class="col-md-6 form-group form-check">
                                 <label for="correo1" style="font-weight: bold;">Correo *</label>
-                                <input type="email" id="correo1" name="correo1" class="form-control" autocomplete="off">
+                                <input type="email" id="correo1" name="correo1" class="form-control" autocomplete="off" required>
                             </div>
                             <div class="col-md-12 form-group form-check">
-                                <label for="direccion1" style="font-weight: bold;">Dirección</label>
-                                <textarea id="direccion1" name="direccion1" class="form-control" autocomplete="off"></textarea>
+                                <label for="direccion1" style="font-weight: bold;">Dirección *</label>
+                                <textarea id="direccion1" name="direccion1" class="form-control" autocomplete="off" required></textarea>
                             </div>
                             <div class="col-md-6 form-group form-check">
-                                <label for="fechaIngreso1" style="font-weight: bold;">Fecha Ingreso</label>
-                                <input type="date" id="fechaIngreso1" name="fechaIngreso1" class="form-control" autocomplete="off">
+                                <label for="fechaIngreso1" style="font-weight: bold;">Fecha Ingreso *</label>
+                                <input type="date" id="fechaIngreso1" name="fechaIngreso1" class="form-control" autocomplete="off" required>
                             </div>
                             <div class="col-md-6 form-group form-check">
                                 <label for="salario1" style="font-weight: bold;">Salario *</label>
@@ -169,10 +173,16 @@ if (!isset($_SESSION['marconiId'])) {
                             <div class="col-md-6 form-group form-check">
                                 <label for="cargo1" style="font-weight: bold;">Cargo *</label>
                                 <select class="form-control" name="cargo1" id="cargo1" required>
-                                    <option>Seleccione</option>
+                                    <option value="">Seleccione</option>
                                     <option value="Cargo1">Cargo1</option>
                                     <option value="Cargo2">Cargo2</option>
                                     <option value="Cargo3">Cargo3</option>
+                                </select>
+                            </div>
+                            <div class="col-md-12 form-group form-check">
+                                <label for="horarios1" style="font-weight: bold;">Horarios *</label>
+                                <select class="form-control" name="horarios1" id="horarios1" required>
+                                    <option value="">Seleccione</option>
                                 </select>
                             </div>
                         </div>
@@ -202,11 +212,15 @@ if (!isset($_SESSION['marconiId'])) {
                         <div class="row">
                             <div class="col-md-6 form-group form-check">
                                 <label for="nombre2" style="font-weight: bold;">Nombre *</label>
-                                <input type="text" id="nombre2" name="nombre2" class="form-control" oninput="soloLetras(this)" autocomplete="off" required>
+                                <input type="text" id="nombre2" name="nombre2" class="form-control" oninput="soloLetras(this); limpiarEspacios(this)" autocomplete="off" required>
                             </div>
                             <div class="col-md-6 form-group form-check">
                                 <label for="apellido2" style="font-weight: bold;">Apellido *</label>
-                                <input type="text" id="apellido2" name="apellido2" class="form-control" oninput="soloLetras(this)" autocomplete="off" required>
+                                <input type="text" id="apellido2" name="apellido2" class="form-control" oninput="soloLetras(this); limpiarEspacios(this)" autocomplete="off" required>
+                            </div>
+                            <div class="col-md-6 form-group form-check">
+                                <label for="apellido2_2" style="font-weight: bold;">Segundo Apellido *</label>
+                                <input type="text" id="apellido2_2" name="apellido2_2" class="form-control" oninput="soloLetras(this); limpiarEspacios(this)" autocomplete="off" required>
                             </div>
                             <div class="col-md-6 form-group form-check">
                                 <label for="cedula2" style="font-weight: bold;">Cédula *</label>
@@ -219,7 +233,7 @@ if (!isset($_SESSION['marconiId'])) {
                             <div class="col-md-6 form-group form-check">
                                 <label for="genero2" style="font-weight: bold;">Género *</label>
                                 <select class="form-control" name="genero2" id="genero2" required>
-                                    <option>Seleccione</option>
+                                    <option value="">Seleccione</option>
                                     <option value="Masculino">Masculino</option>
                                     <option value="Femenino">Femenino</option>
                                 </select>
@@ -228,17 +242,17 @@ if (!isset($_SESSION['marconiId'])) {
                                 <label for="telefono2" style="font-weight: bold;">Teléfono *</label>
                                 <input type="number" id="telefono2" name="telefono2" oninput="soloNumeros(this)" class="form-control" autocomplete="off" required>
                             </div>
-                            <div class="col-md-12 form-group form-check">
+                            <div class="col-md-6 form-group form-check">
                                 <label for="correo2" style="font-weight: bold;">Correo *</label>
-                                <input type="email" id="correo2" name="correo2" class="form-control" autocomplete="off">
+                                <input type="email" id="correo2" name="correo2" class="form-control" autocomplete="off" required>
                             </div>
                             <div class="col-md-12 form-group form-check">
-                                <label for="direccion2" style="font-weight: bold;">Dirección</label>
-                                <textarea id="direccion2" name="direccion2" class="form-control" autocomplete="off"></textarea>
+                                <label for="direccion2" style="font-weight: bold;">Dirección *</label>
+                                <textarea id="direccion2" name="direccion2" class="form-control" autocomplete="off" required></textarea>
                             </div>
                             <div class="col-md-6 form-group form-check">
-                                <label for="fechaIngreso2" style="font-weight: bold;">Fecha Ingreso</label>
-                                <input type="date" id="fechaIngreso2" name="fechaIngreso2" class="form-control" autocomplete="off">
+                                <label for="fechaIngreso2" style="font-weight: bold;">Fecha Ingreso *</label>
+                                <input type="date" id="fechaIngreso2" name="fechaIngreso2" class="form-control" autocomplete="off" required>
                             </div>
                             <div class="col-md-6 form-group form-check">
                                 <label for="fechaRetiro2" style="font-weight: bold;">Fecha Retiro</label>
@@ -251,7 +265,7 @@ if (!isset($_SESSION['marconiId'])) {
                             <div class="col-md-6 form-group form-check">
                                 <label for="cargo2" style="font-weight: bold;">Cargo *</label>
                                 <select class="form-control" name="cargo2" id="cargo2" required>
-                                    <option>Seleccione</option>
+                                    <option value="">Seleccione</option>
                                     <option value="Cargo1">Cargo1</option>
                                     <option value="Cargo2">Cargo2</option>
                                     <option value="Cargo3">Cargo3</option>
@@ -260,6 +274,12 @@ if (!isset($_SESSION['marconiId'])) {
                             <div class="col-md-12 form-group form-check">
                                 <label for="password2" style="font-weight: bold;">Contraseña</label>
                                 <input type="password" id="password2" name="password2" class="form-control" autocomplete="off" >
+                            </div>
+                            <div class="col-md-12 form-group form-check">
+                                <label for="horarios2" style="font-weight: bold;">Horarios *</label>
+                                <select class="form-control" name="horarios2" id="horarios2" required>
+                                    <option value="">Seleccione</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -276,6 +296,7 @@ if (!isset($_SESSION['marconiId'])) {
 <script type="text/javascript">
     $(document).ready(function() {
         filtrar1();
+        iniciarHorarios();
     });
 
     function paginacion1(value){
@@ -338,6 +359,7 @@ if (!isset($_SESSION['marconiId'])) {
                 $('#hiddenId').val(id);
                 $('#nombre2').val(respuesta["nombre"]);
                 $('#apellido2').val(respuesta["apellido"]);
+                $('#apellido2_2').val(respuesta["apellido2"]);
                 $('#cedula2').val(respuesta["cedula"]);
                 $('#fechaNacimiento2').val(respuesta["fechaNacimiento"]);
                 $('#genero2').val(respuesta["genero"]);
@@ -349,6 +371,7 @@ if (!isset($_SESSION['marconiId'])) {
                 $('#salario2').val(respuesta["salario"]);
                 $('#password2').val("");
                 $('#cargo2').val(respuesta["cargo"]);
+                $('#horarios2').val(respuesta["horarios"]);
             },
 
             error: function(respuesta) {
@@ -383,6 +406,7 @@ if (!isset($_SESSION['marconiId'])) {
         e.preventDefault();
         var nombre = $('#nombre1').val();
         var apellido = $('#apellido1').val();
+        var apellido1_2 = $('#apellido1_2').val();
         var cedula = $('#cedula1').val();
         var fechaNacimiento = $('#fechaNacimiento1').val();
         var genero = $('#genero1').val();
@@ -393,6 +417,7 @@ if (!isset($_SESSION['marconiId'])) {
         var salario = $('#salario1').val();
         var password = $('#password1').val();
         var cargo = $('#cargo1').val();
+        var horarios = $('#horarios1').val();
         var validarTelefono = primerNumero(telefono);
         if(validarTelefono>=2 && validarTelefono!=3 && validarTelefono<=8){}else{
             Swal.fire({
@@ -414,10 +439,10 @@ if (!isset($_SESSION['marconiId'])) {
             });
             return false;
         }
-        if(telefono.length != 8){
+        if(telefono.length < 9 || telefono.length > 12){
             Swal.fire({
                 title: 'Info',
-                text: "Teléfono debe tener ocho caracteres",
+                text: "Teléfono debe tener entre 9 a 12 caracteres",
                 icon: 'info',
                 position: 'center',
                 timer: 5000
@@ -431,6 +456,7 @@ if (!isset($_SESSION['marconiId'])) {
             data: {
                 "nombre": nombre,
                 "apellido": apellido,
+                "apellido1_2": apellido1_2,
                 "cedula": cedula,
                 "fechaNacimiento": fechaNacimiento,
                 "genero": genero,
@@ -441,6 +467,7 @@ if (!isset($_SESSION['marconiId'])) {
                 "salario": salario,
                 "password": password,
                 "cargo": cargo,
+                "horarios": horarios,
                 "asunto": "crear",
             },
 
@@ -489,6 +516,7 @@ if (!isset($_SESSION['marconiId'])) {
         var id = $('#hiddenId').val();
         var nombre = $('#nombre2').val();
         var apellido = $('#apellido2').val();
+        var apellido2_2 = $('#apellido2_2').val();
         var cedula = $('#cedula2').val();
         var fechaNacimiento = $('#fechaNacimiento2').val();
         var genero = $('#genero2').val();
@@ -499,6 +527,7 @@ if (!isset($_SESSION['marconiId'])) {
         var salario = $('#salario2').val();
         var password = $('#password2').val();
         var cargo = $('#cargo2').val();
+        var horarios = $('#horarios2').val();
         if(salario<=0){
             Swal.fire({
                 title: 'Info',
@@ -509,10 +538,10 @@ if (!isset($_SESSION['marconiId'])) {
             });
             return false;
         }
-        if(telefono.length != 8){
+        if(telefono.length < 9 || telefono.length > 12){
             Swal.fire({
                 title: 'Info',
-                text: "Teléfono debe tener ocho caracteres",
+                text: "Teléfono debe tener entre 9 a 12 caracteres",
                 icon: 'info',
                 position: 'center',
                 timer: 5000
@@ -527,6 +556,7 @@ if (!isset($_SESSION['marconiId'])) {
                 "id": id,
                 "nombre": nombre,
                 "apellido": apellido,
+                "apellido2_2": apellido2_2,
                 "cedula": cedula,
                 "fechaNacimiento": fechaNacimiento,
                 "genero": genero,
@@ -537,6 +567,7 @@ if (!isset($_SESSION['marconiId'])) {
                 "salario": salario,
                 "password": password,
                 "cargo": cargo,
+                "horarios": horarios,
                 "asunto": "modificar_guardar",
             },
 
@@ -591,6 +622,31 @@ if (!isset($_SESSION['marconiId'])) {
     function primerNumero(cadena) {
         let match = cadena.match(/\d/);
         return match ? match[0] : null;
+    }
+
+    function limpiarEspacios(input) {
+        input.value = input.value.replace(/^\s+|\s+$/g, '').replace(/\s{2,}/g, ' ');
+    }
+
+    function iniciarHorarios(){
+        $.ajax({
+            type: 'POST',
+            url: 'script/horarios.php',
+            dataType: "JSON",
+            data: {
+                "asunto": "listar",
+            },
+
+            success: function(respuesta) {
+                console.log(respuesta);
+                $('#horarios1').html(respuesta["options"]);
+                $('#horarios2').html(respuesta["options"]);
+            },
+
+            error: function(respuesta) {
+                console.log(respuesta['responseText']);
+            }
+        });
     }
 
 

@@ -265,6 +265,7 @@ $asunto = $_POST['asunto'];
 	if($asunto=='crear'){
 		$nombre = $_POST['nombre'];
 		$apellido = $_POST['apellido'];
+		$apellido1_2 = $_POST['apellido1_2'];
 		$cedula = $_POST['cedula'];
 		$fechaNacimiento = $_POST['fechaNacimiento'];
 		$genero = $_POST['genero'];
@@ -275,6 +276,7 @@ $asunto = $_POST['asunto'];
 		$salario = $_POST['salario'];
 		$password = md5($_POST['password']);
 		$cargo = $_POST['cargo'];
+		$horarios = $_POST['horarios'];
 		$usuario = $cedula;
 
 		$sql3 = "SELECT * FROM usuarios WHERE cedula = '$cedula'";
@@ -289,7 +291,7 @@ $asunto = $_POST['asunto'];
 			exit;
 		}
 		
-		$sql1 = "INSERT INTO usuarios (nombre,usuario,apellido,cedula,fechaNacimiento,genero,telefono,correo,direccion,fechaIngreso,salario,password,cargo,rol) VALUES ('$nombre','$usuario','$apellido','$cedula','$fechaNacimiento','$genero','$telefono','$correo','$direccion','$fechaIngreso',$salario,'$password','$cargo',2)";
+		$sql1 = "INSERT INTO usuarios (nombre,usuario,apellido,apellido2,cedula,fechaNacimiento,genero,telefono,correo,direccion,fechaIngreso,salario,password,cargo,rol,horarios) VALUES ('$nombre','$usuario','$apellido','$apellido1_2','$cedula','$fechaNacimiento','$genero','$telefono','$correo','$direccion','$fechaIngreso',$salario,'$password','$cargo',2,horarios)";
 		$proceso1 = mysqli_query($conexion,$sql1);
 
 		$datos = [
@@ -326,6 +328,7 @@ $asunto = $_POST['asunto'];
 			while($row1=mysqli_fetch_array($proceso1)){
 				$nombre = $row1["nombre"];
 				$apellido = $row1["apellido"];
+				$apellido2 = $row1["apellido2"];
 				$cedula = $row1["cedula"];
 				$fechaNacimiento = $row1["fechaNacimiento"];
 				$genero = $row1["genero"];
@@ -336,11 +339,13 @@ $asunto = $_POST['asunto'];
 				$salario = $row1["salario"];
 				$password = $row1["password"];
 				$cargo = $row1["cargo"];
+				$horarios = $row1["horarios"];
 			}
 			$datos = [
 				"estatus"	=> "ok",
 				"nombre"	=> $nombre,
 				"apellido"	=> $apellido,
+				"apellido2"	=> $apellido2,
 				"cedula"		=> $cedula,
 				"fechaNacimiento"	=> $fechaNacimiento,
 				"genero"	=> $genero,
@@ -351,6 +356,7 @@ $asunto = $_POST['asunto'];
 				"salario"	=> $salario,
 				"password"	=> $password,
 				"cargo"		=> $cargo,
+				"horarios"		=> $horarios,
 			];
 			echo json_encode($datos);
 		}
@@ -360,6 +366,7 @@ $asunto = $_POST['asunto'];
 		$id = $_POST['id'];
 		$nombre = $_POST['nombre'];
 		$apellido = $_POST['apellido'];
+		$apellido2_2 = $_POST['apellido2_2'];
 		$cedula = $_POST['cedula'];
 		$fechaNacimiento = $_POST['fechaNacimiento'];
 		$genero = $_POST['genero'];
@@ -368,6 +375,7 @@ $asunto = $_POST['asunto'];
 		$direccion = $_POST['direccion'];
 		$fechaIngreso = $_POST['fechaIngreso'];
 		$salario = $_POST['salario'];
+		$horarios = $_POST['horarios'];
 		if($_POST['password']!=""){
 			$password = md5($_POST['password']);
 			$password = "password = '$password',";
@@ -377,7 +385,7 @@ $asunto = $_POST['asunto'];
 		$cargo = $_POST['cargo'];
 		$usuario = $cedula;
 
-		$sql1 = "UPDATE usuarios SET nombre = '$nombre', usuario = '$usuario', apellido = '$apellido', cedula = '$cedula', fechaNacimiento = '$fechaNacimiento', genero = '$genero', telefono = '$telefono', correo = '$correo', direccion = '$direccion', fechaIngreso = '$fechaIngreso', salario = $salario, $password cargo = '$cargo' WHERE id = ".$id;
+		$sql1 = "UPDATE usuarios SET nombre = '$nombre', usuario = '$usuario', apellido = '$apellido', apellido2 = '$apellido2_2', cedula = '$cedula', fechaNacimiento = '$fechaNacimiento', genero = '$genero', telefono = '$telefono', correo = '$correo', direccion = '$direccion', fechaIngreso = '$fechaIngreso', salario = $salario, $password cargo = '$cargo', horarios = $horarios WHERE id = ".$id;
 		$proceso1 = mysqli_query($conexion,$sql1);
 		$datos = [
 			"estatus"	=> "ok",
@@ -392,7 +400,7 @@ $asunto = $_POST['asunto'];
 		$proceso1 = mysqli_query($conexion,$sql1);
 		while ($row1 = mysqli_fetch_array($proceso1)) {
 			$usuarioId = $row1["id"];
-			$usuarioNombre = $row1["nombre"]." ".$row1["apellido"];
+			$usuarioNombre = $row1["nombre"]." ".$row1["apellido"]." | ".$row1["cedula"];
 			$options .= '<option value="'.$usuarioId.'">'.$usuarioNombre.'</option>';
 		}
 		$datos = [
