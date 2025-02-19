@@ -419,7 +419,7 @@ if (!isset($_SESSION['marconiId'])) {
         var cargo = $('#cargo1').val();
         var horarios = $('#horarios1').val();
         var validarTelefono = primerNumero(telefono);
-        if(validarTelefono>=2 && validarTelefono!=3 && validarTelefono<=8){}else{
+        if(cedula.length>=2 && cedula.length!=3 && cedula.length<=8){}else{
             Swal.fire({
                 title: 'Info',
                 text: "Teléfono debe iniciar con 2, 4, 5, 6, 7 u 8",
@@ -528,6 +528,16 @@ if (!isset($_SESSION['marconiId'])) {
         var password = $('#password2').val();
         var cargo = $('#cargo2').val();
         var horarios = $('#horarios2').val();
+        if(cedula.length>=2 && cedula.length!=3 && cedula.length<=8){}else{
+            Swal.fire({
+                title: 'Info',
+                text: "Teléfono debe iniciar con 2, 4, 5, 6, 7 u 8",
+                icon: 'info',
+                position: 'center',
+                timer: 5000
+            });
+            return false;
+        }
         if(salario<=0){
             Swal.fire({
                 title: 'Info',

@@ -291,7 +291,7 @@ $asunto = $_POST['asunto'];
 			exit;
 		}
 		
-		$sql1 = "INSERT INTO usuarios (nombre,usuario,apellido,apellido2,cedula,fechaNacimiento,genero,telefono,correo,direccion,fechaIngreso,salario,password,cargo,rol,horarios) VALUES ('$nombre','$usuario','$apellido','$apellido1_2','$cedula','$fechaNacimiento','$genero','$telefono','$correo','$direccion','$fechaIngreso',$salario,'$password','$cargo',2,horarios)";
+		$sql1 = "INSERT INTO usuarios (nombre,usuario,apellido,apellido2,cedula,fechaNacimiento,genero,telefono,correo,direccion,fechaIngreso,salario,password,cargo,rol,horarios) VALUES ('$nombre','$usuario','$apellido','$apellido1_2','$cedula','$fechaNacimiento','$genero','$telefono','$correo','$direccion','$fechaIngreso',$salario,'$password','$cargo',2,$horarios)";
 		$proceso1 = mysqli_query($conexion,$sql1);
 
 		$datos = [
