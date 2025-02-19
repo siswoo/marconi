@@ -13,6 +13,18 @@ INSERT INTO roles (nombre) VALUES
 ('Administrador'),
 ('Colaborador');
 
+DROP TABLE IF EXISTS horarios;
+CREATE TABLE horarios (
+	id INT AUTO_INCREMENT,
+	entrada TIME NOT NULL,
+	salida TIME NOT NULL,
+	entradaMaxima TIME NOT NULL,
+	PRIMARY KEY (id)
+); ALTER TABLE horarios CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+
+INSERT INTO horarios (entrada,salida,entradaMaxima) VALUES 
+('09:00:00','17:00:00','09:15:00');
+
 DROP TABLE IF EXISTS usuarios;
 CREATE TABLE usuarios (
 	id INT AUTO_INCREMENT,
@@ -191,15 +203,3 @@ CREATE TABLE liquidaciones (
 	estatus BOOLEAN DEFAULT 0,
 	PRIMARY KEY (id)
 ); ALTER TABLE liquidaciones CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;
-
-DROP TABLE IF EXISTS horarios;
-CREATE TABLE horarios (
-	id INT AUTO_INCREMENT,
-	entrada TIME NOT NULL,
-	salida TIME NOT NULL,
-	entradaMaxima TIME NOT NULL,
-	PRIMARY KEY (id)
-); ALTER TABLE horarios CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;
-
-INSERT INTO horarios (entrada,salida,entradaMaxima) VALUES 
-('09:00:00','17:00:00','09:15:00');
