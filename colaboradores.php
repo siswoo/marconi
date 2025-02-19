@@ -419,7 +419,7 @@ if (!isset($_SESSION['marconiId'])) {
         var cargo = $('#cargo1').val();
         var horarios = $('#horarios1').val();
         var validarTelefono = primerNumero(telefono);
-        if(cedula.length>=2 && cedula.length!=3 && cedula.length<=8){}else{
+        if(telefono.length>=2 && telefono.length!=3 && telefono.length<=8){}else{
             Swal.fire({
                 title: 'Info',
                 text: "Teléfono debe iniciar con 2, 4, 5, 6, 7 u 8",
@@ -439,7 +439,7 @@ if (!isset($_SESSION['marconiId'])) {
             });
             return false;
         }
-        if(telefono.length < 9 || telefono.length > 12){
+        if(cedula.length < 9 || cedula.length > 12){
             Swal.fire({
                 title: 'Info',
                 text: "Teléfono debe tener entre 9 a 12 caracteres",
@@ -528,7 +528,7 @@ if (!isset($_SESSION['marconiId'])) {
         var password = $('#password2').val();
         var cargo = $('#cargo2').val();
         var horarios = $('#horarios2').val();
-        if(cedula.length>=2 && cedula.length!=3 && cedula.length<=8){}else{
+        if(telefono.length>=2 && telefono.length!=3 && telefono.length<=8){}else{
             Swal.fire({
                 title: 'Info',
                 text: "Teléfono debe iniciar con 2, 4, 5, 6, 7 u 8",
@@ -548,7 +548,7 @@ if (!isset($_SESSION['marconiId'])) {
             });
             return false;
         }
-        if(telefono.length < 9 || telefono.length > 12){
+        if(cedula.length < 9 || cedula.length > 12){
             Swal.fire({
                 title: 'Info',
                 text: "Teléfono debe tener entre 9 a 12 caracteres",
