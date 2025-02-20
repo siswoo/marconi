@@ -530,6 +530,7 @@ if (!isset($_SESSION['marconiId'])) {
         var password = $('#password2').val();
         var cargo = $('#cargo2').val();
         var horarios = $('#horarios2').val();
+        var validarTelefono = primerNumero(telefono);
         if(validarTelefono>=2 && validarTelefono!=3 && validarTelefono<=8){}else{
             Swal.fire({
                 title: 'Info',
