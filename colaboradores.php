@@ -419,7 +419,7 @@ if (!isset($_SESSION['marconiId'])) {
         var cargo = $('#cargo1').val();
         var horarios = $('#horarios1').val();
         var validarTelefono = primerNumero(telefono);
-        if(telefono.length>=2 && telefono.length!=3 && telefono.length<=8){}else{
+        if(validarTelefono>=2 && validarTelefono!=3 && validarTelefono<=8){}else{
             Swal.fire({
                 title: 'Info',
                 text: "Teléfono debe iniciar con 2, 4, 5, 6, 7 u 8",
@@ -442,7 +442,7 @@ if (!isset($_SESSION['marconiId'])) {
         if(cedula.length < 9 || cedula.length > 12){
             Swal.fire({
                 title: 'Info',
-                text: "Teléfono debe tener entre 9 a 12 caracteres",
+                text: "Cédula debe tener entre 9 a 12 caracteres",
                 icon: 'info',
                 position: 'center',
                 timer: 5000
@@ -483,6 +483,7 @@ if (!isset($_SESSION['marconiId'])) {
                     });
                     $('#nombre1').val("");
                     $('#apellido1').val("");
+                    $('#apellido1_2').val("");
                     $('#cedula1').val("");
                     $('#fechaNacimiento1').val("");
                     $('#genero1').val("");
@@ -493,6 +494,7 @@ if (!isset($_SESSION['marconiId'])) {
                     $('#salario1').val("");
                     $('#password1').val("");
                     $('#cargo1').val("");
+                    $('#horarios1').val("");
                     filtrar1();
                 }else if(respuesta["estatus"]=="error"){
                     Swal.fire({
@@ -528,7 +530,7 @@ if (!isset($_SESSION['marconiId'])) {
         var password = $('#password2').val();
         var cargo = $('#cargo2').val();
         var horarios = $('#horarios2').val();
-        if(telefono.length>=2 && telefono.length!=3 && telefono.length<=8){}else{
+        if(validarTelefono>=2 && validarTelefono!=3 && validarTelefono<=8){}else{
             Swal.fire({
                 title: 'Info',
                 text: "Teléfono debe iniciar con 2, 4, 5, 6, 7 u 8",
@@ -551,7 +553,7 @@ if (!isset($_SESSION['marconiId'])) {
         if(cedula.length < 9 || cedula.length > 12){
             Swal.fire({
                 title: 'Info',
-                text: "Teléfono debe tener entre 9 a 12 caracteres",
+                text: "Cédula debe tener entre 9 a 12 caracteres",
                 icon: 'info',
                 position: 'center',
                 timer: 5000
