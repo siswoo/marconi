@@ -92,7 +92,6 @@ $asunto = $_POST['asunto'];
 			                    <td style="text-align:center;">'.$salario.'</td>
 			                    <td style="text-align:center;">'.$horasExtras.'</td>
 			                    <td style="text-align:center;">'.$diasFeriadosLaborados.'</td>
-			                    <td style="text-align:center;">'.$aguinaldos.'</td>
 			                    <td style="text-align:center;">'.$subTotal.'</td>
 			                    <td style="text-align:center;">'.$ccss.'</td>
 			                    <td style="text-align:center;">'.$isr.'</td>
@@ -104,7 +103,7 @@ $asunto = $_POST['asunto'];
 				';
 			}
 		}else{
-			$html .= '<tr><td colspan="8" class="text-center" style="font-weight:bold;font-size:20px;">Sin Resultados</td></tr>';
+			$html .= '<tr><td colspan="11" class="text-center" style="font-weight:bold;font-size:20px;">Sin Resultados</td></tr>';
 		}
 
 		$html .= '

@@ -264,10 +264,24 @@ $asunto = $_POST['asunto'];
 			exit;
 		}
 
-		$sql1 = "SELECT * FROM permisosLaborales WHERE usuarioId = $usuario and fechaInicio = '$fecha'";
+		$entradaMaxima = 0;
+		$sql1 = "SELECT * FROM horarios WHERE usuarioId = $usuarioId";
 		$proceso1 = mysqli_query($conexion,$sql1);
-		$contador1 = mysqli_num_rows($proceso1);
-		if($contador1>0){
+		while ($row1 = mysqli_fetch_array($proceso1)) {
+			$entradaMaxima = $row1["entradaMaxima"];
+		}
+
+		// Calculo comparación entrada
+		if (strtotime($entradaMaxima) < strtotime($desde)) {
+		    echo "$hora1 es menor que $hora2";
+		}else{
+		    echo "$hora1 es mayor que $hora2";
+		}
+
+		$sql2 = "SELECT * FROM permisosLaborales WHERE usuarioId = $usuario and fechaInicio = '$fecha'";
+		$proceso2 = mysqli_query($conexion,$sql2);
+		$contador2 = mysqli_num_rows($proceso2);
+		if($contador2>0){
 			$datos = [
 				"estatus"	=> "error",
 				"msg"	=> "Fecha ya solicitada",
@@ -275,8 +289,8 @@ $asunto = $_POST['asunto'];
 			echo json_encode($datos);
 			exit;
 		}
-		$sql2 = "INSERT INTO permisosLaborales (usuarioId,tipo,fechaInicio,horaInicio,horaFin,observacion) VALUES ($usuario,'$tipo','$fecha','$desde','$hasta','$observacion')";
-		$proceso2 = mysqli_query($conexion,$sql2);
+		$sql3 = "INSERT INTO permisosLaborales (usuarioId,tipo,fechaInicio,horaInicio,horaFin,observacion) VALUES ($usuario,'$tipo','$fecha','$desde','$hasta','$observacion')";
+		$proceso3 = mysqli_query($conexion,$sql3);
 		$datos = [
 			"estatus"	=> "ok",
 			"msg"	=> "Se ha creado satisfactoriamente",

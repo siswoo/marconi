@@ -363,11 +363,11 @@ $asunto = $_POST['asunto'];
 			exit;
 		}
 
-		if($value=="Despido con justa causa" or $value=="Renuncia voluntaria"){
+		if($value=="Despido con responsabilidad patronal" or $value=="Renuncia voluntaria"){
 			$pagoSalario = true;
 			$pagoVacaciones = true;
 			$pagoAguinaldo = true;
-		}else if($value=="Despido sin justa causa" or $value=="Despido justificada"){
+		}else if($value=="Despido sin responsabilidad patronal" or $value=="Despido justificada"){
 			$pagoSalario = true;
 			$pagoVacaciones = true;
 			$pagoAguinaldo = true;

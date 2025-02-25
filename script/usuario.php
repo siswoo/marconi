@@ -44,7 +44,7 @@ $asunto = $_POST['asunto'];
 				exit;
 			}
 
-			iniciarTurno($conexion,$usuarioId,$fecha_creacion,$hora_creacion);
+			//iniciarTurno($conexion,$usuarioId,$fecha_creacion,$hora_creacion);
 
 			$redireccion = "admin.php";
 			$_SESSION["marconiId"] = $usuarioId;

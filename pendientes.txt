@@ -1,34 +1,9 @@
 --------------------
 17-02-2025
 
-Inicio:
-Colocamos boton de iniciar turno
-quitamos el boton de horas extras
-No se inicia turno al logear
-Tomar el rango en consideración de entrada y salida en contra del horario que tiene el usuario ->
-    ni un minuto mas ni un minuto menos
-
-
-Horarios:
-* si llega antes el sistema lo marca como su horario inicial
-* Si incumple su horario de entrada mas el tiempo maximo inicia a perder horas
-
-
 Colaboradores:
 -> Edición:
 * Colocar enlace con el horario (Solo debe permitir cuando este pago del mes sin iniciar el otro)
-
-
-Planillas:
-* quitar columna aguinaldos
-
-
-liquidacion:
-* cambiar despido sin justa causa -> Despido con responsabilidad patronal
-* cambiar despido con justo causa -> Despido sin responsabilidad patronal
-
-Permisos:
-* que se base en el horario disponible para el usuario
 
 Vacaciones:
 * Colocar un rango de fecha ya no una fecha
@@ -38,40 +13,65 @@ Feriados:
 * Ya no se paga por dia sino por hora
 
 -----------------------------------
--------------Hechos-------------
+-------------Hechos----------------
 -----------------------------------
 
-18-02-2025
+    18-02-2025
 
-Permisos:
-    * Concatenar Usuario (Nombre completo - Cedula)
+        Permisos:
+            * Concatenar Usuario (Nombre completo - Cedula)
 
-Incapacidad:
-    * Concatenar Usuario (Nombre completo - Cedula)
+        Incapacidad:
+            * Concatenar Usuario (Nombre completo - Cedula)
 
-Vacaciones:
-    * Concatenar Usuario (Nombre completo - Cedula)
+        Vacaciones:
+            * Concatenar Usuario (Nombre completo - Cedula)
 
-Colaboradores:
-    -> Creacion:
-        * No se pueden colocar espacios en blancos al inicio ni al final del nombre
-        * No se pueden colocar espacios en blancos al inicio ni al final del apellido
-        * Habilitar apellido 1 y apellido 2
-        * todos los campos son obligatorios
-        * de 9 a 12 digitos el espacio de cedula
-        * Colocar enlace con el horario
+        Colaboradores:
+            -> Creacion:
+                * No se pueden colocar espacios en blancos al inicio ni al final del nombre
+                * No se pueden colocar espacios en blancos al inicio ni al final del apellido
+                * Habilitar apellido 1 y apellido 2
+                * todos los campos son obligatorios
+                * de 9 a 12 digitos el espacio de cedula
+                * Colocar enlace con el horario
 
-    -> Edición:
-        * No se pueden colocar espacios en blancos al inicio ni al final del nombre
-        * No se pueden colocar espacios en blancos al inicio ni al final del apellido
-        * Habilitar apellido 1 y apellido 2
-        * todos los campos son obligatorios
-        * de 9 a 12 digitos el espacio de cedula
-        * No deja cambiar los horarios a los usuarios sino se ha cancelado el mes de pago
+            -> Edición:
+                * No se pueden colocar espacios en blancos al inicio ni al final del nombre
+                * No se pueden colocar espacios en blancos al inicio ni al final del apellido
+                * Habilitar apellido 1 y apellido 2
+                * todos los campos son obligatorios
+                * de 9 a 12 digitos el espacio de cedula
+                * No deja cambiar los horarios a los usuarios sino se ha cancelado el mes de pago
 
-Horarios:
-    * Crear tabla horarios con horario de entrada y salida
-    * Adicionar una columna que sea de tiempo entrada maxima
+        Horarios:
+            * Crear tabla horarios con horario de entrada y salida
+            * Adicionar una columna que sea de tiempo entrada maxima
+
+
+    19-02-2025
+        Inicio:
+            Colocamos boton de iniciar turno
+            quitamos el boton de horas extras
+            No se inicia turno al logear
+            Tomar el rango en consideración de entrada y salida en contra del horario que tiene el usuario -> ni un minuto mas ni un minuto menos
+        Horarios:
+            * si llega antes el sistema lo marca como su horario inicial
+            * Si incumple su horario de entrada mas el tiempo maximo inicia a perder horas
+
+    20-02-2025
+        Planillas:
+            * quitar columna aguinaldos
+
+        liquidacion:
+            * cambiar despido con justo causa -> Despido con responsabilidad patronal
+            * cambiar despido sin justa causa -> Despido sin responsabilidad patronal
+
+        Permisos:
+            ---* que se base en el horario disponible para el usuario
+
+
+
 
 -----------------------------------
 -----------------------------------

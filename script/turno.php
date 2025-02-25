@@ -370,6 +370,48 @@ $asunto = $_POST['asunto'];
 		echo json_encode($datos);
 	}
 
+	if($asunto=='abrirTurno'){
+		$usuarioId = $_POST['idUsuario'];
+		$sql1 = "SELECT * FROM turnos WHERE usuarioId = $usuarioId and tipo = 'Entrada' and fechaInicio = '$fecha_creacion'";
+		$proceso1 = mysqli_query($conexion,$sql1);
+		$contador1 = mysqli_num_rows($proceso1);
+
+		if($contador1>0){
+			$datos = [
+				"estatus"	=> "error",
+				"msg"	=> "Ya iniciaste turno hoy",
+			];
+			echo json_encode($datos);
+			exit;
+		}
+
+		$sql2 = "SELECT ho.entrada, ho.entradaMaxima FROM usuarios usu 
+		INNER JOIN horarios ho 
+		ON ho.id = usu.horarios
+		WHERE usu.id = $usuarioId";
+		$proceso2 = mysqli_query($conexion,$sql2);
+		while($row2=mysqli_fetch_array($proceso2)){
+			$entradaMaxima = $row2["entradaMaxima"];
+		}
+
+		$sql3 = "INSERT INTO turnos (usuarioId,tipo,fechaInicio,horaInicio) VALUES ($usuarioId,'Entrada','$fecha_creacion','$hora_creacion')";
+		$proceso3 = mysqli_query($conexion,$sql3);
+
+		if($fecha_creacion > $entradaMaxima){
+			$datos = [
+				"estatus"	=> "info",
+				"msg"	=> "Excediste tu hora de llegada se le descontara del pago",
+			];
+			echo json_encode($datos);
+		}else{
+			$datos = [
+				"estatus"	=> "ok",
+				"msg"	=> "Turno Abierto",
+			];
+			echo json_encode($datos);
+		}
+	}
+
 	if($asunto=='cerrarTurno'){
 		$id = $_POST['id'];
 		$sql1 = "INSERT INTO turnos (usuarioId,tipo,fechaInicio,horaInicio) VALUES ($id,'Salida','$fecha_creacion','$hora_creacion')";

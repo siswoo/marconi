@@ -76,8 +76,8 @@ if (!isset($_SESSION['marconiId'])) {
                                                 <input type="text" id="cargo" name="cargo" class="form-control" autocomplete="off" readonly value="<?php echo $cargo; ?>">
                                             </div>
                                             <div class="col-12 mt-3 text-center">
+                                                <input type="button" class="btn btn-success" onclick="abrirTurno();" value="Iniciar Turno">
                                                 <input type="button" class="btn btn-danger" onclick="cerrarTurno();" value="Cerrar turno">
-                                                <input type="button" class="btn btn-primary" data-toggle="modal" data-target="#extras" value="Horas extras">
                                             </div>
                                         </div>
                                     </div>
@@ -192,6 +192,52 @@ if (!isset($_SESSION['marconiId'])) {
             }
         });
     });
+
+    function abrirTurno(){
+        var idUsuario = $('#idUsuario').val();
+        $.ajax({
+            type: 'POST',
+            url: 'script/turno.php',
+            dataType: "JSON",
+            data: {
+                "idUsuario": idUsuario,
+                "asunto": "abrirTurno",
+            },
+
+            success: function(respuesta) {
+                console.log(respuesta);
+                if(respuesta["estatus"]=="ok"){
+                    Swal.fire({
+                        title: 'Ok',
+                        text: respuesta["msg"],
+                        icon: 'success',
+                        position: 'center',
+                        timer: 5000
+                    });
+                }else if(respuesta["estatus"]=="info"){
+                    Swal.fire({
+                        title: 'Info',
+                        text: respuesta["msg"],
+                        icon: 'info',
+                        position: 'center',
+                        timer: 5000
+                    });
+                }else if(respuesta["estatus"]=="error"){
+                    Swal.fire({
+                        title: 'Error',
+                        text: respuesta["msg"],
+                        icon: 'error',
+                        position: 'center',
+                        timer: 5000
+                    });
+                }
+            },
+
+            error: function(respuesta) {
+                console.log(respuesta['responseText']);
+            }
+        });
+    }
 
     function cerrarTurno(){
         Swal.fire({
