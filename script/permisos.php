@@ -22,7 +22,7 @@ $asunto = $_POST['asunto'];
 		}
 
 		if($filtrado!=''){
-			$filtrado = ' and (usu.nombre LIKE "%'.$filtrado.'%" or usu.apellido LIKE "%'.$filtrado.'%")';
+			$filtrado = ' and (usu.nombre LIKE "%'.$filtrado.'%" or usu.apellido LIKE "%'.$filtrado.'%" or usu.apellido2 LIKE "%'.$filtrado.'%")';
 		}
 
 		if($fecha!=''){
@@ -39,12 +39,12 @@ $asunto = $_POST['asunto'];
 		}
 
 
-		$sql1 = "SELECT per.tipo as tipo, per.id as id, usu.cedula as cedula, usu.nombre as nombre, usu.apellido as apellido, per.fechaInicio as fechaInicio, per.horaInicio as horaInicio, per.horaFin as horaFin, per.observacion as observacion, per.estatus as estatus FROM permisosLaborales per
+		$sql1 = "SELECT per.tipo as tipo, per.id as id, usu.cedula as cedula, usu.nombre as nombre, usu.apellido as apellido, usu.apellido2 as apellido2, per.fechaInicio as fechaInicio, per.horaInicio as horaInicio, per.horaFin as horaFin, per.observacion as observacion, per.estatus as estatus FROM permisosLaborales per
 		INNER JOIN usuarios usu
 		ON per.usuarioId = usu.id 
 		WHERE ".$rolCon.$filtrado.$fecha;
 
-		$sql2 = "SELECT per.tipo as tipo, per.id as id, usu.cedula as cedula, usu.nombre as nombre, usu.apellido as apellido, per.fechaInicio as fechaInicio, per.horaInicio as horaInicio, per.horaFin as horaFin, per.observacion as observacion, per.estatus as estatus FROM permisosLaborales per
+		$sql2 = "SELECT per.tipo as tipo, per.id as id, usu.cedula as cedula, usu.nombre as nombre, usu.apellido as apellido, usu.apellido2 as apellido2, per.fechaInicio as fechaInicio, per.horaInicio as horaInicio, per.horaFin as horaFin, per.observacion as observacion, per.estatus as estatus FROM permisosLaborales per
 		INNER JOIN usuarios usu
 		ON per.usuarioId = usu.id 
 		WHERE ".$rolCon.$filtrado.$fecha." ORDER BY per.id DESC LIMIT ".$limit." OFFSET ".$offset;
@@ -76,7 +76,7 @@ $asunto = $_POST['asunto'];
 		if($conteo1>=1){
 			while($row2 = mysqli_fetch_array($proceso2)) {
 				$id = $row2["id"];
-				$nombre = $row2["nombre"]." ".$row2["apellido"];
+				$nombre = $row2["nombre"]." ".$row2["apellido"]." ".$row2["apellido2"];
 				$tipo = $row2["tipo"];
 				$estatus = $row2["estatus"];
 				$fechaInicio = $row2["fechaInicio"];

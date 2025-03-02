@@ -22,7 +22,7 @@ $asunto = $_POST['asunto'];
 		}
 
 		if($filtrado!=''){
-			$filtrado = ' and (usu.nombre LIKE "%'.$filtrado.'%" or usu.apellido LIKE "%'.$filtrado.'%")';
+			$filtrado = ' and (usu.nombre LIKE "%'.$filtrado.'%" or usu.apellido LIKE "%'.$filtrado.'%" or usu.apellido2 LIKE "%'.$filtrado.'%")';
 		}
 
 		if($fecha!=''){
@@ -39,12 +39,12 @@ $asunto = $_POST['asunto'];
 		}
 
 
-		$sql1 = "SELECT inca.id as id, usu.cedula as cedula, usu.nombre as nombre, usu.apellido as apellido, inca.fechaInicio as fechaInicio, inca.fechaFin as fechaFin, inca.observacion as observacion, inca.estatus as estatus FROM incapacidades inca
+		$sql1 = "SELECT inca.id as id, usu.cedula as cedula, usu.nombre as nombre, usu.apellido as apellido, usu.apellido2 as apellido2, inca.fechaInicio as fechaInicio, inca.fechaFin as fechaFin, inca.observacion as observacion, inca.estatus as estatus FROM incapacidades inca
 		INNER JOIN usuarios usu
 		ON inca.usuarioId = usu.id 
 		WHERE ".$rolCon.$filtrado.$fecha;
 
-		$sql2 = "SELECT inca.id as id, usu.cedula as cedula, usu.nombre as nombre, usu.apellido as apellido, inca.fechaInicio as fechaInicio, inca.fechaFin as fechaFin, inca.observacion as observacion, inca.estatus as estatus FROM incapacidades inca
+		$sql2 = "SELECT inca.id as id, usu.cedula as cedula, usu.nombre as nombre, usu.apellido as apellido, usu.apellido2 as apellido2, inca.fechaInicio as fechaInicio, inca.fechaFin as fechaFin, inca.observacion as observacion, inca.estatus as estatus FROM incapacidades inca
 		INNER JOIN usuarios usu
 		ON inca.usuarioId = usu.id 
 		WHERE ".$rolCon.$filtrado.$fecha." ORDER BY inca.id DESC LIMIT ".$limit." OFFSET ".$offset;
@@ -74,7 +74,7 @@ $asunto = $_POST['asunto'];
 		if($conteo1>=1){
 			while($row2 = mysqli_fetch_array($proceso2)) {
 				$id = $row2["id"];
-				$nombre = $row2["nombre"]." ".$row2["apellido"];
+				$nombre = $row2["nombre"]." ".$row2["apellido"]." ".$row2["apellido2"];
 				$estatus = $row2["estatus"];
 				$fechaInicio = $row2["fechaInicio"];
 				$fechaFin = $row2["fechaFin"];

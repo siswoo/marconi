@@ -5,13 +5,6 @@ Colaboradores:
 -> Edición:
 * Colocar enlace con el horario (Solo debe permitir cuando este pago del mes sin iniciar el otro)
 
-Vacaciones:
-* Colocar un rango de fecha ya no una fecha
-* Si en el rango de fecha hay algun domingo se omiten
-
-Feriados:
-* Ya no se paga por dia sino por hora
-
 -----------------------------------
 -------------Hechos----------------
 -----------------------------------
@@ -48,7 +41,6 @@ Feriados:
             * Crear tabla horarios con horario de entrada y salida
             * Adicionar una columna que sea de tiempo entrada maxima
 
-
     19-02-2025
         Inicio:
             Colocamos boton de iniciar turno
@@ -75,6 +67,11 @@ Feriados:
         Vacaciones:
             * Colocar un rango de fecha ya no una fecha
             * Si en el rango de fecha hay algun domingo se omiten
+        Feriados:
+            * Ya no se paga por dia sino por hora
+        Planilla:
+            * Colocar calculo de pago por hora y no por día
+
 
 
 

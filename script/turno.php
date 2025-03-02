@@ -2,7 +2,7 @@
 session_start();
 include("conexion.php");
 $fecha_creacion = date('Y-m-d');
-$hora_creacion = date('h:i:s');
+$hora_creacion = date('H:i:s');
 $asunto = $_POST['asunto'];
 
 	if($asunto=='table1'){
@@ -20,7 +20,7 @@ $asunto = $_POST['asunto'];
 		}
 
 		if($filtrado!=''){
-			$filtrado = ' and (usu.nombre LIKE "%'.$filtrado.'%" or usu.apellido LIKE "%'.$filtrado.'%")';
+			$filtrado = ' and (usu.nombre LIKE "%'.$filtrado.'%" or usu.apellido LIKE "%'.$filtrado.'%" or usu.apellido2 LIKE "%'.$filtrado.'%")';
 		}
 
 		if($fecha!=''){
@@ -30,12 +30,12 @@ $asunto = $_POST['asunto'];
 		$limit = $consultasporpagina;
 		$offset = ($pagina - 1) * $consultasporpagina;
 
-		$sql1 = "SELECT tur.tipo as tipo, tur.id as id, usu.cedula as cedula, usu.nombre as nombre, usu.apellido as apellido, tur.fechaInicio as fechaInicio, tur.horaInicio as horaInicio, tur.horaFin as horaFin, tur.fechaFin as fechaFin, tur.estatusExtras as estatusExtras FROM turnos tur
+		$sql1 = "SELECT tur.tipo as tipo, tur.id as id, usu.cedula as cedula, usu.nombre as nombre, usu.apellido as apellido, usu.apellido2 as apellido2, tur.fechaInicio as fechaInicio, tur.horaInicio as horaInicio, tur.horaFin as horaFin, tur.fechaFin as fechaFin, tur.estatusExtras as estatusExtras FROM turnos tur
 		INNER JOIN usuarios usu
 		ON tur.usuarioId = usu.id 
 		WHERE usu.rol > 1".$filtrado.$fecha;
 
-		$sql2 = "SELECT tur.tipo as tipo, tur.id as id, usu.cedula as cedula, usu.nombre as nombre, usu.apellido as apellido, tur.fechaInicio as fechaInicio, tur.horaInicio as horaInicio, tur.horaFin as horaFin, tur.fechaFin as fechaFin, tur.estatusExtras as estatusExtras FROM turnos tur
+		$sql2 = "SELECT tur.tipo as tipo, tur.id as id, usu.cedula as cedula, usu.nombre as nombre, usu.apellido as apellido, usu.apellido2 as apellido2, tur.fechaInicio as fechaInicio, tur.horaInicio as horaInicio, tur.horaFin as horaFin, tur.fechaFin as fechaFin, tur.estatusExtras as estatusExtras FROM turnos tur
 		INNER JOIN usuarios usu
 		ON tur.usuarioId = usu.id 
 		WHERE usu.rol > 1".$filtrado.$fecha." ORDER BY tur.id DESC LIMIT ".$limit." OFFSET ".$offset;
@@ -67,7 +67,7 @@ $asunto = $_POST['asunto'];
 			while($row2 = mysqli_fetch_array($proceso2)) {
 				$id = $row2["id"];
 				$cedula = $row2["cedula"];
-				$nombre = $row2["nombre"]." ".$row2["apellido"];
+				$nombre = $row2["nombre"]." ".$row2["apellido"]." ".$row2["apellido2"];
 				$tipo = $row2["tipo"];
 				$fechaInicio = $row2["fechaInicio"];
 				$horaInicio = $row2["horaInicio"];

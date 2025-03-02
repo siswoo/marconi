@@ -26,19 +26,19 @@ $asunto = $_POST['asunto'];
 		}
 
 		if($filtrado!=''){
-			$filtrado = ' and (usu.nombre LIKE "%'.$filtrado.'%" or usu.apellido LIKE "%'.$filtrado.'%" or usu.cedula LIKE "%'.$filtrado.'%")';
+			$filtrado = ' and (usu.nombre LIKE "%'.$filtrado.'%" or usu.apellido LIKE "%'.$filtrado.'%" or usu.apellido2 LIKE "%'.$filtrado.'%" or usu.cedula LIKE "%'.$filtrado.'%")';
 		}
 
 		$limit = $consultasporpagina;
 		$offset = ($pagina - 1) * $consultasporpagina;
 
-		$sql1 = "SELECT pla.id as plaId, pla.horasExtras, pla.diasFeriadosLaborados, pla.aguinaldos, pla.subTotal, pla.total, pla.ccss, pla.isr, usu.nombre, usu.apellido, usu.cedula, usu.salario, usu.id as usuarioId
+		$sql1 = "SELECT pla.id as plaId, pla.horasExtras, pla.diasFeriadosLaborados, pla.aguinaldos, pla.subTotal, pla.total, pla.ccss, pla.isr, usu.nombre, usu.apellido, usu.apellido2, usu.cedula, usu.salario, usu.id as usuarioId
 		FROM planillas pla 
 		INNER JOIN usuarios usu
 		ON pla.usuarioId = usu.id 
 		WHERE usu.estado = 'Activo' and pla.fecha = '$finMes' ".$filtrado;
 
-		$sql2 = "SELECT pla.id as plaId, pla.horasExtras, pla.diasFeriadosLaborados, pla.aguinaldos, pla.subTotal, pla.total, pla.ccss, pla.isr, usu.nombre, usu.apellido, usu.cedula, usu.salario, usu.id as usuarioId
+		$sql2 = "SELECT pla.id as plaId, pla.horasExtras, pla.diasFeriadosLaborados, pla.aguinaldos, pla.subTotal, pla.total, pla.ccss, pla.isr, usu.nombre, usu.apellido, usu.apellido2, usu.cedula, usu.salario, usu.id as usuarioId
 		FROM planillas pla 
 		INNER JOIN usuarios usu
 		ON pla.usuarioId = usu.id 
@@ -74,7 +74,7 @@ $asunto = $_POST['asunto'];
 			while($row2 = mysqli_fetch_array($proceso2)) {
 				$plaId = $row2["plaId"];
 				$usuarioId = $row2["usuarioId"];
-				$nombre = $row2["nombre"]." ".$row2["apellido"];
+				$nombre = $row2["nombre"]." ".$row2["apellido"]." ".$row2["apellido2"];
 				$cedula = $row2["cedula"];
 				$salario = $row2["salario"];
 				$horasExtras = $row2["horasExtras"];
@@ -269,8 +269,8 @@ $asunto = $_POST['asunto'];
 		$inicioMes = $fecha . "-01";
 		$ultimoDia = date("t", strtotime($inicioMes));
 		$finMes = $fecha . "-" . $ultimoDia;
-		//$sql1 = "SELECT * FROM usuarios WHERE estado = 'Activo'";
 		$sql1 = "SELECT * FROM usuarios WHERE estado = 'Activo'";
+		//$sql1 = "SELECT * FROM usuarios WHERE estado = 'Activo' and id = 2";
 		$proceso1 = mysqli_query($conexion,$sql1);
 		$contador1 = mysqli_num_rows($proceso1);
 		if($contador1==0){
@@ -289,6 +289,7 @@ $asunto = $_POST['asunto'];
 			$pagoHora = round($pagoAlDia/8,2);
 			$pagoHoraExtra = round($pagoHora*1.5,2);
 			$diasTrabajados = diasLaborados($conexion,$usuarioId,$inicioMes,$finMes);
+			$horasTrabajados = horasLaborados($conexion,$usuarioId,$inicioMes,$finMes);
 			$diasMesDiferencia = $diasTrabajados["diasMesDiferencia"];
 			$diasLaborados = $diasTrabajados["diasLaborados"];
 			//$diasNoTrabajados = diasNoLaborados($conexion,$usuarioId,$inicioMes,$finMes);
@@ -297,6 +298,11 @@ $asunto = $_POST['asunto'];
 			$horasExtras = horasExtras($conexion,$usuarioId,$inicioMes,$finMes);
 			$calculoHorasExtras = $horasExtras*$pagoHoraExtra;
 			$diasFeriadosLaborados = diasFeriados($conexion,$usuarioId,$inicioMes,$finMes);
+
+			$horasFeriadosLaborados = horasFeriados($conexion,$usuarioId,$inicioMes,$finMes);
+			//$calculoHorasFeriadosLaborados = $horasFeriadosLaborados*($pagoHora*2);
+			$calculoHorasFeriadosLaborados = $horasFeriadosLaborados*$pagoHora;
+
 			$calculoDiasFeriadosLaborados = $diasFeriadosLaborados*$pagoDiaFeriado;
 			$montoAguinaldo = aguinaldo($conexion,$usuarioId,$anio,$mes);
 			$permisosHorasSinGoce = permisosSinGoce($conexion,$usuarioId,$inicioMes,$finMes);
@@ -306,15 +312,18 @@ $asunto = $_POST['asunto'];
 				$diasLaborados += $diasMesDiferencia;
 			}else if($diasLaborados>30){
 				$diasLaborados = 30;
+				//Calculo de horas laboradas quitarle un día si es mayor a 30
 			}
 
 			$pagoDiasLaborados = $diasLaborados*$pagoAlDia;
+			$pagoHorasLaborados = $horasTrabajados*$pagoHora;
 
 			if($pagoDiasLaborados==0){
 				$calculoHorasSinGoce = 0;
 			}
 
-			$subTotal = ($pagoDiasLaborados+$calculoHorasExtras+$calculoDiasFeriadosLaborados);
+			//$subTotal = ($pagoDiasLaborados+$calculoHorasExtras+$calculoDiasFeriadosLaborados);
+			$subTotal = ($pagoHorasLaborados+$calculoHorasExtras+$calculoHorasFeriadosLaborados);
 			$total = $subTotal-$calculoHorasSinGoce;
 
 			//seguro social
@@ -434,15 +443,39 @@ $asunto = $_POST['asunto'];
 	}
 
 	function horasExtras($conexion,$usuarioId,$inicioMes,$finMes){
-		$sql1 = "SELECT * FROM turnos WHERE usuarioId = $usuarioId and fechaInicio BETWEEN '$inicioMes' AND '$finMes' and tipo = 'Extras' and estatusExtras = 1";
-		$proceso1 = mysqli_query($conexion,$sql1);
-		$contador1 = mysqli_num_rows($proceso1);
 		$horasExtras = 0;
-		if($contador1>0){
-			while($row1=mysqli_fetch_array($proceso1)){
-				$horaInicio = $row1["horaInicio"];
-				$horaFin = $row1["horaFin"];
-				$horasExtras += diferenciaHoras($horaInicio,$horaFin);
+		$sql1 = "SELECT hor.entradaMaxima, hor.entrada, hor.salida FROM horarios hor INNER JOIN usuarios usu ON hor.id = usu.horarios WHERE usu.id = $usuarioId";
+		$proceso1 = mysqli_query($conexion,$sql1);
+		while($row1=mysqli_fetch_array($proceso1)){
+			$entradaMaxima = $row1["entradaMaxima"];
+			$entrada = $row1["entrada"];
+			$salida = $row1["salida"];
+		}
+		$sql2 = "SELECT * FROM turnos WHERE usuarioId = $usuarioId and fechaInicio BETWEEN '$inicioMes' AND '$finMes' and tipo = 'Entrada'";
+		$proceso2 = mysqli_query($conexion,$sql2);
+		$contador2 = mysqli_num_rows($proceso2);
+		if($contador2>0){
+			while($row2=mysqli_fetch_array($proceso2)){
+				$fechaCiclo = $row2["fechaInicio"];
+				$horaInicio = $row2["horaInicio"];
+				if($horaInicio<$entrada){
+					$horaInicio = $entrada;
+				}
+				$sql3 = "SELECT * FROM turnos WHERE usuarioId = $usuarioId and fechaInicio = '$fechaCiclo' and tipo = 'Salida'";
+				$proceso3 = mysqli_query($conexion,$sql3);
+				$contador3 = mysqli_num_rows($proceso3);
+				if($contador3>0){
+					while($row3=mysqli_fetch_array($proceso3)){
+						$horaInicio2 = $row3["horaInicio"];
+						if(diferenciaHoras($horaInicio,$horaInicio2)>8){
+							$horasExtras += diferenciaHoras($horaInicio,$horaInicio2)-8;
+						}
+					}
+				}else{
+					if(diferenciaHoras($horaInicio,$salida)>8){
+						$horasExtras += diferenciaHoras($horaInicio,$salida)-8;
+					}
+				}
 			}
 		}
 		return $horasExtras;
@@ -473,6 +506,50 @@ $asunto = $_POST['asunto'];
 			}
 		}
 		return $diasTotales;
+	}
+
+	function horasFeriados($conexion,$usuarioId,$inicioMes,$finMes){
+		$horasFeriados = 0;
+		$sql1 = "SELECT hor.entradaMaxima, hor.entrada, hor.salida FROM horarios hor INNER JOIN usuarios usu ON hor.id = usu.horarios WHERE usu.id = $usuarioId";
+		$proceso1 = mysqli_query($conexion,$sql1);
+		while($row1=mysqli_fetch_array($proceso1)){
+			$entradaMaxima = $row1["entradaMaxima"];
+			$entrada = $row1["entrada"];
+			$salida = $row1["salida"];
+		}
+		$sql4 = "SELECT * FROM diasFeriados";
+		$proceso4 = mysqli_query($conexion,$sql4);
+		while($row4=mysqli_fetch_array($proceso4)){
+			$dia = $row4["dia"];
+			$mes = $row4["mes"];
+			$anio = explode('-',$finMes);
+			$anio = $anio[0];
+			$fechaFeriado = $anio."-".$mes."-".$dia;
+			$sql2 = "SELECT * FROM turnos WHERE usuarioId = $usuarioId and fechaInicio = '$fechaFeriado' and tipo = 'Entrada'";
+			$proceso2 = mysqli_query($conexion,$sql2);
+			$contador2 = mysqli_num_rows($proceso2);
+			if($contador2>0){
+				while($row2=mysqli_fetch_array($proceso2)){
+					$fechaCiclo = $row2["fechaInicio"];
+					$horaInicio = $row2["horaInicio"];
+					if($horaInicio<$entrada){
+						$horaInicio = $entrada;
+					}
+					$sql3 = "SELECT * FROM turnos WHERE usuarioId = $usuarioId and fechaInicio = '$fechaCiclo' and tipo = 'Salida'";
+					$proceso3 = mysqli_query($conexion,$sql3);
+					$contador3 = mysqli_num_rows($proceso3);
+					if($contador3>0){
+						while($row3=mysqli_fetch_array($proceso3)){
+							$horaInicio2 = $row3["horaInicio"];
+							$horasFeriados += diferenciaHoras($horaInicio,$horaInicio2);
+						}
+					}else{
+						$horasFeriados += diferenciaHoras($horaInicio,$salida);
+					}
+				}
+			}
+		}
+		return $horasFeriados;
 	}
 
 	function aguinaldo($conexion,$usuarioId,$anio,$mes){
@@ -524,6 +601,49 @@ $asunto = $_POST['asunto'];
 			}
 		}
 		return abs($horasRestar);
+	}
+
+	function horasLaborados($conexion,$usuarioId,$inicioMes,$finMes){
+		$horasLaborados = 0;
+		$sql1 = "SELECT hor.entradaMaxima, hor.entrada, hor.salida FROM horarios hor INNER JOIN usuarios usu ON hor.id = usu.horarios WHERE usu.id = $usuarioId";
+		$proceso1 = mysqli_query($conexion,$sql1);
+		while($row1=mysqli_fetch_array($proceso1)){
+			$entradaMaxima = $row1["entradaMaxima"];
+			$entrada = $row1["entrada"];
+			$salida = $row1["salida"];
+		}
+		$sql2 = "SELECT * FROM turnos WHERE usuarioId = $usuarioId and fechaInicio BETWEEN '$inicioMes' AND '$finMes' and tipo = 'Entrada'";
+		$proceso2 = mysqli_query($conexion,$sql2);
+		$contador2 = mysqli_num_rows($proceso2);
+		if($contador2>0){
+			while($row2=mysqli_fetch_array($proceso2)){
+				$fechaCiclo = $row2["fechaInicio"];
+				$horaInicio = $row2["horaInicio"];
+				if($horaInicio<$entrada){
+					$horaInicio = $entrada;
+				}
+				$sql3 = "SELECT * FROM turnos WHERE usuarioId = $usuarioId and fechaInicio = '$fechaCiclo' and tipo = 'Salida'";
+				$proceso3 = mysqli_query($conexion,$sql3);
+				$contador3 = mysqli_num_rows($proceso3);
+				if($contador3>0){
+					while($row3=mysqli_fetch_array($proceso3)){
+						$horaInicio2 = $row3["horaInicio"];
+						if(diferenciaHoras($horaInicio,$horaInicio2)<8){
+							$horasLaborados += diferenciaHoras($horaInicio,$horaInicio2);
+						}else if(diferenciaHoras($horaInicio,$horaInicio2)>=8){
+							$horasLaborados += 8;
+						}
+					}
+				}else{
+					if(diferenciaHoras($horaInicio,$salida)!=8){
+						$horasLaborados += diferenciaHoras($horaInicio,$salida);
+					}else if(diferenciaHoras($horaInicio,$salida)>=8){
+						$horasLaborados += 8;
+					}
+				}
+			}
+		}
+		return $horasLaborados;
 	}
 
 
