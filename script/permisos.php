@@ -269,13 +269,17 @@ $asunto = $_POST['asunto'];
 		$proceso1 = mysqli_query($conexion,$sql1);
 		while ($row1 = mysqli_fetch_array($proceso1)) {
 			$entradaMaxima = $row1["entradaMaxima"];
+			$entrada = $row1["entrada"];
+			$salida = $row1["salida"];
 		}
 
-		// Calculo comparación entrada
-		if (strtotime($entradaMaxima) < strtotime($desde)) {
-		    echo "$hora1 es menor que $hora2";
-		}else{
-		    echo "$hora1 es mayor que $hora2";
+		if (strtotime($entrada) < strtotime($desde) or strtotime($salida) > strtotime($hasta)) {
+		    $datos = [
+				"estatus"	=> "error",
+				"msg"	=> "No esta dentro del rango de horario",
+			];
+			echo json_encode($datos);
+			exit;
 		}
 
 		$sql2 = "SELECT * FROM permisosLaborales WHERE usuarioId = $usuario and fechaInicio = '$fecha'";
@@ -289,6 +293,7 @@ $asunto = $_POST['asunto'];
 			echo json_encode($datos);
 			exit;
 		}
+		
 		$sql3 = "INSERT INTO permisosLaborales (usuarioId,tipo,fechaInicio,horaInicio,horaFin,observacion) VALUES ($usuario,'$tipo','$fecha','$desde','$hasta','$observacion')";
 		$proceso3 = mysqli_query($conexion,$sql3);
 		$datos = [

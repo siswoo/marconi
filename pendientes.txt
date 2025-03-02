@@ -68,7 +68,7 @@ Feriados:
             * cambiar despido sin justa causa -> Despido sin responsabilidad patronal
 
         Permisos:
-            ---* que se base en el horario disponible para el usuario
+            * que se base en el horario disponible para el usuario
 
 
 
