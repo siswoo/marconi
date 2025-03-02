@@ -467,13 +467,13 @@ $asunto = $_POST['asunto'];
 				if($contador3>0){
 					while($row3=mysqli_fetch_array($proceso3)){
 						$horaInicio2 = $row3["horaInicio"];
-						if(diferenciaHoras($horaInicio,$horaInicio2)>8){
-							$horasExtras += diferenciaHoras($horaInicio,$horaInicio2)-8;
+						if(diferenciaHoras($horaInicio,$horaInicio2)>9){
+							$horasExtras += diferenciaHoras($horaInicio,$horaInicio2)-9;
 						}
 					}
 				}else{
-					if(diferenciaHoras($horaInicio,$salida)>8){
-						$horasExtras += diferenciaHoras($horaInicio,$salida)-8;
+					if(diferenciaHoras($horaInicio,$salida)>9){
+						$horasExtras += diferenciaHoras($horaInicio,$salida)-9;
 					}
 				}
 			}
