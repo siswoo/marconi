@@ -63,7 +63,7 @@ $asunto = $_POST['asunto'];
 		            <tr>
 						<th class="text-center">Empleado</th>
 						<th class="text-center">Aceptada</th>
-						<th class="text-center">Fecha Inicio</th>
+						<th class="text-center">Fecha</th>
 						<th class="text-center">Observación</th>
 						<th class="text-center">Opciones</th>
 		            </tr>
@@ -230,10 +230,14 @@ $asunto = $_POST['asunto'];
 
 	if($asunto=='crear'){
 		$usuario = $_POST['usuario'];
-		$fecha = $_POST['fecha'];
+		$fechaDesde = $_POST['fechaDesde'];
+		$fechaHasta = $_POST['fechaHasta'];
 		$observacion = $_POST['observacion'];
+		$diasDescontar = 0;
 
-		if(calcularDiasDisponibles($conexion,$usuario)==0){
+		$disponibles = calcularDiasDisponibles($conexion,$usuario);
+
+		if($disponibles==0){
 			$datos = [
 				"estatus"	=> "error",
 				"msg"	=> "No tienes días disponibles",
@@ -242,19 +246,48 @@ $asunto = $_POST['asunto'];
 			exit;
 		}
 
-		$sql1 = "SELECT * FROM vacaciones WHERE usuarioId = $usuario and fechaInicio = '$fecha'";
-		$proceso1 = mysqli_query($conexion,$sql1);
-		$contador1 = mysqli_num_rows($proceso1);
-		if($contador1>0){
+		$inicio = new DateTime($fechaDesde);
+		$fin = new DateTime($fechaHasta);
+		$fin = $fin->modify('+1 day');
+
+		$periodo = new DatePeriod($inicio, new DateInterval('P1D'), $fin);
+
+		$dias_laborales = [];
+
+		foreach ($periodo as $fecha) {
+		    if ($fecha->format('N') != 7) {
+		        $dias_laborales[] = $fecha->format('Y-m-d');
+		    }
+		}
+
+		if(count($dias_laborales)>$disponibles){
 			$datos = [
 				"estatus"	=> "error",
-				"msg"	=> "Fecha ya solicitada",
+				"msg"	=> "Ha superado los días disponibles",
 			];
 			echo json_encode($datos);
 			exit;
 		}
-		$sql2 = "INSERT INTO vacaciones (usuarioId,fechaInicio,observacion) VALUES ($usuario,'$fecha','$observacion')";
-		$proceso2 = mysqli_query($conexion,$sql2);
+
+		foreach ($dias_laborales as $dia) {
+		    $sql1 = "SELECT * FROM vacaciones WHERE usuarioId = $usuario and fechaInicio = '$dia'";
+			$proceso1 = mysqli_query($conexion,$sql1);
+			$contador1 = mysqli_num_rows($proceso1);
+			if($contador1>0){
+				$datos = [
+					"estatus"	=> "error",
+					"msg"	=> "Tiene una fecha en el rango ya solicitada",
+				];
+				echo json_encode($datos);
+				exit;
+			}
+		}
+
+		foreach ($dias_laborales as $dia) {
+		    $sql2 = "INSERT INTO vacaciones (usuarioId,fechaInicio,observacion) VALUES ($usuario,'$dia','$observacion')";
+			$proceso2 = mysqli_query($conexion,$sql2);
+		}
+
 		$datos = [
 			"estatus"	=> "ok",
 			"msg"	=> "Se ha creado satisfactoriamente",

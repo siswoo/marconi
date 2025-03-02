@@ -67,8 +67,14 @@ Feriados:
             * cambiar despido con justo causa -> Despido con responsabilidad patronal
             * cambiar despido sin justa causa -> Despido sin responsabilidad patronal
 
+    01-03-25
         Permisos:
             * que se base en el horario disponible para el usuario
+        Colaboradores:
+            * Anexar segundo apellido en el listado de usuarios
+        Vacaciones:
+            * Colocar un rango de fecha ya no una fecha
+            * Si en el rango de fecha hay algun domingo se omiten
 
 
 

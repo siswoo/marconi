@@ -47,8 +47,8 @@ CREATE TABLE usuarios (
 	rol INT NOT NULL,
 	horarios INT NOT NULL,
 	PRIMARY KEY (id),
-	FOREIGN KEY (rol) REFERENCES roles (id) ON DELETE CASCADE ON UPDATE CASCADE,
-	FOREIGN KEY (horarios) REFERENCES horarios (id) ON DELETE CASCADE ON UPDATE CASCADE
+	FOREIGN KEY (rol) REFERENCES roles (id) ON UPDATE CASCADE,
+	FOREIGN KEY (horarios) REFERENCES horarios (id) ON UPDATE CASCADE
 ); ALTER TABLE usuarios CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
 INSERT INTO usuarios (usuario,nombre,apellido,password,rol,horarios) VALUES 

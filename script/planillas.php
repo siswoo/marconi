@@ -61,7 +61,6 @@ $asunto = $_POST['asunto'];
 						<th class="text-center">Salario</th>
 						<th class="text-center">Horas extras</th>
 						<th class="text-center">Feriados</th>
-						<th class="text-center">Aguinaldos</th>
 						<th class="text-center">Sub-Total</th>
 						<th class="text-center">Ccss</th>
 						<th class="text-center">Isr</th>
@@ -80,7 +79,6 @@ $asunto = $_POST['asunto'];
 				$salario = $row2["salario"];
 				$horasExtras = $row2["horasExtras"];
 				$diasFeriadosLaborados = $row2["diasFeriadosLaborados"];
-				$aguinaldos = $row2["aguinaldos"];
 				$subTotal = $row2["subTotal"];
 				$ccss = $row2["ccss"];
 				$isr = $row2["isr"];
@@ -103,7 +101,7 @@ $asunto = $_POST['asunto'];
 				';
 			}
 		}else{
-			$html .= '<tr><td colspan="11" class="text-center" style="font-weight:bold;font-size:20px;">Sin Resultados</td></tr>';
+			$html .= '<tr><td colspan="10" class="text-center" style="font-weight:bold;font-size:20px;">Sin Resultados</td></tr>';
 		}
 
 		$html .= '

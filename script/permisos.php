@@ -265,15 +265,17 @@ $asunto = $_POST['asunto'];
 		}
 
 		$entradaMaxima = 0;
-		$sql1 = "SELECT * FROM horarios WHERE usuarioId = $usuarioId";
+		$sql1 = "SELECT hor.entrada, hor.salida FROM horarios hor 
+		INNER JOIN usuarios usu 
+		ON hor.id = usu.horarios
+		WHERE usu.id = $usuario";
 		$proceso1 = mysqli_query($conexion,$sql1);
 		while ($row1 = mysqli_fetch_array($proceso1)) {
-			$entradaMaxima = $row1["entradaMaxima"];
 			$entrada = $row1["entrada"];
 			$salida = $row1["salida"];
 		}
 
-		if (strtotime($entrada) < strtotime($desde) or strtotime($salida) > strtotime($hasta)) {
+		if (strtotime($desde) < strtotime($entrada) or strtotime($hasta) > strtotime($salida)) {
 		    $datos = [
 				"estatus"	=> "error",
 				"msg"	=> "No esta dentro del rango de horario",

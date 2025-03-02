@@ -143,8 +143,12 @@ if (!isset($_SESSION['marconiId'])) {
                                 <input type="text" id="diasDisponibles1" name="diasDisponibles1" class="form-control" readonly>
                             </div>
                             <div class="col-md-12 form-group form-check">
-                                <label for="fecha1" style="font-weight: bold;">Fecha *</label>
-                                <input type="date" id="fecha1" name="fecha1" class="form-control" required>
+                                <label for="fechaDesde1" style="font-weight: bold;">Fecha desde*</label>
+                                <input type="date" id="fechaDesde1" name="fechaDesde1" class="form-control" required>
+                            </div>
+                            <div class="col-md-12 form-group form-check">
+                                <label for="fechaHasta1" style="font-weight: bold;">Fecha hasta*</label>
+                                <input type="date" id="fechaHasta1" name="fechaHasta1" class="form-control" required>
                             </div>
                             <div class="col-md-12 form-group form-check">
                                 <label for="observacion1" style="font-weight: bold;">Observación *</label>
@@ -262,7 +266,8 @@ if (!isset($_SESSION['marconiId'])) {
     $("#formulario1").on("submit", function(e){
         e.preventDefault();
         var usuario = $('#usuario1').val();
-        var fecha = $('#fecha1').val();
+        var fechaDesde = $('#fechaDesde1').val();
+        var fechaHasta = $('#fechaHasta1').val();
         var observacion = $('#observacion1').val();
         $.ajax({
             type: 'POST',
@@ -270,7 +275,8 @@ if (!isset($_SESSION['marconiId'])) {
             dataType: "JSON",
             data: {
                 "usuario": usuario,
-                "fecha": fecha,
+                "fechaDesde": fechaDesde,
+                "fechaHasta": fechaHasta,
                 "observacion": observacion,
                 "asunto": "crear",
             },
@@ -287,7 +293,8 @@ if (!isset($_SESSION['marconiId'])) {
                     });
                     $('#usuario1').val("");
                     $('#diasDisponibles1').val("");
-                    $('#fecha1').val("");
+                    $('#fechaDesde1').val("");
+                    $('#fechaHasta1').val("");
                     $('#observacion1').val("");
                     filtrar1();
                 }else if(respuesta["estatus"]=="error"){

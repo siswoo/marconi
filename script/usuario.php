@@ -73,7 +73,7 @@ $asunto = $_POST['asunto'];
 		}
 
 		if($filtrado!=''){
-			$filtrado = ' and (nombre LIKE "%'.$filtrado.'%" or apellido LIKE "%'.$filtrado.'%")';
+			$filtrado = ' and (nombre LIKE "%'.$filtrado.'%" or apellido LIKE "%'.$filtrado.'%" or apellido2 LIKE "%'.$filtrado.'%")';
 		}
 
 		$limit = $consultasporpagina;
@@ -111,7 +111,7 @@ $asunto = $_POST['asunto'];
 		if($conteo1>=1){
 			while($row2 = mysqli_fetch_array($proceso2)) {
 				$id = $row2["id"];
-				$nombre = $row2["nombre"]." ".$row2["apellido"];
+				$nombre = $row2["nombre"]." ".$row2["apellido"]." ".$row2["apellido2"];
 				$cedula = $row2["cedula"];
 				$genero = $row2["genero"];
 				$telefono = $row2["telefono"];
