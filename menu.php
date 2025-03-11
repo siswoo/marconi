@@ -3,7 +3,7 @@
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
-                <div class="sidebar-brand-text mx-3">AdminJJ<sup>2</sup></div>
+                <div class="sidebar-brand-text mx-3">ATP<sup>2</sup></div>
             </a>
             <hr class="sidebar-divider my-0">
             <li class="nav-item active">
