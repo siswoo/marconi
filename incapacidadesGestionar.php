@@ -140,7 +140,7 @@ if (!isset($_SESSION['marconiId'])) {
                             </div>
                             <div class="col-md-12 form-group form-check">
                                 <label for="fechaInicio1" style="font-weight: bold;">Fecha Inicio *</label>
-                                <input type="date" id="fechaInicio1" name="fechaInicio1" class="form-control" required>
+                                <input type="date" id="fechaInicio1" name="fechaInicio1" class="form-control" onchange="confirmarNoDomingos(value,'fechaInicio1');" required>
                             </div>
                             <div class="col-md-12 form-group form-check">
                                 <label for="fechaFin1" style="font-weight: bold;">Fecha Fin *</label>
@@ -203,6 +203,7 @@ if (!isset($_SESSION['marconiId'])) {
 <script type="text/javascript">
     $(document).ready(function() {
         filtrar1();
+        setearInputDate();
     });
 
     function paginacion1(value){
@@ -360,25 +361,39 @@ if (!isset($_SESSION['marconiId'])) {
     });
 
     function cambioEstatus(id,estatus){
-        $.ajax({
-            type: 'POST',
-            url: 'script/incapacidades.php',
-            dataType: "JSON",
-            data: {
-                "id": id,
-                "estatus": estatus,
-                "asunto": "cambioEstatus",
-            },
-              
-            success: function(respuesta) {
-                console.log(respuesta);
-                filtrar1();
-            },
+        Swal.fire({
+          title: 'Estas seguro?',
+          text: "Esta acción no podra revertirse",
+          icon: 'warning',
+          showConfirmButton: true,
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Si, eliminar el registro!',
+          cancelButtonText: 'Cancelar'
+        }).then((result) => {
+          if (result.value) {
+            $.ajax({
+                type: 'POST',
+                url: 'script/incapacidades.php',
+                dataType: "JSON",
+                data: {
+                    "id": id,
+                    "estatus": estatus,
+                    "asunto": "cambioEstatus",
+                },
+                  
+                success: function(respuesta) {
+                    console.log(respuesta);
+                    filtrar1();
+                },
 
-            error: function(respuesta) {
-                console.log(respuesta['responseText']);
-            }
-        });
+                error: function(respuesta) {
+                    console.log(respuesta['responseText']);
+                }
+            });
+          }
+        })
     }
 
     function eliminar(id){
@@ -434,6 +449,31 @@ if (!isset($_SESSION['marconiId'])) {
                 console.log(respuesta['responseText']);
             }
         });
+    }
+
+    function setearInputDate(){
+        let fechaInput = document.getElementById("fechaInicio1");
+        let hoy = new Date();
+        let semanaAtras = new Date();
+        semanaAtras.setDate(hoy.getDate() - 7);
+        fechaInput.min = formatDate(semanaAtras);
+        fechaInput.max = formatDate(hoy);
+        fechaInput.value = formatDate(hoy);
+    }
+
+    function formatDate(fecha) {
+        let año = fecha.getFullYear();
+        let mes = String(fecha.getMonth() + 1).padStart(2, '0');
+        let dia = String(fecha.getDate()).padStart(2, '0');
+        return `${año}-${mes}-${dia}`;
+    }
+
+    function confirmarNoDomingos(value,id){
+        let hoy = new Date();
+        let seleccionada = new Date(value);
+        if (seleccionada.getDay() === 6) {
+            $('#'+id).val(formatDate(hoy));
+        }
     }
 
 </script>

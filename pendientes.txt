@@ -1,12 +1,6 @@
 --------------------
 11-03-2025
 
-Permisos->
-    Aprobar->
-        * Que salga la opcion de ¿Esta seguro?
-        * quitar la opcion de rechazar
-        * Y si esta aceptada que no salga eliminar
-
 Vacaciones->
     como usuario->
         * colocar el rango de fecha
@@ -16,14 +10,6 @@ Vacaciones->
         * Que salga la opcion de ¿Esta seguro?
         * quitar la opcion de rechazar
         * Y si esta aceptada que no salga eliminar
-
-Incapacidades->
-    adicionar->
-        * Que salga la opcion de ¿Esta seguro?
-        * quitar la opcion de rechazar
-        * Y si esta aceptada que no salga eliminar
-    crear->
-        * fecha inicio tiene que ser de hoy a una semana hacia atras
 
 Planilla->
     Impuesto sobre la renta->
@@ -138,7 +124,20 @@ colocar negar horas extras
                 * Que salga la opcion de ¿Esta seguro?
                 * quitar la opcion de rechazar
                 * Y si esta aceptada que no salga eliminar
-        
+
+        Permisos->
+            Aprobar->
+                * Que salga la opcion de ¿Esta seguro?
+                * quitar la opcion de rechazar
+                * Y si esta aceptada que no salga eliminar
+
+        Incapacidades->
+            adicionar->
+                * Que salga la opcion de ¿Esta seguro?
+                * quitar la opcion de rechazar
+                * Y si esta aceptada que no salga eliminar
+            crear->
+                * fecha inicio tiene que ser de hoy a una semana hacia atras
 
 
 -----------------------------------

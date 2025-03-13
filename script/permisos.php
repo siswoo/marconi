@@ -93,10 +93,10 @@ $asunto = $_POST['asunto'];
 				if($rol==1){
 					if($estatus==0){
 						$button = '<button class="btn btn-success ml-2" onclick="cambioEstatus('.$id.',1);">Aceptar</button>';
-					}else{
+						$button .= '<button class="btn btn-danger ml-2" onclick="eliminar('.$id.');">Eliminar</button>';
+					}/*else{
 						$button = '<button class="btn btn-info ml-2" onclick="cambioEstatus('.$id.',0);">Rechazar</button>';
-					}
-					$button .= '<button class="btn btn-danger ml-2" onclick="eliminar('.$id.');">Eliminar</button>';
+					}*/
 				}
 				$html .= '
 			                <tr id="">
