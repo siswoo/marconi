@@ -461,7 +461,7 @@ $asunto = $_POST['asunto'];
 				if($horaInicio<$entrada){
 					$horaInicio = $entrada;
 				}
-				$sql3 = "SELECT * FROM turnos WHERE usuarioId = $usuarioId and fechaInicio = '$fechaCiclo' and tipo = 'Salida'";
+				$sql3 = "SELECT * FROM turnos WHERE usuarioId = $usuarioId and fechaInicio = '$fechaCiclo' and tipo = 'Salida' and estatusExtras = 1";
 				$proceso3 = mysqli_query($conexion,$sql3);
 				$contador3 = mysqli_num_rows($proceso3);
 				if($contador3>0){
