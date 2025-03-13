@@ -334,6 +334,16 @@ if (!isset($_SESSION['marconiId'])) {
         var fechaDesde = $('#fechaDesde2').val();
         var fechaHasta = $('#fechaHasta2').val();
         var observacion = $('#observacion2').val();
+        if(fechaDesde>fechaHasta){
+            Swal.fire({
+                title: 'info',
+                text: 'Fechas invalidas',
+                icon: 'info',
+                position: 'center',
+                timer: 5000
+            });
+            return false;
+        }
         $.ajax({
             type: 'POST',
             url: 'script/vacaciones.php',
