@@ -3,7 +3,8 @@ $servidor = "localhost";
 $usuario = "root";
 $contrasena = "";
 $basededatos = "marconi";
-date_default_timezone_set('America/Bogota');
+//date_default_timezone_set('America/Bogota');
+date_default_timezone_set('America/Costa_Rica');
 
 $conexion = mysqli_connect( $servidor, $usuario, $contrasena ) or die ("Problemas con la Base de datos, contactar al desarollador");
 $db = mysqli_select_db( $conexion, $basededatos ) or die ( "Error con la base de datos registrar la configuración" );
