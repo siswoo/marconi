@@ -1,16 +1,6 @@
 --------------------
 11-03-2025
 
-Vacaciones->
-    como usuario->
-        * colocar el rango de fecha
-        * si tiene 0 dias que salga el aviso
-    Ambos->
-        * Que no tome en cuenta ni los domingos ni los feriados en el rango de fecha
-        * Que salga la opcion de ¿Esta seguro?
-        * quitar la opcion de rechazar
-        * Y si esta aceptada que no salga eliminar
-
 Planilla->
     Impuesto sobre la renta->
         Tramos de renta
@@ -29,9 +19,6 @@ Planilla->
 
         exceso de ¢4.745.000,00     25%
 
-
-turnosGestionar -> 
-colocar negar horas extras
 
 -----------------------------------
 -------------Hechos----------------
@@ -138,6 +125,18 @@ colocar negar horas extras
                 * Y si esta aceptada que no salga eliminar
             crear->
                 * fecha inicio tiene que ser de hoy a una semana hacia atras
+
+        Vacaciones->
+            como usuario->
+                * colocar el rango de fecha
+                * si tiene 0 dias que salga el aviso
+            Ambos->
+                * Que no tome en cuenta ni los domingos ni los feriados en el rango de fecha
+                * Que salga la opcion de ¿Esta seguro?
+                * quitar la opcion de rechazar
+                * Y si esta aceptada que no salga eliminar
+
+
 
 
 -----------------------------------

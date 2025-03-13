@@ -177,7 +177,7 @@ if (!isset($_SESSION['marconiId'])) {
                         <div class="row">
                             <div class="col-md-12 form-group form-check">
                                 <label for="fechaInicio2" style="font-weight: bold;">Fecha Inicio *</label>
-                                <input type="date" id="fechaInicio2" name="fechaInicio2" class="form-control" required>
+                                <input type="date" id="fechaInicio2" name="fechaInicio2" class="form-control" onchange="confirmarNoDomingos(value,'fechaInicio1');"required>
                             </div>
                             <div class="col-md-12 form-group form-check">
                                 <label for="fechaFin2" style="font-weight: bold;">Fecha Fin *</label>
@@ -203,7 +203,8 @@ if (!isset($_SESSION['marconiId'])) {
 <script type="text/javascript">
     $(document).ready(function() {
         filtrar1();
-        setearInputDate();
+        setearInputDate('fechaInicio1');
+        setearInputDate('fechaInicio2');
     });
 
     function paginacion1(value){
@@ -451,8 +452,8 @@ if (!isset($_SESSION['marconiId'])) {
         });
     }
 
-    function setearInputDate(){
-        let fechaInput = document.getElementById("fechaInicio1");
+    function setearInputDate(id){
+        let fechaInput = document.getElementById(id);
         let hoy = new Date();
         let semanaAtras = new Date();
         semanaAtras.setDate(hoy.getDate() - 7);

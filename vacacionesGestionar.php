@@ -180,8 +180,12 @@ if (!isset($_SESSION['marconiId'])) {
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-12 form-group form-check">
-                                <label for="fecha2" style="font-weight: bold;">Fecha *</label>
-                                <input type="date" id="fecha2" name="fecha2" class="form-control" required>
+                                <label for="fechaDesde2" style="font-weight: bold;">Fecha desde*</label>
+                                <input type="date" id="fechaDesde2" name="fechaDesde2" class="form-control" required>
+                            </div>
+                            <div class="col-md-12 form-group form-check">
+                                <label for="fechaHasta2" style="font-weight: bold;">Fecha hasta*</label>
+                                <input type="date" id="fechaHasta2" name="fechaHasta2" class="form-control" required>
                             </div>
                             <div class="col-md-12 form-group form-check">
                                 <label for="diasDisponibles2" style="font-weight: bold;">Dias disponibles</label>
@@ -317,7 +321,8 @@ if (!isset($_SESSION['marconiId'])) {
     $("#formulario2").on("submit", function(e){
         e.preventDefault();
         var usuario = $('#hiddenId').val();
-        var fecha = $('#fecha2').val();
+        var fechaDesde = $('#fechaDesde2').val();
+        var fechaHasta = $('#fechaHasta2').val();
         var observacion = $('#observacion2').val();
         $.ajax({
             type: 'POST',
@@ -325,7 +330,8 @@ if (!isset($_SESSION['marconiId'])) {
             dataType: "JSON",
             data: {
                 "usuario": usuario,
-                "fecha": fecha,
+                "fechaDesde": fechaDesde,
+                "fechaHasta": fechaHasta,
                 "observacion": observacion,
                 "asunto": "crear",
             },
@@ -364,26 +370,40 @@ if (!isset($_SESSION['marconiId'])) {
     });
 
     function cambioEstatus(id,estatus,usuarioId){
-        $.ajax({
-            type: 'POST',
-            url: 'script/vacaciones.php',
-            dataType: "JSON",
-            data: {
-                "id": id,
-                "estatus": estatus,
-                "usuarioId": usuarioId,
-                "asunto": "cambioEstatus",
-            },
-              
-            success: function(respuesta) {
-                console.log(respuesta);
-                filtrar1();
-            },
+        Swal.fire({
+          title: 'Estas seguro?',
+          text: "Esta acción no podra revertirse",
+          icon: 'warning',
+          showConfirmButton: true,
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Si, eliminar el registro!',
+          cancelButtonText: 'Cancelar'
+        }).then((result) => {
+          if (result.value) {
+            $.ajax({
+                type: 'POST',
+                url: 'script/vacaciones.php',
+                dataType: "JSON",
+                data: {
+                    "id": id,
+                    "estatus": estatus,
+                    "usuarioId": usuarioId,
+                    "asunto": "cambioEstatus",
+                },
+                  
+                success: function(respuesta) {
+                    console.log(respuesta);
+                    filtrar1();
+                },
 
-            error: function(respuesta) {
-                console.log(respuesta['responseText']);
-            }
-        });
+                error: function(respuesta) {
+                    console.log(respuesta['responseText']);
+                }
+            });
+          }
+        })
     }
 
     function eliminar(id){
@@ -458,7 +478,7 @@ if (!isset($_SESSION['marconiId'])) {
 
             success: function(respuesta) {
                 console.log(respuesta);
-                $('#diasDisponibles'+rol).val(respuesta["diasDisponibles"]);
+                $('#diasDisponibles2').val(respuesta["diasDisponibles"]);
             },
 
             error: function(respuesta) {
