@@ -131,9 +131,9 @@ if (!isset($_SESSION['marconiId'])) {
                                 <label for="opcion1" style="font-weight: bold;">Opción *</label>
                                 <select class="form-control" name="opcion1" id="opcion1" onchange="calcular(value)" required>
                                     <option value="">Seleccione</option>
-                                    <option value="Despido sin responsabilidad patronal">Despido sin responsabilidad patronal</option>
-                                    <option value="Renuncia voluntaria">Renuncia voluntaria</option>
                                     <option value="Despido con responsabilidad patronal">Despido con responsabilidad patronal</option>
+                                    <option value="Renuncia voluntaria">Renuncia voluntaria</option>
+                                    <option value="Despido sin responsabilidad patronal">Despido sin responsabilidad patronal</option>
                                     <option value="Despido justificada">Despido justificada</option>
                                 </select>
                             </div>
