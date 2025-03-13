@@ -1,13 +1,6 @@
 --------------------
 11-03-2025
 
-turnos->
-    horasExtras->
-        * Cualquier hora extra debe aprobarse
-        * Que salga la opcion de ¿Esta seguro?
-        * quitar la opcion de rechazar
-        * Y si esta aceptada que no salga eliminar
-
 Permisos->
     Aprobar->
         * Que salga la opcion de ¿Esta seguro?
@@ -137,6 +130,15 @@ colocar negar horas extras
                 * Agregar y validar campo de confirmar contraseña
             Ingreso -> 
                 * validar que si el usuario no cumple con su fecha de ingreso no lo deje logearse
+
+    12-03-25
+        turnos->
+            horasExtras->
+                * Cualquier hora extra debe aprobarse
+                * Que salga la opcion de ¿Esta seguro?
+                * quitar la opcion de rechazar
+                * Y si esta aceptada que no salga eliminar
+        
 
 
 -----------------------------------

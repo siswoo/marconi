@@ -30,15 +30,15 @@ $asunto = $_POST['asunto'];
 		$limit = $consultasporpagina;
 		$offset = ($pagina - 1) * $consultasporpagina;
 
-		$sql1 = "SELECT tur.tipo as tipo, tur.id as id, usu.cedula as cedula, usu.nombre as nombre, usu.apellido as apellido, usu.apellido2 as apellido2, tur.fechaInicio as fechaInicio, tur.horaInicio as horaInicio, tur.horaFin as horaFin, tur.fechaFin as fechaFin, tur.estatusExtras as estatusExtras FROM turnos tur
+		$sql1 = "SELECT tur.tipo as tipo, tur.id as id, usu.id as usuarioId, usu.cedula as cedula, usu.nombre as nombre, usu.apellido as apellido, usu.apellido2 as apellido2, tur.fechaInicio as fechaInicio, tur.horaInicio as horaInicio, tur.horaFin as horaFin, tur.fechaFin as fechaFin, tur.estatusExtras as estatusExtras FROM turnos tur
 		INNER JOIN usuarios usu
 		ON tur.usuarioId = usu.id 
-		WHERE usu.rol > 1".$filtrado.$fecha;
+		WHERE usu.rol > 1 ".$filtrado.$fecha;
 
-		$sql2 = "SELECT tur.tipo as tipo, tur.id as id, usu.cedula as cedula, usu.nombre as nombre, usu.apellido as apellido, usu.apellido2 as apellido2, tur.fechaInicio as fechaInicio, tur.horaInicio as horaInicio, tur.horaFin as horaFin, tur.fechaFin as fechaFin, tur.estatusExtras as estatusExtras FROM turnos tur
+		$sql2 = "SELECT tur.tipo as tipo, tur.id as id, usu.id as usuarioId, usu.cedula as cedula, usu.nombre as nombre, usu.apellido as apellido, usu.apellido2 as apellido2, tur.fechaInicio as fechaInicio, tur.horaInicio as horaInicio, tur.horaFin as horaFin, tur.fechaFin as fechaFin, tur.estatusExtras as estatusExtras FROM turnos tur
 		INNER JOIN usuarios usu
 		ON tur.usuarioId = usu.id 
-		WHERE usu.rol > 1".$filtrado.$fecha." ORDER BY tur.id DESC LIMIT ".$limit." OFFSET ".$offset;
+		WHERE usu.rol > 1 ".$filtrado.$fecha." ORDER BY tur.id DESC LIMIT ".$limit." OFFSET ".$offset;
 
 		$proceso1 = mysqli_query($conexion,$sql1);
 		$proceso2 = mysqli_query($conexion,$sql2);
@@ -55,9 +55,9 @@ $asunto = $_POST['asunto'];
 						<th class="text-center">Identificación</th>
 						<th class="text-center">Empleado</th>
 						<th class="text-center">Tipo</th>
-						<th class="text-center">Aceptada</th>
 						<th class="text-center">Fecha Inicio</th>
-						<th class="text-center">Fecha Fin</th>
+						<th class="text-center">Horas extras</th>
+						<th class="text-center">Aceptada</th>
 						<th class="text-center">Opciones</th>
 		            </tr>
 		            </thead>
@@ -66,6 +66,7 @@ $asunto = $_POST['asunto'];
 		if($conteo1>=1){
 			while($row2 = mysqli_fetch_array($proceso2)) {
 				$id = $row2["id"];
+				$usuarioId = $row2["usuarioId"];
 				$cedula = $row2["cedula"];
 				$nombre = $row2["nombre"]." ".$row2["apellido"]." ".$row2["apellido2"];
 				$tipo = $row2["tipo"];
@@ -74,18 +75,20 @@ $asunto = $_POST['asunto'];
 				$fechaFin = $row2["fechaFin"];
 				$horaFin = $row2["horaFin"];
 				$estatusExtras = $row2["estatusExtras"];
+				$diferenciaHorarias = 0;
+				if($tipo=='Salida'){
+					$diferenciaHorarias = diferenciaHoras($conexion,$usuarioId,$fechaInicio)-9;
+				}
 				if($fechaFin=="0000-00-00"){
 					$fin = "";
 				}else{
 					$fin = $fechaFin.' '.$horaFin;
 				}
 
-				if($tipo!="Extras"){
-					$aceptada = "";
-				}else if($estatusExtras==0){
-					$aceptada = "No";
-				}else{
+				if($diferenciaHorarias>0 and $estatusExtras==1){
 					$aceptada = "Si";
+				}else{
+					$aceptada = "";
 				}
 
 				$html .= '
@@ -93,29 +96,26 @@ $asunto = $_POST['asunto'];
 			                    <td style="text-align:center;">'.$cedula.'</td>
 			                    <td style="text-align:center;">'.$nombre.'</td>
 			                    <td style="text-align:center;">'.$tipo.'</td>
-			                    <td style="text-align:center;">'.$aceptada.'</td>
 			                    <td style="text-align:center;">'.$fechaInicio.' '.$horaInicio.'</td>
-			                    <td style="text-align:center;">'.$fin.'</td>
+			                    <td style="text-align:center;">'.$diferenciaHorarias.'</td>
+			                    <td style="text-align:center;">'.$aceptada.'</td>
 			                    <td style="text-align:center;" nowrap>
 				';
-				if($tipo=="Salida"){
-					$html .= '
-						<button class="btn btn-danger" onclick="eliminar('.$id.');">Eliminar</button>
-					';
-				}else if($tipo=="Extras"){
-					if($aceptada=="No"){
+
+				if($estatusExtras==0){
+					if($diferenciaHorarias>0){
 						$html .= '
 							<button class="btn btn-success" onclick="cambioExtras('.$id.','.$estatusExtras.');">Aceptar</button>
 						';
-					}else{
+					}
+
+					if($tipo=="Salida"){
 						$html .= '
-							<button class="btn btn-info" onclick="cambioExtras('.$id.','.$estatusExtras.');">Rechazar</button>
+							<button class="btn btn-danger" onclick="eliminar('.$id.');">Eliminar</button>
 						';
 					}
-					$html .= '
-						<button class="btn btn-danger" onclick="eliminar('.$id.');">Eliminar</button>
-					';
 				}
+
 				$html .= '
 			                    </td>
 			                </tr>
@@ -506,6 +506,31 @@ $asunto = $_POST['asunto'];
 			"msg"	=> "",
 		];
 		echo json_encode($datos);
+	}
+
+	function diferenciaHoras($conexion,$usuarioId,$fechaInicio){
+		$diferenciaHoras = 0;
+		$sql1 = "SELECT * FROM turnos WHERE usuarioId = $usuarioId and fechaInicio = '$fechaInicio' and tipo = 'Entrada'";
+		$proceso1 = mysqli_query($conexion,$sql1);
+		$contador1 = mysqli_num_rows($proceso1);
+		if($contador1>0){
+			$sql2 = "SELECT * FROM turnos WHERE usuarioId = $usuarioId and fechaInicio = '$fechaInicio' and tipo = 'Salida'";
+			$proceso2 = mysqli_query($conexion,$sql2);
+			$contador2 = mysqli_num_rows($proceso2);
+			if($contador2>0){
+				while($row1 = mysqli_fetch_array($proceso1)) {
+					$horaInicioEntrada = $row1["horaInicio"];
+				}
+				while($row2 = mysqli_fetch_array($proceso2)) {
+					$horaInicioSalida = $row2["horaInicio"];
+				}
+			}
+			$segundos1 = strtotime($horaInicioEntrada);
+			$segundos2 = strtotime($horaInicioSalida);
+			$diferenciaSegundos = abs($segundos2 - $segundos1);
+			$diferenciaHoras = floor($diferenciaSegundos / 3600);
+		}
+		return $diferenciaHoras;
 	}
 
 

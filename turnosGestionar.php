@@ -420,25 +420,39 @@ if (!isset($_SESSION['marconiId'])) {
     });
 
     function cambioExtras(id,estatus){
-        $.ajax({
-            type: 'POST',
-            url: 'script/turno.php',
-            dataType: "JSON",
-            data: {
-                "id": id,
-                "estatus": estatus,
-                "asunto": "cambioExtras",
-            },
+        Swal.fire({
+          title: 'Estas seguro?',
+          text: "Esta acción no podra revertirse",
+          icon: 'warning',
+          showConfirmButton: true,
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Si, cambiar el estatus!',
+          cancelButtonText: 'Cancelar'
+        }).then((result) => {
+          if (result.value) {
+            $.ajax({
+                type: 'POST',
+                url: 'script/turno.php',
+                dataType: "JSON",
+                data: {
+                    "id": id,
+                    "estatus": estatus,
+                    "asunto": "cambioExtras",
+                },
 
-            success: function(respuesta) {
-                console.log(respuesta);
-                filtrar1();
-            },
+                success: function(respuesta) {
+                    console.log(respuesta);
+                    filtrar1();
+                },
 
-            error: function(respuesta) {
-                console.log(respuesta['responseText']);
-            }
-        });
+                error: function(respuesta) {
+                    console.log(respuesta['responseText']);
+                }
+            });
+          }
+        })
     }
 
     function eliminar(id){
