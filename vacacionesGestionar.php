@@ -63,7 +63,7 @@ if (!isset($_SESSION['marconiId'])) {
                                                 <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                                             </a>
                                             <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
-                                                <a class="dropdown-item" data-toggle="modal" <?php if($esAdmin==true){ echo 'onclick="listadoUsuarios(1)" data-target="#crear"';}else{ echo ' onclick="diasDisponibles(0)" data-target="#crear2"'; } ?> href="#">Crear Nuevo</a>
+                                                <a class="dropdown-item" data-toggle="modal" <?php if($esAdmin==true){ echo 'onclick="listadoUsuarios(1)" data-target="#crear"';}else{ echo ' onclick="diasDisponibles(0,2)" data-target="#crear2"'; } ?> href="#">Crear Nuevo</a>
                                             </div>
                                         </div>
                                 </div>
@@ -136,7 +136,7 @@ if (!isset($_SESSION['marconiId'])) {
                         <div class="row">
                             <div class="col-md-12 form-group form-check">
                                 <label for="usuario1" style="font-weight: bold;">Usuario *</label>
-                                <select class="form-control" name="usuario1" id="usuario1" onchange="diasDisponibles(value);" required></select>
+                                <select class="form-control" name="usuario1" id="usuario1" onchange="diasDisponibles(value,1);" required></select>
                             </div>
                             <div class="col-md-12 form-group form-check">
                                 <label for="diasDisponibles1" style="font-weight: bold;">Dias disponibles</label>
@@ -351,7 +351,7 @@ if (!isset($_SESSION['marconiId'])) {
                     $('#fecha2').val("");
                     $('#observacion2').val("");
                     filtrar1();
-                    diasDisponibles(usuario);
+                    diasDisponibles(usuario,2);
                 }else if(respuesta["estatus"]=="error"){
                     Swal.fire({
                         title: 'Error',
@@ -461,7 +461,7 @@ if (!isset($_SESSION['marconiId'])) {
         });
     }
 
-    function diasDisponibles(value){
+    function diasDisponibles(value,id){
         var rol = $('#hiddenRol').val();
         var usuarioId = $('#hiddenId').val();
         if(rol==2){
@@ -478,7 +478,7 @@ if (!isset($_SESSION['marconiId'])) {
 
             success: function(respuesta) {
                 console.log(respuesta);
-                $('#diasDisponibles2').val(respuesta["diasDisponibles"]);
+                $('#diasDisponibles'+id).val(respuesta["diasDisponibles"]);
             },
 
             error: function(respuesta) {
