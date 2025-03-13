@@ -1,9 +1,58 @@
 --------------------
-17-02-2025
+11-03-2025
 
-Colaboradores:
--> Edición:
-* Colocar enlace con el horario (Solo debe permitir cuando este pago del mes sin iniciar el otro)
+turnos->
+    horasExtras->
+        * Cualquier hora extra debe aprobarse
+        * Que salga la opcion de ¿Esta seguro?
+        * quitar la opcion de rechazar
+        * Y si esta aceptada que no salga eliminar
+
+Permisos->
+    Aprobar->
+        * Que salga la opcion de ¿Esta seguro?
+        * quitar la opcion de rechazar
+        * Y si esta aceptada que no salga eliminar
+
+Vacaciones->
+    como usuario->
+        * colocar el rango de fecha
+        * si tiene 0 dias que salga el aviso
+    Ambos->
+        * Que no tome en cuenta ni los domingos ni los feriados en el rango de fecha
+        * Que salga la opcion de ¿Esta seguro?
+        * quitar la opcion de rechazar
+        * Y si esta aceptada que no salga eliminar
+
+Incapacidades->
+    adicionar->
+        * Que salga la opcion de ¿Esta seguro?
+        * quitar la opcion de rechazar
+        * Y si esta aceptada que no salga eliminar
+    crear->
+        * fecha inicio tiene que ser de hoy a una semana hacia atras
+
+Planilla->
+    Impuesto sobre la renta->
+        Tramos de renta
+        (salario bruto)
+        Tasa de impuesto aplicable
+        Las rentas de hasta ¢922.000,00 Sin impuesto
+
+        Sobre el exceso de ¢922.000,00
+        hasta ¢ 1.352.000,00 10%
+
+        Sobre el exceso de ¢l.352.000,00
+        hasta ¢2.373.000,00     15%
+
+        Sobre el exceso de ¢2.373.000,00
+        hasta ¢4.745.000,00     20%
+
+        exceso de ¢4.745.000,00     25%
+
+
+turnosGestionar -> 
+colocar negar horas extras
 
 -----------------------------------
 -------------Hechos----------------
@@ -71,6 +120,23 @@ Colaboradores:
             * Ya no se paga por dia sino por hora
         Planilla:
             * Colocar calculo de pago por hora y no por día
+
+    11-03-25
+        inicio->
+            turnos->
+                * No deje cerrar turno sin iniciar ese dia
+                
+        colaboradores -> 
+            crear -> 
+                * que acepte ñ en cualquier espacio que ocupe letras
+                * Provincia, Canton y Distrito
+                * Agregar y validar campo de confirmar contraseña
+            modificar -> 
+                * que acepte ñ en cualquier espacio que ocupe letras
+                * Provincia, Canton y Distrito
+                * Agregar y validar campo de confirmar contraseña
+            Ingreso -> 
+                * validar que si el usuario no cumple con su fecha de ingreso no lo deje logearse
 
 
 -----------------------------------

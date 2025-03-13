@@ -36,7 +36,6 @@ if (!isset($_SESSION['marconiId'])) {
                         $genero = $row1["genero"];
                         $telefono = $row1["telefono"];
                         $correo = $row1["correo"];
-                        $direccion = $row1["direccion"];
                         $fechaIngreso = $row1["fechaIngreso"];
                         $cargo = $row1["cargo"];
                     }
@@ -264,7 +263,17 @@ if (!isset($_SESSION['marconiId'])) {
 
                 success: function(respuesta) {
                     console.log(respuesta);
-                    window.location.href = 'index.php';
+                    if(respuesta["estatus"]=='ok'){
+                        window.location.href = 'index.php';
+                    }else{
+                        Swal.fire({
+                            title: 'info',
+                            text: respuesta["msg"],
+                            icon: 'info',
+                            position: 'center',
+                            timer: 5000
+                        });
+                    }
                 },
 
                 error: function(respuesta) {

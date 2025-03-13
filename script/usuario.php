@@ -23,6 +23,16 @@ $asunto = $_POST['asunto'];
 				$usuarioId = $row1["id"];
 				$rol = $row1["rol"];
 				$estado = $row1["estado"];
+				$fechaIngreso = $row1["fechaIngreso"];
+			}
+
+			if($fecha_creacion<$fechaIngreso){
+				$datos = [
+					"estatus"	=> "error",
+					"msg"	=> "Debe iniciar desde su fecha de ingreso",
+				];
+				echo json_encode($datos);
+				exit;
 			}
 
 			if($estado=="Inactivo"){
@@ -116,7 +126,10 @@ $asunto = $_POST['asunto'];
 				$genero = $row2["genero"];
 				$telefono = $row2["telefono"];
 				$correo = $row2["correo"];
-				$direccion = $row2["direccion"];
+				$provincia = $row2["provincia"];
+				$canton = $row2["canton"];
+				$distrito = $row2["distrito"];
+				$direccion = $provincia." ".$canton." ".$distrito;
 				$fechaIngreso = $row2["fechaIngreso"];
 				$estado = $row2["estado"];
 				$html .= '
@@ -271,7 +284,9 @@ $asunto = $_POST['asunto'];
 		$genero = $_POST['genero'];
 		$telefono = $_POST['telefono'];
 		$correo = $_POST['correo'];
-		$direccion = $_POST['direccion'];
+		$provincia = $_POST['provincia'];
+		$canton = $_POST['canton'];
+		$distrito = $_POST['distrito'];
 		$fechaIngreso = $_POST['fechaIngreso'];
 		$salario = $_POST['salario'];
 		$password = md5($_POST['password']);
@@ -291,7 +306,7 @@ $asunto = $_POST['asunto'];
 			exit;
 		}
 		
-		$sql1 = "INSERT INTO usuarios (nombre,usuario,apellido,apellido2,cedula,fechaNacimiento,genero,telefono,correo,direccion,fechaIngreso,salario,password,cargo,rol,horarios) VALUES ('$nombre','$usuario','$apellido','$apellido1_2','$cedula','$fechaNacimiento','$genero','$telefono','$correo','$direccion','$fechaIngreso',$salario,'$password','$cargo',2,$horarios)";
+		$sql1 = "INSERT INTO usuarios (nombre,usuario,apellido,apellido2,cedula,fechaNacimiento,genero,telefono,correo,provincia,canton,distrito,fechaIngreso,salario,password,cargo,rol,horarios) VALUES ('$nombre','$usuario','$apellido','$apellido1_2','$cedula','$fechaNacimiento','$genero','$telefono','$correo','$provincia','$canton','$distrito','$fechaIngreso',$salario,'$password','$cargo',2,$horarios)";
 		$proceso1 = mysqli_query($conexion,$sql1);
 
 		$datos = [
@@ -334,7 +349,9 @@ $asunto = $_POST['asunto'];
 				$genero = $row1["genero"];
 				$telefono = $row1["telefono"];
 				$correo = $row1["correo"];
-				$direccion = $row1["direccion"];
+				$provincia = $row1["provincia"];
+				$canton = $row1["canton"];
+				$distrito = $row1["distrito"];
 				$fechaIngreso = $row1["fechaIngreso"];
 				$salario = $row1["salario"];
 				$password = $row1["password"];
@@ -351,7 +368,9 @@ $asunto = $_POST['asunto'];
 				"genero"	=> $genero,
 				"telefono"		=> $telefono,
 				"correo"	=> $correo,
-				"direccion"	=> $direccion,
+				"provincia"	=> $provincia,
+				"canton"	=> $canton,
+				"distrito"	=> $distrito,
 				"fechaIngreso"		=> $fechaIngreso,
 				"salario"	=> $salario,
 				"password"	=> $password,

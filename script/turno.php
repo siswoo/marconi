@@ -414,13 +414,24 @@ $asunto = $_POST['asunto'];
 
 	if($asunto=='cerrarTurno'){
 		$id = $_POST['id'];
-		$sql1 = "INSERT INTO turnos (usuarioId,tipo,fechaInicio,horaInicio) VALUES ($id,'Salida','$fecha_creacion','$hora_creacion')";
+		$sql1 = "SELECT * FROM turnos WHERE usuarioId = $id and fechaInicio = '$fecha_creacion' and tipo = 'Entrada'";
 		$proceso1 = mysqli_query($conexion,$sql1);
-		$datos = [
-			"estatus"	=> "ok",
-			"msg"	=> "Turno Cerrado",
-		];
-		echo json_encode($datos);
+		$contador1 = mysqli_num_rows($proceso1);
+		if($contador1==0){
+			$datos = [
+				"estatus"	=> "error",
+				"msg"	=> "No ha iniciado un turno hoy",
+			];
+			echo json_encode($datos);
+		}else{
+			$sql2 = "INSERT INTO turnos (usuarioId,tipo,fechaInicio,horaInicio) VALUES ($id,'Salida','$fecha_creacion','$hora_creacion')";
+			$proceso2 = mysqli_query($conexion,$sql2);
+			$datos = [
+				"estatus"	=> "ok",
+				"msg"	=> "Turno Cerrado",
+			];
+			echo json_encode($datos);
+		}
 	}
 
 	if($asunto=='agregarExtras'){

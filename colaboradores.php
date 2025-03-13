@@ -154,9 +154,17 @@ if (!isset($_SESSION['marconiId'])) {
                                 <label for="correo1" style="font-weight: bold;">Correo *</label>
                                 <input type="email" id="correo1" name="correo1" class="form-control" autocomplete="off" required>
                             </div>
-                            <div class="col-md-12 form-group form-check">
-                                <label for="direccion1" style="font-weight: bold;">Dirección *</label>
-                                <textarea id="direccion1" name="direccion1" class="form-control" autocomplete="off" required></textarea>
+                            <div class="col-md-4 form-group form-check">
+                                <label for="provincia1" style="font-weight: bold;">Provincia *</label>
+                                <input type="text" id="provincia1" name="provincia1" class="form-control" autocomplete="off" required>
+                            </div>
+                            <div class="col-md-4 form-group form-check">
+                                <label for="canton1" style="font-weight: bold;">Canton *</label>
+                                <input type="text" id="canton1" name="canton1" class="form-control" autocomplete="off" required>
+                            </div>
+                            <div class="col-md-4 form-group form-check">
+                                <label for="distrito1" style="font-weight: bold;">Distrito *</label>
+                                <input type="text" id="distrito1" name="distrito1" class="form-control" autocomplete="off" required>
                             </div>
                             <div class="col-md-6 form-group form-check">
                                 <label for="fechaIngreso1" style="font-weight: bold;">Fecha Ingreso *</label>
@@ -171,6 +179,10 @@ if (!isset($_SESSION['marconiId'])) {
                                 <input type="password" id="password1" name="password1" class="form-control" autocomplete="off" required>
                             </div>
                             <div class="col-md-6 form-group form-check">
+                                <label for="Cpassword1" style="font-weight: bold;">Confirmar contraseña *</label>
+                                <input type="password" id="Cpassword1" name="Cpassword1" class="form-control" autocomplete="off" required>
+                            </div>
+                            <div class="col-md-6 form-group form-check">
                                 <label for="cargo1" style="font-weight: bold;">Cargo *</label>
                                 <select class="form-control" name="cargo1" id="cargo1" required>
                                     <option value="">Seleccione</option>
@@ -179,7 +191,7 @@ if (!isset($_SESSION['marconiId'])) {
                                     <option value="Cargo3">Cargo3</option>
                                 </select>
                             </div>
-                            <div class="col-md-12 form-group form-check">
+                            <div class="col-md-6 form-group form-check">
                                 <label for="horarios1" style="font-weight: bold;">Horarios *</label>
                                 <select class="form-control" name="horarios1" id="horarios1" required>
                                     <option value="">Seleccione</option>
@@ -246,9 +258,17 @@ if (!isset($_SESSION['marconiId'])) {
                                 <label for="correo2" style="font-weight: bold;">Correo *</label>
                                 <input type="email" id="correo2" name="correo2" class="form-control" autocomplete="off" required>
                             </div>
-                            <div class="col-md-12 form-group form-check">
-                                <label for="direccion2" style="font-weight: bold;">Dirección *</label>
-                                <textarea id="direccion2" name="direccion2" class="form-control" autocomplete="off" required></textarea>
+                            <div class="col-md-4 form-group form-check">
+                                <label for="provincia2" style="font-weight: bold;">Provincia *</label>
+                                <input type="text" id="provincia2" name="provincia2" class="form-control" autocomplete="off" required>
+                            </div>
+                            <div class="col-md-4 form-group form-check">
+                                <label for="canton2" style="font-weight: bold;">Canton *</label>
+                                <input type="text" id="canton2" name="canton2" class="form-control" autocomplete="off" required>
+                            </div>
+                            <div class="col-md-4 form-group form-check">
+                                <label for="distrito2" style="font-weight: bold;">Distrito *</label>
+                                <input type="text" id="distrito2" name="distrito2" class="form-control" autocomplete="off" required>
                             </div>
                             <div class="col-md-6 form-group form-check">
                                 <label for="fechaIngreso2" style="font-weight: bold;">Fecha Ingreso *</label>
@@ -271,9 +291,13 @@ if (!isset($_SESSION['marconiId'])) {
                                     <option value="Cargo3">Cargo3</option>
                                 </select>
                             </div>
-                            <div class="col-md-12 form-group form-check">
+                            <div class="col-md-6 form-group form-check">
                                 <label for="password2" style="font-weight: bold;">Contraseña</label>
                                 <input type="password" id="password2" name="password2" class="form-control" autocomplete="off" >
+                            </div>
+                            <div class="col-md-6 form-group form-check">
+                                <label for="Cpassword2" style="font-weight: bold;">Confirmar contraseña</label>
+                                <input type="password" id="Cpassword2" name="Cpassword2" class="form-control" autocomplete="off" >
                             </div>
                             <div class="col-md-12 form-group form-check">
                                 <label for="horarios2" style="font-weight: bold;">Horarios *</label>
@@ -365,7 +389,9 @@ if (!isset($_SESSION['marconiId'])) {
                 $('#genero2').val(respuesta["genero"]);
                 $('#telefono2').val(respuesta["telefono"]);
                 $('#correo2').val(respuesta["correo"]);
-                $('#direccion2').val(respuesta["direccion"]);
+                $('#provincia2').val(respuesta["provincia"]);
+                $('#canton2').val(respuesta["canton"]);
+                $('#distrito2').val(respuesta["distrito"]);
                 $('#fechaIngreso2').val(respuesta["fechaIngreso"]);
                 $('#fechaRetiro2').val(respuesta["fechaRetiro"]);
                 $('#salario2').val(respuesta["salario"]);
@@ -412,10 +438,13 @@ if (!isset($_SESSION['marconiId'])) {
         var genero = $('#genero1').val();
         var telefono = $('#telefono1').val();
         var correo = $('#correo1').val();
-        var direccion = $('#direccion1').val();
+        var provincia = $('#provincia1').val();
+        var canton = $('#canton1').val();
+        var distrito = $('#distrito1').val();
         var fechaIngreso = $('#fechaIngreso1').val();
         var salario = $('#salario1').val();
         var password = $('#password1').val();
+        var Cpassword = $('#Cpassword1').val();
         var cargo = $('#cargo1').val();
         var horarios = $('#horarios1').val();
         var validarTelefono = primerNumero(telefono);
@@ -449,6 +478,16 @@ if (!isset($_SESSION['marconiId'])) {
             });
             return false;
         }
+        if(password!=Cpassword){
+            Swal.fire({
+                title: 'Info',
+                text: "Las contraseña debe coincidir",
+                icon: 'info',
+                position: 'center',
+                timer: 5000
+            });
+            return false;
+        }
         $.ajax({
             type: 'POST',
             url: 'script/usuario.php',
@@ -462,7 +501,9 @@ if (!isset($_SESSION['marconiId'])) {
                 "genero": genero,
                 "telefono": telefono,
                 "correo": correo,
-                "direccion": direccion,
+                "provincia": provincia,
+                "canton": canton,
+                "distrito": distrito,
                 "fechaIngreso": fechaIngreso,
                 "salario": salario,
                 "password": password,
@@ -489,7 +530,9 @@ if (!isset($_SESSION['marconiId'])) {
                     $('#genero1').val("");
                     $('#telefono1').val("");
                     $('#correo1').val("");
-                    $('#direccion1').val("");
+                    $('#provincia1').val("");
+                    $('#canton1').val("");
+                    $('#distrito1').val("");
                     $('#fechaIngreso1').val("");
                     $('#salario1').val("");
                     $('#password1').val("");
@@ -524,10 +567,13 @@ if (!isset($_SESSION['marconiId'])) {
         var genero = $('#genero2').val();
         var telefono = $('#telefono2').val();
         var correo = $('#correo2').val();
-        var direccion = $('#direccion2').val();
+        var provincia = $('#provincia2').val();
+        var canton = $('#canton2').val();
+        var distrito = $('#distrito2').val();
         var fechaIngreso = $('#fechaIngreso2').val();
         var salario = $('#salario2').val();
         var password = $('#password2').val();
+        var Cpassword = $('#Cpassword2').val();
         var cargo = $('#cargo2').val();
         var horarios = $('#horarios2').val();
         var validarTelefono = primerNumero(telefono);
@@ -561,6 +607,16 @@ if (!isset($_SESSION['marconiId'])) {
             });
             return false;
         }
+        if(password!=Cpassword && password!=""){
+            Swal.fire({
+                title: 'Info',
+                text: "Las contraseña debe coincidir",
+                icon: 'info',
+                position: 'center',
+                timer: 5000
+            });
+            return false;
+        }
         $.ajax({
             type: 'POST',
             url: 'script/usuario.php',
@@ -575,7 +631,9 @@ if (!isset($_SESSION['marconiId'])) {
                 "genero": genero,
                 "telefono": telefono,
                 "correo": correo,
-                "direccion": direccion,
+                "provincia": provincia,
+                "canton": canton,
+                "distrito": distrito,
                 "fechaIngreso": fechaIngreso,
                 "salario": salario,
                 "password": password,
@@ -613,7 +671,7 @@ if (!isset($_SESSION['marconiId'])) {
     });
 
     function soloLetras(input) {
-        input.value = input.value.replace(/[^A-Za-z\s]/g, '');
+        input.value = input.value.replace(/[^A-Za-zñÑ\s]/g, '');
     }
 
     function sinCaracteresEspeciales(input) {
