@@ -1,8 +1,5 @@
 --------------------
-11-03-2025
-
-Planilla ->
-    Que se calculen las horas extras nuevas 
+11-03-2025 
 
 -----------------------------------
 -------------Hechos----------------
@@ -137,6 +134,11 @@ Planilla ->
                 hasta ¢4.745.000,00     20%
 
                 exceso de ¢4.745.000,00     25%
+
+            * Que se calculen las horas extras nuevas
+
+        Zona Horaria->
+            * Cambiar zona a Costa Rica
 
 
 
