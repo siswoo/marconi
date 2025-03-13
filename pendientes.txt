@@ -1,24 +1,6 @@
 --------------------
 11-03-2025
 
-Planilla->
-    Impuesto sobre la renta->
-        Tramos de renta
-        (salario bruto)
-        Tasa de impuesto aplicable
-        Las rentas de hasta ¢922.000,00 Sin impuesto
-
-        Sobre el exceso de ¢922.000,00
-        hasta ¢ 1.352.000,00 10%
-
-        Sobre el exceso de ¢l.352.000,00
-        hasta ¢2.373.000,00     15%
-
-        Sobre el exceso de ¢2.373.000,00
-        hasta ¢4.745.000,00     20%
-
-        exceso de ¢4.745.000,00     25%
-
 
 -----------------------------------
 -------------Hechos----------------
@@ -135,6 +117,24 @@ Planilla->
                 * Que salga la opcion de ¿Esta seguro?
                 * quitar la opcion de rechazar
                 * Y si esta aceptada que no salga eliminar
+
+        Planilla->
+            Impuesto sobre la renta->
+                Tramos de renta
+                (salario bruto)
+                Tasa de impuesto aplicable
+                Las rentas de hasta ¢922.000,00 Sin impuesto
+
+                Sobre el exceso de ¢922.000,00
+                hasta ¢ 1.352.000,00 10%
+
+                Sobre el exceso de ¢l.352.000,00
+                hasta ¢2.373.000,00     15%
+
+                Sobre el exceso de ¢2.373.000,00
+                hasta ¢4.745.000,00     20%
+
+                exceso de ¢4.745.000,00     25%
 
 
 

@@ -269,8 +269,8 @@ $asunto = $_POST['asunto'];
 		$inicioMes = $fecha . "-01";
 		$ultimoDia = date("t", strtotime($inicioMes));
 		$finMes = $fecha . "-" . $ultimoDia;
-		$sql1 = "SELECT * FROM usuarios WHERE estado = 'Activo'";
-		//$sql1 = "SELECT * FROM usuarios WHERE estado = 'Activo' and id = 2";
+		//$sql1 = "SELECT * FROM usuarios WHERE estado = 'Activo'";
+		$sql1 = "SELECT * FROM usuarios WHERE estado = 'Activo' and id = 2";
 		$proceso1 = mysqli_query($conexion,$sql1);
 		$contador1 = mysqli_num_rows($proceso1);
 		if($contador1==0){
@@ -573,7 +573,36 @@ $asunto = $_POST['asunto'];
 		return $aguinaldo;
 	}
 
-	function isr($total){
+	function isr($salario_bruto){
+		$tramos = [
+	        [922000, 0.00],
+	        [1352000, 0.10],
+	        [2373000, 0.15],
+	        [4745000, 0.20],
+	        [PHP_INT_MAX, 0.25]
+	    ];
+	    
+	    $impuesto_total = 0;
+	    $exceso_anterior = 0;
+	    
+	    foreach ($tramos as [$limite, $tasa]) {
+	        if ($salario_bruto > $limite) {
+	            $exceso = $limite - $exceso_anterior;
+	        } else {
+	            $exceso = $salario_bruto - $exceso_anterior;
+	        }
+	        
+	        if ($exceso > 0) {
+	            $impuesto_total += $exceso * $tasa;
+	        }
+	        
+	        $exceso_anterior = $limite;
+	        if ($salario_bruto <= $limite) break;
+	    }
+	    
+	    return $impuesto_total;
+
+	    /*
 		if($total<=941000){
 			$resultado = 0;
 		}else if ($total>941 and $total <=1381000){
@@ -586,6 +615,7 @@ $asunto = $_POST['asunto'];
 			$resultado = ($total*25)/100;
 		}
 		return $resultado;
+		*/
 	}
 
 	function permisosSinGoce($conexion,$usuarioId,$inicioMes,$finMes){
