@@ -247,8 +247,6 @@ $asunto = $_POST['asunto'];
 		}
 
 		$sql1 = "SELECT * FROM incapacidades WHERE usuarioId = $usuario and (fechaInicio BETWEEN '$desde' AND '$hasta' or fechaFin BETWEEN '$desde' AND '$hasta')";
-		echo $sql1;
-		exit;
 		$proceso1 = mysqli_query($conexion,$sql1);
 		$contador1 = mysqli_num_rows($proceso1);
 		if($contador1>0){
