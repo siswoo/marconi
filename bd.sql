@@ -40,6 +40,7 @@ CREATE TABLE usuarios (
 	provincia VARCHAR(250) NOT NULL,
 	canton VARCHAR(250) NOT NULL,
 	distrito VARCHAR(250) NOT NULL,
+	direccion VARCHAR(250) NOT NULL,
 	fechaIngreso DATE NOT NULL,
 	fechaRetiro DATE NOT NULL,
 	salario INT NOT NULL,

@@ -140,7 +140,19 @@
         Zona Horaria->
             * Cambiar zona a Costa Rica
 
-
+    13-03-2025
+        Colaborador->
+            crear->
+                * Colocar la cedula primero
+                * Cambiar apellido -> Primer apellido
+                * que el telefono acepte solo 8 digitos ni mas ni menos
+                * Nombre, primer apellido y segundo apellido acepte como minimo 2 caracteres
+            modificar -> 
+                * Colocar la cedula primero
+                * Cambiar apellido -> Primer apellido
+                * que el telefono acepte solo 8 digitos ni mas ni menos
+                * Nombre, primer apellido y segundo apellido acepte como minimo 2 caracteres
+                * Colocar readOnly en cedula
 
 
 -----------------------------------

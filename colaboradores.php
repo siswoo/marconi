@@ -119,20 +119,20 @@ if (!isset($_SESSION['marconiId'])) {
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-6 form-group form-check">
+                                <label for="cedula1" style="font-weight: bold;">Cédula *</label>
+                                <input type="text" id="cedula1" name="cedula1" class="form-control" oninput="soloNumeros(this)" autocomplete="off" required>
+                            </div>
+                            <div class="col-md-6 form-group form-check">
                                 <label for="nombre1" style="font-weight: bold;">Nombre *</label>
                                 <input type="text" id="nombre1" name="nombre1" class="form-control" oninput="soloLetras(this); limpiarEspacios(this)" autocomplete="off" required>
                             </div>
                             <div class="col-md-6 form-group form-check">
-                                <label for="apellido1" style="font-weight: bold;">Apellido *</label>
+                                <label for="apellido1" style="font-weight: bold;">Primer Apellido *</label>
                                 <input type="text" id="apellido1" name="apellido1" class="form-control" oninput="soloLetras(this); limpiarEspacios(this)" autocomplete="off" required>
                             </div>
                             <div class="col-md-6 form-group form-check">
                                 <label for="apellido1_2" style="font-weight: bold;">Segundo Apellido *</label>
                                 <input type="text" id="apellido1_2" name="apellido1_2" class="form-control" oninput="soloLetras(this); limpiarEspacios(this)" autocomplete="off" required>
-                            </div>
-                            <div class="col-md-6 form-group form-check">
-                                <label for="cedula1" style="font-weight: bold;">Cédula *</label>
-                                <input type="text" id="cedula1" name="cedula1" class="form-control" oninput="soloNumeros(this)" autocomplete="off" required>
                             </div>
                             <div class="col-md-6 form-group form-check">
                                 <label for="fechaNacimiento1" style="font-weight: bold;">Fecha Nacimiento *</label>
@@ -154,17 +154,21 @@ if (!isset($_SESSION['marconiId'])) {
                                 <label for="correo1" style="font-weight: bold;">Correo *</label>
                                 <input type="email" id="correo1" name="correo1" class="form-control" autocomplete="off" required>
                             </div>
-                            <div class="col-md-4 form-group form-check">
+                            <div class="col-md-12 form-group form-check">
                                 <label for="provincia1" style="font-weight: bold;">Provincia *</label>
-                                <input type="text" id="provincia1" name="provincia1" class="form-control" autocomplete="off" required>
+                                <select id="provincia1" name="provincia1" class="form-control" onchange="provincias(value,1);" autocomplete="off" required></select>
                             </div>
-                            <div class="col-md-4 form-group form-check">
+                            <div class="col-md-12 form-group form-check">
                                 <label for="canton1" style="font-weight: bold;">Canton *</label>
-                                <input type="text" id="canton1" name="canton1" class="form-control" autocomplete="off" required>
+                                <select id="canton1" name="canton1" class="form-control" onchange="cantones(value,1);" disabled autocomplete="off" required></select>
                             </div>
-                            <div class="col-md-4 form-group form-check">
+                            <div class="col-md-12 form-group form-check">
                                 <label for="distrito1" style="font-weight: bold;">Distrito *</label>
-                                <input type="text" id="distrito1" name="distrito1" class="form-control" autocomplete="off" required>
+                                <select id="distrito1" name="distrito1" class="form-control" disabled autocomplete="off" required></select>
+                            </div>
+                            <div class="col-md-12 form-group form-check">
+                                <label for="direccion1" style="font-weight: bold;">Dirección exacta *</label>
+                                <input type="text" id="direccion1" name="direccion1" class="form-control" autocomplete="off" required>
                             </div>
                             <div class="col-md-6 form-group form-check">
                                 <label for="fechaIngreso1" style="font-weight: bold;">Fecha Ingreso *</label>
@@ -223,20 +227,20 @@ if (!isset($_SESSION['marconiId'])) {
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-6 form-group form-check">
+                                <label for="cedula2" style="font-weight: bold;">Cédula *</label>
+                                <input type="text" id="cedula2" name="cedula2" class="form-control" disabled oninput="soloNumeros(this)" autocomplete="off" required>
+                            </div>
+                            <div class="col-md-6 form-group form-check">
                                 <label for="nombre2" style="font-weight: bold;">Nombre *</label>
                                 <input type="text" id="nombre2" name="nombre2" class="form-control" oninput="soloLetras(this); limpiarEspacios(this)" autocomplete="off" required>
                             </div>
                             <div class="col-md-6 form-group form-check">
-                                <label for="apellido2" style="font-weight: bold;">Apellido *</label>
+                                <label for="apellido2" style="font-weight: bold;">Primer Apellido *</label>
                                 <input type="text" id="apellido2" name="apellido2" class="form-control" oninput="soloLetras(this); limpiarEspacios(this)" autocomplete="off" required>
                             </div>
                             <div class="col-md-6 form-group form-check">
                                 <label for="apellido2_2" style="font-weight: bold;">Segundo Apellido *</label>
                                 <input type="text" id="apellido2_2" name="apellido2_2" class="form-control" oninput="soloLetras(this); limpiarEspacios(this)" autocomplete="off" required>
-                            </div>
-                            <div class="col-md-6 form-group form-check">
-                                <label for="cedula2" style="font-weight: bold;">Cédula *</label>
-                                <input type="text" id="cedula2" name="cedula2" class="form-control" oninput="soloNumeros(this)" autocomplete="off" required>
                             </div>
                             <div class="col-md-6 form-group form-check">
                                 <label for="fechaNacimiento2" style="font-weight: bold;">Fecha Nacimiento *</label>
@@ -258,17 +262,21 @@ if (!isset($_SESSION['marconiId'])) {
                                 <label for="correo2" style="font-weight: bold;">Correo *</label>
                                 <input type="email" id="correo2" name="correo2" class="form-control" autocomplete="off" required>
                             </div>
-                            <div class="col-md-4 form-group form-check">
+                            <div class="col-md-12 form-group form-check">
                                 <label for="provincia2" style="font-weight: bold;">Provincia *</label>
-                                <input type="text" id="provincia2" name="provincia2" class="form-control" autocomplete="off" required>
+                                <select id="provincia2" name="provincia2" class="form-control" onchange="provincias(value,2);" autocomplete="off" required></select>
                             </div>
-                            <div class="col-md-4 form-group form-check">
+                            <div class="col-md-12 form-group form-check">
                                 <label for="canton2" style="font-weight: bold;">Canton *</label>
-                                <input type="text" id="canton2" name="canton2" class="form-control" autocomplete="off" required>
+                                <select id="canton2" name="canton2" class="form-control" onchange="cantones(value,2);" autocomplete="off" required></select>
                             </div>
-                            <div class="col-md-4 form-group form-check">
+                            <div class="col-md-12 form-group form-check">
                                 <label for="distrito2" style="font-weight: bold;">Distrito *</label>
-                                <input type="text" id="distrito2" name="distrito2" class="form-control" autocomplete="off" required>
+                                <select id="distrito2" name="distrito2" class="form-control" autocomplete="off" required></select>
+                            </div>
+                            <div class="col-md-12 form-group form-check">
+                                <label for="direccion2" style="font-weight: bold;">Dirección exacta *</label>
+                                <input type="text" id="direccion2" name="direccion2" class="form-control" autocomplete="off" required>
                             </div>
                             <div class="col-md-6 form-group form-check">
                                 <label for="fechaIngreso2" style="font-weight: bold;">Fecha Ingreso *</label>
@@ -321,6 +329,8 @@ if (!isset($_SESSION['marconiId'])) {
     $(document).ready(function() {
         filtrar1();
         iniciarHorarios();
+        cargarProvincias('provincia1',1);
+        cargarProvincias('provincia2',2);
     });
 
     function paginacion1(value){
@@ -390,8 +400,11 @@ if (!isset($_SESSION['marconiId'])) {
                 $('#telefono2').val(respuesta["telefono"]);
                 $('#correo2').val(respuesta["correo"]);
                 $('#provincia2').val(respuesta["provincia"]);
+                provincias(respuesta["provincia"],2);
                 $('#canton2').val(respuesta["canton"]);
+                cantones(respuesta["canton"],2);
                 $('#distrito2').val(respuesta["distrito"]);
+                $('#direccion2').val(respuesta["direccion"]);
                 $('#fechaIngreso2').val(respuesta["fechaIngreso"]);
                 $('#fechaRetiro2').val(respuesta["fechaRetiro"]);
                 $('#salario2').val(respuesta["salario"]);
@@ -402,6 +415,7 @@ if (!isset($_SESSION['marconiId'])) {
 
             error: function(respuesta) {
                 console.log(respuesta['responseText']);
+
             }
         });
     }
@@ -441,6 +455,7 @@ if (!isset($_SESSION['marconiId'])) {
         var provincia = $('#provincia1').val();
         var canton = $('#canton1').val();
         var distrito = $('#distrito1').val();
+        var direccion = $('#direccion1').val();
         var fechaIngreso = $('#fechaIngreso1').val();
         var salario = $('#salario1').val();
         var password = $('#password1').val();
@@ -488,6 +503,26 @@ if (!isset($_SESSION['marconiId'])) {
             });
             return false;
         }
+        if(telefono.length!=8){
+            Swal.fire({
+                title: 'Info',
+                text: "El teléfono debe contener 8 caracteres",
+                icon: 'info',
+                position: 'center',
+                timer: 5000
+            });
+            return false;
+        }
+        if(nombre.length < 2 || apellido.length < 2 || apellido1_2.length < 2){
+            Swal.fire({
+                title: 'Info',
+                text: "Nombre y apellidos como mínimo 2 caracteres",
+                icon: 'info',
+                position: 'center',
+                timer: 5000
+            });
+            return false;
+        }
         $.ajax({
             type: 'POST',
             url: 'script/usuario.php',
@@ -504,6 +539,7 @@ if (!isset($_SESSION['marconiId'])) {
                 "provincia": provincia,
                 "canton": canton,
                 "distrito": distrito,
+                "direccion": direccion,
                 "fechaIngreso": fechaIngreso,
                 "salario": salario,
                 "password": password,
@@ -570,6 +606,7 @@ if (!isset($_SESSION['marconiId'])) {
         var provincia = $('#provincia2').val();
         var canton = $('#canton2').val();
         var distrito = $('#distrito2').val();
+        var direccion = $('#direccion2').val();
         var fechaIngreso = $('#fechaIngreso2').val();
         var salario = $('#salario2').val();
         var password = $('#password2').val();
@@ -617,6 +654,26 @@ if (!isset($_SESSION['marconiId'])) {
             });
             return false;
         }
+        if(telefono.length!=8){
+            Swal.fire({
+                title: 'Info',
+                text: "El teléfono debe contener 8 caracteres",
+                icon: 'info',
+                position: 'center',
+                timer: 5000
+            });
+            return false;
+        }
+        if(nombre.length < 2 || apellido.length < 2 || apellido2_2.length < 2){
+            Swal.fire({
+                title: 'Info',
+                text: "Nombre y apellidos como mínimo 2 caracteres",
+                icon: 'info',
+                position: 'center',
+                timer: 5000
+            });
+            return false;
+        }
         $.ajax({
             type: 'POST',
             url: 'script/usuario.php',
@@ -634,6 +691,7 @@ if (!isset($_SESSION['marconiId'])) {
                 "provincia": provincia,
                 "canton": canton,
                 "distrito": distrito,
+                "direccion": direccion,
                 "fechaIngreso": fechaIngreso,
                 "salario": salario,
                 "password": password,
@@ -718,6 +776,177 @@ if (!isset($_SESSION['marconiId'])) {
                 console.log(respuesta['responseText']);
             }
         });
+    }
+
+    const data = {
+        "San José": {
+            "San José": ["Carmen", "Merced", "Hospital", "Catedral", "Zapote", "San Francisco de Dos Ríos", "Uruca", "Mata Redonda", "Pavas", "Hatillo", "San Sebastián"],
+            "Escazú": ["Escazú", "San Antonio", "San Rafael"],
+            "Desamparados": ["Desamparados", "San Miguel", "San Juan de Dios", "San Rafael Arriba", "San Rafael Abajo", "San Antonio", "Frailes", "Patarrá", "San Cristóbal", "Rosario", "Damas", "San Jerónimo", "Gravilias", "Los Guido"],
+            "Puriscal": ["Santiago", "Mercedes Sur", "Barbacoas", "Grifo Alto", "San Rafael", "Candelarita", "Desamparaditos", "San Antonio", "Chires"],
+            "Tarrazú": ["San Marcos", "San Lorenzo", "San Carlos"],
+            "Aserrí": ["Aserrí", "Tarbaca", "Vuelta de Jorco", "San Gabriel", "Legua", "Monterrey", "Salitrillos"],
+            "Mora": ["Colón", "Guayabo", "Tabarcia", "Piedras Negras", "Picagres", "Jaris", "Quitirrisí"],
+            "Goicoechea": ["Guadalupe", "San Francisco", "Calle Blancos", "Mata de Plátano", "Ipís", "Rancho Redondo", "Purral"],
+            "Santa Ana": ["Santa Ana", "Salitral", "Pozos", "Uruca", "Piedades", "Brasil"],
+            "Alajuelita": ["Alajuelita", "San Josecito", "San Antonio", "Concepción", "San Felipe"],
+            "Vásquez de Coronado": ["San Isidro", "San Rafael", "Dulce Nombre de Jesús", "Patalillo", "Cascajal"],
+            "Acosta": ["San Ignacio", "Guaitil", "Palmichal", "Cangrejal", "Sabanillas"],
+            "Tibás": ["San Juan", "Cinco Esquinas", "Anselmo Llorente", "León XIII", "Colima"],
+            "Moravia": ["San Vicente", "San Jerónimo", "La Trinidad"],
+            "Montes de Oca": ["San Pedro", "Sabanilla", "Mercedes", "San Rafael"],
+            "Turrubares": ["San Pablo", "San Pedro", "San Juan de Mata", "San Luis", "Carara"],
+            "Dota": ["Santa María", "Jardín", "Copey"],
+            "Curridabat": ["Curridabat", "Granadilla", "Sánchez", "Tirrases"],
+            "Pérez Zeledón": ["San Isidro de El General", "El General", "Daniel Flores", "Rivas", "San Pedro", "Platanares", "Pejibaye", "Cajón", "Barú", "Río Nuevo", "Páramo"],
+            "León Cortés Castro": ["San Pablo", "San Andrés", "Llano Bonito", "San Isidro", "Santa Cruz", "San Antonio"]
+        },
+        "Alajuela": {
+            "Alajuela": ["Alajuela", "San José", "Carrizal", "San Antonio", "Guácima", "San Isidro", "Sabanilla", "San Rafael", "Río Segundo", "Desamparados", "Turrúcares", "Tambor", "La Garita", "Sarapiquí"],
+            "San Ramón": ["San Ramón", "Santiago", "San Juan", "Piedades Norte", "Piedades Sur", "San Rafael", "San Isidro", "Ángeles", "Alfaro", "Volio", "Concepción", "Zapotal", "Peñas Blancas"],
+            "Grecia": ["Grecia", "San Isidro", "San José", "San Roque", "Tacares", "Río Cuarto", "Puente de Piedra", "Bolívar"],
+            "San Mateo": ["San Mateo", "Desmonte", "Jesús María", "Labrador"],
+            "Atenas": ["Atenas", "Jesús", "Mercedes", "San Isidro", "Concepción", "San José", "Santa Eulalia", "Escobal"],
+            "Naranjo": ["Naranjo", "San Miguel", "San José", "Cirrí Sur", "San Jerónimo", "San Juan", "El Rosario", "Palmitos"],
+            "Palmares": ["Palmares", "Zaragoza", "Buenos Aires", "Santiago", "Candelaria", "Esquipulas", "La Granja"],
+            "Poás": ["San Pedro", "San Juan", "San Rafael", "Carrillos", "Sabana Redonda"],
+            "Orotina": ["Orotina", "Mastate", "Hacienda Vieja", "Coyolar", "La Ceiba"],
+            "San Carlos": ["Quesada", "Florencia", "Buenavista", "Aguas Zarcas", "Venecia", "Pital", "La Fortuna", "La Tigra", "La Palmera", "Venado", "Cutris", "Monterrey", "Pocosol"],
+            "Zarcero": ["Zarcero", "Laguna", "Tapezco", "Guadalupe", "Palmira", "Zapote", "Brisas"],
+            "Valverde Vega": ["Sarchí Norte", "Sarchí Sur", "Toro Amarillo", "San Pedro", "Rodríguez"],
+            "Upala": ["Upala", "Aguas Claras", "San José (Pizote)", "Bijagua", "Delicias", "Dos Ríos", "Yolillal", "Canalete"],
+            "Los Chiles": ["Los Chiles", "Caño Negro", "El Amparo", "San Jorge"],
+            "Guatuso": ["San Rafael", "Buenavista", "Cote", "Katira"],
+            "Río Cuarto": ["Río Cuarto", "Santa Rita", "Santa Isabel"]
+        },
+        "Cartago": {
+            "Cartago": ["Oriental", "Occidental", "Carmen", "San Nicolás", "Agua Caliente (San Francisco)", "Guadalupe (Arenilla)", "Corralillo", "Tierra Blanca", "Dulce Nombre", "Llano Grande", "Quebradilla"],
+            "Paraíso": ["Paraíso", "Santiago", "Orosi", "Cachí", "Llanos de Santa Lucía"],
+            "La Unión": ["Tres Ríos", "San Diego", "San Juan", "San Rafael", "Concepción", "Dulce Nombre", "San Ramón", "Río Azul"],
+            "Jiménez": ["Juan Viñas", "Tucurrique", "Pejibaye"],
+            "Turrialba": ["Turrialba", "La Suiza", "Peralta", "Santa Cruz", "Santa Teresita", "Pavones", "Tuis", "Tayutic", "Santa Rosa", "Tres Equis", "La Isabel", "Chirripó"],
+            "Alvarado": ["Pacayas", "Cervantes", "Capellades"],
+            "Oreamuno": ["San Rafael", "Cot", "Potrero Cerrado", "Cipreses", "Santa Rosa"],
+            "El Guarco": ["El Tejar", "San Isidro", "Tobosi", "Patio de Agua"]
+        },
+        "Heredia": {
+            "Heredia": ["Heredia", "Mercedes", "San Francisco", "Ulloa", "Varablanca"],
+            "Barva": ["Barva", "San Pedro", "San Pablo", "San Roque", "Santa Lucía", "San José de la Montaña"],
+            "Santo Domingo": ["Santo Domingo", "San Vicente", "San Miguel", "Paracito", "Santo Tomás", "Santa Rosa", "Tures", "Pará"],
+            "Santa Bárbara": ["Santa Bárbara", "San Pedro", "San Juan", "Jesús", "Santo Domingo", "Purabá"],
+            "San Rafael": ["San Rafael", "San Josecito", "Santiago", "Los Ángeles", "Concepción"],
+            "San Isidro": ["San Isidro", "San José", "Concepción", "San Francisco"],
+            "Belén": ["San Antonio", "La Ribera", "La Asunción"],
+            "Flores": ["San Joaquín", "Barrantes", "Llorente"],
+            "San Pablo": ["San Pablo", "Rincón de Sabanilla"],
+            "Sarapiquí": ["Puerto Viejo", "La Virgen", "Horquetas", "Llanuras del Gaspar", "Cureña"]
+        },
+        "Guanacaste": {
+            "Liberia": ["Liberia", "Cañas Dulces", "Mayorga", "Nacascolo", "Curubandé"],
+            "Nicoya": ["Nicoya", "Mansión", "San Antonio", "Quebrada Honda", "Sámara", "Nosara", "Belén de Nosarita"],
+            "Santa Cruz": ["Santa Cruz", "Bolsón", "Veintisiete de Abril", "Tempate", "Cartagena", "Cuajiniquil", "Diriá", "Cabo Velas", "Tamarindo"],
+            "Bagaces": ["Bagaces", "La Fortuna", "Mogote", "Río Naranjo"],
+            "Carrillo": ["Filadelfia", "Palmira", "Sardinal", "Belén"],
+            "Cañas": ["Cañas", "Palmira", "San Miguel", "Bebedero", "Porozal"],
+            "Abangares": ["Las Juntas", "Sierra", "San Juan", "Colorado"],
+            "Tilarán": ["Tilarán", "Quebrada Grande", "Tronadora", "Santa Rosa", "Líbano", "Tierras Morenas", "Arenal"],
+            "Nandayure": ["Carmona", "Santa Rita", "Zapotal", "San Pablo", "Porvenir", "Bejuco"],
+            "La Cruz": ["La Cruz", "Santa Cecilia", "La Garita", "Santa Elena"],
+            "Hojancha": ["Hojancha", "Monte Romo", "Puerto Carrillo", "Huacas", "Matambú"]
+        },
+        "Puntarenas": {
+            "Puntarenas": ["Puntarenas", "Pitahaya", "Chomes", "Lepanto", "Paquera", "Manzanillo", "Guacimal", "Barranca", "Isla del Coco", "Cóbano", "Chacarita", "Chira", "Acapulco", "El Roble", "Arancibia"],
+            "Esparza": ["Espíritu Santo", "San Juan Grande", "Macacona", "San Rafael", "San Jerónimo", "Caldera"],
+            "Buenos Aires": ["Buenos Aires", "Volcán", "Potrero Grande", "Boruca", "Pilas", "Colinas", "Chánguena", "Biolley", "Brunka"],
+            "Montes de Oro": ["Miramar", "La Unión", "San Isidro"],
+            "Osa": ["Puerto Cortés", "Palmar", "Sierpe", "Piedras Blancas", "Bahía Ballena", "Bahía Drake"],
+            "Quepos": ["Quepos", "Savegre", "Naranjito"],
+            "Golfito": ["Golfito", "Guaycará", "Pavón", "Comte-Burica"],
+            "Coto Brus": ["San Vito", "Sabalito", "Aguabuena", "Limoncito", "Pittier", "Gutiérrez Braun"],
+            "Parrita": ["Parrita"],
+            "Corredores": ["Corredor", "La Cuesta", "Canoas", "Laurel"],
+            "Garabito": ["Jacó", "Tárcoles", "Lagunillas"],
+            "Monteverde": ["Santa Elena"],
+            "Puerto Jiménez": ["Puerto Jiménez"]
+        },
+        "Limón": {
+            "Limón": ["Limón", "Valle La Estrella", "Río Blanco", "Matama"],
+            "Pococí": ["Guápiles", "Jiménez", "La Rita", "Roxana", "Cariari", "Colorado"],
+            "Siquirres": ["Siquirres", "Pacuarito", "Florida", "Germania", "El Cairo", "Alegría"],
+            "Talamanca": ["Bratsi", "Sixaola", "Cahuita", "Telire"],
+            "Matina": ["Matina", "Batán", "Carrandi"],
+            "Guácimo": ["Guácimo", "Mercedes", "Pocora", "Río Jiménez", "Duacari"]
+        }
+    };
+
+    function cargarProvincias(provincia,condicion) {
+        let selectProvincia = document.getElementById(provincia);
+        if(condicion==1){
+            selectProvincia.innerHTML = '<option value="">Seleccione una provincia</option>';
+        }
+        for (let provincia in data) {
+            let option = document.createElement("option");
+            option.value = provincia;
+            option.textContent = provincia;
+            selectProvincia.appendChild(option);
+        }
+    }
+
+    function provincias(value,id){
+        let selectCanton = document.getElementById('canton'+id);
+        let selectDistrito = document.getElementById('distrito'+id);
+        let provinciaSeleccionada = value;
+        selectCanton.innerHTML = '<option value="">Seleccione un cantón</option>';
+        selectDistrito.disabled = true;
+        $('#distrito'+id).val("");
+        if (provinciaSeleccionada) {
+            selectCanton.disabled = false;
+            for (let canton in data[provinciaSeleccionada]) {
+                let option = document.createElement("option");
+                option.value = canton;
+                option.textContent = canton;
+                selectCanton.appendChild(option);
+            }
+        } else {
+            selectCanton.disabled = true;
+            $('#canton'+id).val("");
+        }
+    }
+
+    function cantones(value,id){
+        var provinciaSeleccionada = $('#provincia'+id).val();
+        var cantonSeleccionado = $('#canton'+id).val();
+        let selectDistrito = document.getElementById('distrito'+id);
+        let distritoSeleccionada = value;
+        selectDistrito.innerHTML = '<option value="">Seleccione un cantón</option>';
+        if (distritoSeleccionada) {
+            selectDistrito.disabled = false;
+            for (let distrito of data[provinciaSeleccionada][cantonSeleccionado]) {
+                let option = document.createElement("option");
+                option.value = distrito;
+                option.textContent = distrito;
+                selectDistrito.appendChild(option);
+            }
+        } else {
+            selectDistrito.disabled = true;
+            $('#distrito'+id).val("");
+        }
+    }
+
+    function cargarDistritos() {
+        let provinciaSeleccionada = document.getElementById("provincia").value;
+        let cantonSeleccionado = document.getElementById("canton").value;
+        let selectDistrito = document.getElementById("distrito");
+        selectDistrito.innerHTML = '<option value="">Seleccione un distrito</option>';
+        if (cantonSeleccionado) {
+            selectDistrito.disabled = false;
+            for (let distrito of data[provinciaSeleccionada][cantonSeleccionado]) {
+                let option = document.createElement("option");
+                option.value = distrito;
+                option.textContent = distrito;
+                selectDistrito.appendChild(option);
+            }
+        }
     }
 
 

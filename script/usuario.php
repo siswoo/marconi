@@ -287,6 +287,7 @@ $asunto = $_POST['asunto'];
 		$provincia = $_POST['provincia'];
 		$canton = $_POST['canton'];
 		$distrito = $_POST['distrito'];
+		$direccion = $_POST['direccion'];
 		$fechaIngreso = $_POST['fechaIngreso'];
 		$salario = $_POST['salario'];
 		$password = md5($_POST['password']);
@@ -306,7 +307,7 @@ $asunto = $_POST['asunto'];
 			exit;
 		}
 		
-		$sql1 = "INSERT INTO usuarios (nombre,usuario,apellido,apellido2,cedula,fechaNacimiento,genero,telefono,correo,provincia,canton,distrito,fechaIngreso,salario,password,cargo,rol,horarios) VALUES ('$nombre','$usuario','$apellido','$apellido1_2','$cedula','$fechaNacimiento','$genero','$telefono','$correo','$provincia','$canton','$distrito','$fechaIngreso',$salario,'$password','$cargo',2,$horarios)";
+		$sql1 = "INSERT INTO usuarios (nombre,usuario,apellido,apellido2,cedula,fechaNacimiento,genero,telefono,correo,provincia,canton,distrito,direccion,fechaIngreso,salario,password,cargo,rol,horarios) VALUES ('$nombre','$usuario','$apellido','$apellido1_2','$cedula','$fechaNacimiento','$genero','$telefono','$correo','$provincia','$canton','$distrito','$direccion','$fechaIngreso',$salario,'$password','$cargo',2,$horarios)";
 		$proceso1 = mysqli_query($conexion,$sql1);
 
 		$datos = [
@@ -352,6 +353,7 @@ $asunto = $_POST['asunto'];
 				$provincia = $row1["provincia"];
 				$canton = $row1["canton"];
 				$distrito = $row1["distrito"];
+				$direccion = $row1["direccion"];
 				$fechaIngreso = $row1["fechaIngreso"];
 				$salario = $row1["salario"];
 				$password = $row1["password"];
@@ -371,6 +373,7 @@ $asunto = $_POST['asunto'];
 				"provincia"	=> $provincia,
 				"canton"	=> $canton,
 				"distrito"	=> $distrito,
+				"direccion"	=> $direccion,
 				"fechaIngreso"		=> $fechaIngreso,
 				"salario"	=> $salario,
 				"password"	=> $password,
@@ -394,6 +397,7 @@ $asunto = $_POST['asunto'];
 		$provincia = $_POST['provincia'];
 		$canton = $_POST['canton'];
 		$distrito = $_POST['distrito'];
+		$direccion = $_POST['direccion'];
 		$fechaIngreso = $_POST['fechaIngreso'];
 		$salario = $_POST['salario'];
 		$horarios = $_POST['horarios'];
@@ -406,7 +410,7 @@ $asunto = $_POST['asunto'];
 		$cargo = $_POST['cargo'];
 		$usuario = $cedula;
 
-		$sql1 = "UPDATE usuarios SET nombre = '$nombre', usuario = '$usuario', apellido = '$apellido', apellido2 = '$apellido2_2', cedula = '$cedula', fechaNacimiento = '$fechaNacimiento', genero = '$genero', telefono = '$telefono', correo = '$correo', provincia = '$provincia', canton = '$canton', distrito = '$distrito', fechaIngreso = '$fechaIngreso', salario = $salario, $password cargo = '$cargo', horarios = $horarios WHERE id = ".$id;
+		$sql1 = "UPDATE usuarios SET nombre = '$nombre', usuario = '$usuario', apellido = '$apellido', apellido2 = '$apellido2_2', cedula = '$cedula', fechaNacimiento = '$fechaNacimiento', genero = '$genero', telefono = '$telefono', correo = '$correo', provincia = '$provincia', canton = '$canton', distrito = '$distrito', direccion = '$direccion', fechaIngreso = '$fechaIngreso', salario = $salario, $password cargo = '$cargo', horarios = $horarios WHERE id = ".$id;
 		$proceso1 = mysqli_query($conexion,$sql1);
 		$datos = [
 			"estatus"	=> "ok",
