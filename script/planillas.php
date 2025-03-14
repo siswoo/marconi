@@ -272,8 +272,8 @@ $asunto = $_POST['asunto'];
 		$inicioMes = $fecha . "-01";
 		$ultimoDia = date("t", strtotime($inicioMes));
 		$finMes = $fecha . "-" . $ultimoDia;
-		$sql1 = "SELECT * FROM usuarios WHERE estado = 'Activo'";
-		//$sql1 = "SELECT * FROM usuarios WHERE estado = 'Activo' and id = 2";
+		//$sql1 = "SELECT * FROM usuarios WHERE estado = 'Activo'";
+		$sql1 = "SELECT * FROM usuarios WHERE estado = 'Activo' and id = 2";
 		$proceso1 = mysqli_query($conexion,$sql1);
 		$contador1 = mysqli_num_rows($proceso1);
 		if($contador1==0){
@@ -311,13 +311,6 @@ $asunto = $_POST['asunto'];
 			$permisosHorasSinGoce = permisosSinGoce($conexion,$usuarioId,$inicioMes,$finMes);
 			$calculoHorasSinGoce = $pagoHora*$permisosHorasSinGoce;
 
-			if($diasMesDiferencia>0 and $diasLaborados>0){
-				$diasLaborados += $diasMesDiferencia;
-			}else if($diasLaborados>30){
-				$diasLaborados = 30;
-				//Calculo de horas laboradas quitarle un día si es mayor a 30
-			}
-
 			$domingosPagos = 0;
 			$calculoDomingosPagos = 0;
 			if($diasLaborados>0){
@@ -327,8 +320,20 @@ $asunto = $_POST['asunto'];
 				}
 			}
 
+			if($diasMesDiferencia>0 and $diasLaborados>0){
+				$diasLaborados += $diasMesDiferencia;
+			}else if($diasMesDiferencia<0 and $diasLaborados>0){
+				$diasLaborados += $diasMesDiferencia;
+			}else if(($diasLaborados+$domingosPagos)>30){
+				$diasLaborados = 30;
+			}
+
 			$pagoDiasLaborados = $diasLaborados*$pagoAlDia;
 			$pagoHorasLaborados = $horasTrabajados*$pagoHora;
+
+			if($pagoHorasLaborados>$pagoDiasLaborados){
+				$pagoHorasLaborados = $pagoDiasLaborados;
+			}
 
 			if($pagoDiasLaborados==0){
 				$calculoHorasSinGoce = 0;
@@ -347,7 +352,7 @@ $asunto = $_POST['asunto'];
 			$isr = isr(round($total,2));
 			$total = round($total-($ccss+$isr),2);
 
-			$total += $montoAguinaldo;
+			$total += $calculoHorasSinGoce;
 
 			$sql2 = "INSERT INTO planillas (usuarioId,fecha,pagoDia,pagoHora,horasExtras,diasFeriadosLaborados,aguinaldos,subTotal,total,estatus,ccss,isr) VALUES ($usuarioId,'$finMes','$pagoAlDia','$pagoHora',$horasExtras,$diasFeriadosLaborados,'$montoAguinaldo','$subTotal','$total',0,'$ccss','$isr')";
 			$proceso2 = mysqli_query($conexion,$sql2);
@@ -675,19 +680,20 @@ $asunto = $_POST['asunto'];
 				if($contador3>0){
 					while($row3=mysqli_fetch_array($proceso3)){
 						$horaInicio2 = $row3["horaInicio"];
-						if(diferenciaHoras($horaInicio,$horaInicio2)<8){
+						if(diferenciaHoras($horaInicio,$horaInicio2)<9){
 							$horasLaborados += diferenciaHoras($horaInicio,$horaInicio2);
-						}else if(diferenciaHoras($horaInicio,$horaInicio2)>=8){
-							$horasLaborados += 8;
+						}else if(diferenciaHoras($horaInicio,$horaInicio2)>=9){
+							$horasLaborados += 9;
 						}
 					}
 				}else{
-					if(diferenciaHoras($horaInicio,$salida)!=8){
+					if(diferenciaHoras($horaInicio,$salida)<9){
 						$horasLaborados += diferenciaHoras($horaInicio,$salida);
-					}else if(diferenciaHoras($horaInicio,$salida)>=8){
-						$horasLaborados += 8;
+					}else if(diferenciaHoras($horaInicio,$salida)>=9){
+						$horasLaborados += 9;
 					}
 				}
+				$horasLaborados -= 1;
 			}
 		}
 		return $horasLaborados;
