@@ -272,8 +272,8 @@ $asunto = $_POST['asunto'];
 		$inicioMes = $fecha . "-01";
 		$ultimoDia = date("t", strtotime($inicioMes));
 		$finMes = $fecha . "-" . $ultimoDia;
-		//$sql1 = "SELECT * FROM usuarios WHERE estado = 'Activo'";
-		$sql1 = "SELECT * FROM usuarios WHERE estado = 'Activo' and id = 2";
+		$sql1 = "SELECT * FROM usuarios WHERE estado = 'Activo'";
+		//$sql1 = "SELECT * FROM usuarios WHERE estado = 'Activo' and id = 2";
 		$proceso1 = mysqli_query($conexion,$sql1);
 		$contador1 = mysqli_num_rows($proceso1);
 		if($contador1==0){
