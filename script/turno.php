@@ -389,6 +389,18 @@ $asunto = $_POST['asunto'];
 			exit;
 		}
 
+		$sql4 = "SELECT * FROM permisosLaborales WHERE usuarioId = $usuarioId and fechaInicio = '$fecha_creacion' and horaFin >= '$hora_creacion' and estatus = 1";
+		$proceso4 = mysqli_query($conexion,$sql4);
+		$contador4 = mysqli_num_rows($proceso4);
+		if($contador4>0){
+			$datos = [
+				"estatus"	=> "error",
+				"msg"	=> "Estas en un rango de permiso",
+			];
+			echo json_encode($datos);
+			exit;
+		}
+
 		$sql2 = "SELECT ho.entrada, ho.entradaMaxima FROM usuarios usu 
 		INNER JOIN horarios ho 
 		ON ho.id = usu.horarios

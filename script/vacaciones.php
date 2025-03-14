@@ -282,8 +282,16 @@ $asunto = $_POST['asunto'];
 		}
 
 		foreach ($dias_laborales as $dia) {
-		    $sql2 = "INSERT INTO vacaciones (usuarioId,fechaInicio,observacion) VALUES ($usuario,'$dia','$observacion')";
-			$proceso2 = mysqli_query($conexion,$sql2);
+			$fechaArray = explode("-",$dia);
+			$diaArray = $fechaArray[2];
+			$mesArray = $fechaArray[1];
+			$sql3 = "SELECT * FROM diasFeriados WHERE mes = $mesArray and dia = $diaArray";
+			$proceso3 = mysqli_query($conexion,$sql3);
+			$contador3 = mysqli_num_rows($proceso3);
+			if($contador3==0){
+			    $sql2 = "INSERT INTO vacaciones (usuarioId,fechaInicio,observacion) VALUES ($usuario,'$dia','$observacion')";
+				$proceso2 = mysqli_query($conexion,$sql2);
+			}
 		}
 
 		$datos = [

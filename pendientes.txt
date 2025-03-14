@@ -156,6 +156,19 @@
         Turnos->
             Listado->
                 * Fixear horas extras que no sean negativas
+        Vacaciones->
+            Guardar->
+                * Que no tome en cuenta los dias feriados
+        Planillas->
+            Generar->
+                * Calcular horas con permisos de goce
+        Inicio->
+            Entrada->
+                * No permitir si estoy en un rango de permiso
+        Permisos->
+            Crear->
+                * No permitir un registro antes de la fecha actual
+                * No dejar crear un registro si ya ha ingresado para la fecha
 
 -----------------------------------
 -----------------------------------

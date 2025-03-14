@@ -322,8 +322,11 @@ $asunto = $_POST['asunto'];
 				$calculoHorasSinGoce = 0;
 			}
 
+			$horasPermisosLaborales = calcularHorasPermisos($conexion,$usuarioId,$inicioMes,$finMes);
+			$calculoHorasPermisosLaborales = $horasPermisosLaborales*$pagoHora;
+
 			//$subTotal = ($pagoDiasLaborados+$calculoHorasExtras+$calculoDiasFeriadosLaborados);
-			$subTotal = ($pagoHorasLaborados+$calculoHorasExtras+$calculoHorasFeriadosLaborados);
+			$subTotal = ($pagoHorasLaborados+$calculoHorasExtras+$calculoHorasFeriadosLaborados+$calculoHorasPermisosLaborales);
 			$total = $subTotal-$calculoHorasSinGoce;
 
 			//seguro social
@@ -674,6 +677,21 @@ $asunto = $_POST['asunto'];
 			}
 		}
 		return $horasLaborados;
+	}
+
+	function calcularHorasPermisos($conexion,$usuarioId,$inicioMes,$finMes){
+		$horasPermisos = 0;
+		$sql1 = "SELECT * FROM permisosLaborales WHERE usuarioId = $usuarioId and tipo = 'Goce de salario' and estatus = 1 and fechaInicio BETWEEN '$inicioMes' AND '$finMes'";
+		$proceso1 = mysqli_query($conexion,$sql1);
+		$contador1 = mysqli_num_rows($proceso1);
+		if($contador1>0){
+			while($row1=mysqli_fetch_array($proceso1)){
+				$horaInicio = $row1["horaInicio"];
+				$horaFin = $row1["horaFin"];
+				$horasPermisos += diferenciaHoras($horaInicio,$horaFin);
+			}
+		}
+		return $horasPermisos;
 	}
 
 
