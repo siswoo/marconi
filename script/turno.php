@@ -90,6 +90,10 @@ $asunto = $_POST['asunto'];
 				}else{
 					$aceptada = "";
 				}
+				
+				if($diferenciaHorarias<0){
+					$diferenciaHorarias = 0;
+				}
 
 				$html .= '
 			                <tr id="">

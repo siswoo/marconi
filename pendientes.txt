@@ -153,7 +153,9 @@
                 * que el telefono acepte solo 8 digitos ni mas ni menos
                 * Nombre, primer apellido y segundo apellido acepte como minimo 2 caracteres
                 * Colocar readOnly en cedula
-
+        Turnos->
+            Listado->
+                * Fixear horas extras que no sean negativas
 
 -----------------------------------
 -----------------------------------
