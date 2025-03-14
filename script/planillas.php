@@ -64,6 +64,7 @@ $asunto = $_POST['asunto'];
 						<th class="text-center">Sub-Total</th>
 						<th class="text-center">Ccss</th>
 						<th class="text-center">Isr</th>
+						<th class="text-center">Rebajos</th>
 						<th class="text-center">Total</th>
 						<th class="text-center">Opciones</th>
 		            </tr>
@@ -82,6 +83,7 @@ $asunto = $_POST['asunto'];
 				$subTotal = $row2["subTotal"];
 				$ccss = $row2["ccss"];
 				$isr = $row2["isr"];
+				$rebajos = $ccss+$isr;
 				$total = $row2["total"];
 				$html .= '
 			                <tr id="">
@@ -93,6 +95,7 @@ $asunto = $_POST['asunto'];
 			                    <td style="text-align:center;">'.$subTotal.'</td>
 			                    <td style="text-align:center;">'.$ccss.'</td>
 			                    <td style="text-align:center;">'.$isr.'</td>
+			                    <td style="text-align:center;">'.$rebajos.'</td>
 			                    <td style="text-align:center;">'.$total.'</td>
 			                    <td style="text-align:center;" nowrap>
 			                    	<button class="btn btn-primary" data-toggle="modal" data-target="#detalle" onclick="detalle('.$plaId.')">Detalle</button>
@@ -399,6 +402,7 @@ $asunto = $_POST['asunto'];
 			$salario = $row1['salario'];
 			$ccss = $row1['ccss'];
 			$isr = $row1['isr'];
+			$rebajos = $ccss+$isr;
 		}
 		$datos = [
 			"estatus"	=> "ok",
@@ -412,6 +416,7 @@ $asunto = $_POST['asunto'];
 			"salario"	=> $salario,
 			"ccss"	=> $ccss,
 			"isr"	=> $isr,
+			"rebajos"	=> $rebajos,
 		];
 		echo json_encode($datos);
 	}

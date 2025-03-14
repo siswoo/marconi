@@ -148,6 +148,10 @@ if (!isset($_SESSION['marconiId'])) {
                                 <input type="text" id="isr1" name="isr1" class="form-control" readonly>
                             </div>
                             <div class="col-md-6 form-group form-check">
+                                <label for="rebajos1" style="font-weight: bold;">Rebajos</label>
+                                <input type="text" id="rebajos1" name="rebajos1" class="form-control" readonly>
+                            </div>
+                            <div class="col-md-12 form-group form-check">
                                 <label for="total1" style="font-weight: bold;">Total</label>
                                 <input type="text" id="total1" name="total1" class="form-control" readonly>
                             </div>
@@ -384,6 +388,7 @@ if (!isset($_SESSION['marconiId'])) {
                 $('#salario1').val(respuesta['salario']);
                 $('#ccss1').val(respuesta['ccss']);
                 $('#isr1').val(respuesta['isr']);
+                $('#rebajos1').val(respuesta['rebajos']);
                 $('#total1').val(respuesta['total']);
             },
 

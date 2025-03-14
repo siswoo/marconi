@@ -162,6 +162,10 @@
         Planillas->
             Generar->
                 * Calcular horas con permisos de goce
+            Listar->
+                * Colocar columna rebajos con sumatoria de ccss + isr
+            Detalle->
+                * Colocar input rebajos con sumatoria de ccss + isr
         Inicio->
             Entrada->
                 * No permitir si estoy en un rango de permiso
