@@ -318,6 +318,15 @@ $asunto = $_POST['asunto'];
 				//Calculo de horas laboradas quitarle un día si es mayor a 30
 			}
 
+			$domingosPagos = 0;
+			$calculoDomingosPagos = 0;
+			if($diasLaborados>0){
+				$domingosPagos = contarDomingos($inicioMes,$finMes);
+				if($domingosPagos>0){
+					$calculoDomingosPagos = $domingosPagos*$pagoAlDia;
+				}
+			}
+
 			$pagoDiasLaborados = $diasLaborados*$pagoAlDia;
 			$pagoHorasLaborados = $horasTrabajados*$pagoHora;
 
@@ -329,7 +338,7 @@ $asunto = $_POST['asunto'];
 			$calculoHorasPermisosLaborales = $horasPermisosLaborales*$pagoHora;
 
 			//$subTotal = ($pagoDiasLaborados+$calculoHorasExtras+$calculoDiasFeriadosLaborados);
-			$subTotal = ($pagoHorasLaborados+$calculoHorasExtras+$calculoHorasFeriadosLaborados+$calculoHorasPermisosLaborales);
+			$subTotal = ($pagoHorasLaborados+$calculoHorasExtras+$calculoHorasFeriadosLaborados+$calculoHorasPermisosLaborales+$calculoDomingosPagos);
 			$total = $subTotal-$calculoHorasSinGoce;
 
 			//seguro social
@@ -699,6 +708,20 @@ $asunto = $_POST['asunto'];
 		return $horasPermisos;
 	}
 
+	function contarDomingos($fechaInicio, $fechaFin) {
+	    $inicio = new DateTime($fechaInicio);
+	    $fin = new DateTime($fechaFin);
+	    $contador = 0;
+
+	    while ($inicio <= $fin) {
+	        if ($inicio->format('w') == 0) {
+	            $contador++;
+	        }
+	        $inicio->modify('+1 day');
+	    }
+
+	    return $contador;
+	}
 
 
 ?>
