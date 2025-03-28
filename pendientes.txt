@@ -1,6 +1,17 @@
 --------------------
-11-03-2025 
+    18-03-2025
+            aguinaldos -> 
+                * Verificar el calculo resultante
 
+        Vacaciones -> 
+            creacion -> 
+                * Cuando es rango de un día que salgan los avisos correspondientes
+
+        Liquidaciones -> 
+            general -> 
+                * Validar todos los calculos como en planilla
+            al aceptar -> 
+                * Que salga estas seguro ?
 -----------------------------------
 -------------Hechos----------------
 -----------------------------------
@@ -178,6 +189,31 @@
         Planillas->
             Generar->
                 * Que se sumen los domingos como laborados si al menos tien un dia laborado en el mes
+
+    27-03-2025
+        Colaboradores
+            creacion -> 
+                * no acepte espacio en blanco al inicio ni al final
+                * Limpiar direccion en la creación
+            editar ->
+                * no acepte espacio en blanco al inicio ni al final
+            listado -> 
+                * concatenar direccion con lo demas
+            general -> 
+                * validar que todos los campos se limpien al crear
+
+        Cargo -> 
+            Base de datos -> 
+                * colocar la tabla y que se expanda en colaboradores
+
+        Planilla -> 
+            ccss -> calculo de ccss a 11.16 linea 350
+
+        incapacidades -> 
+            calculo en planilla ->
+                * Si la incapacidad es de 1 a 3 dias -> 50% de salario el dia
+                * Si es mayor a 3 días no le pagamos nada
+
 
 -----------------------------------
 -----------------------------------

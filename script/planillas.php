@@ -311,6 +311,12 @@ $asunto = $_POST['asunto'];
 			$permisosHorasSinGoce = permisosSinGoce($conexion,$usuarioId,$inicioMes,$finMes);
 			$calculoHorasSinGoce = $pagoHora*$permisosHorasSinGoce;
 
+			$diasIncapacidades = incapacidades($conexion,$usuarioId,$inicioMes,$finMes);
+			$cuentasDiasIncapacidades = 0;
+			if($diasIncapacidades>0 and $diasIncapacidades<4){
+				$cuentasDiasIncapacidades = $diasIncapacidades*($pagoAlDia*0.5);
+			}
+
 			$domingosPagos = 0;
 			$calculoDomingosPagos = 0;
 			if($diasLaborados>0){
@@ -343,11 +349,11 @@ $asunto = $_POST['asunto'];
 			$calculoHorasPermisosLaborales = $horasPermisosLaborales*$pagoHora;
 
 			//$subTotal = ($pagoDiasLaborados+$calculoHorasExtras+$calculoDiasFeriadosLaborados);
-			$subTotal = ($pagoHorasLaborados+$calculoHorasExtras+$calculoHorasFeriadosLaborados+$calculoHorasPermisosLaborales+$calculoDomingosPagos);
+			$subTotal = ($pagoHorasLaborados+$calculoHorasExtras+$calculoHorasFeriadosLaborados+$calculoHorasPermisosLaborales+$calculoDomingosPagos+$cuentasDiasIncapacidades);
 			$total = $subTotal-$calculoHorasSinGoce;
 
 			//seguro social
-			$ccss = round(($total*10.5)/100,2);
+			$ccss = round(($total*11.16)/100,2);
 			//impuesto sobre la renta
 			$isr = isr(round($total,2));
 			$total = round($total-($ccss+$isr),2);
@@ -727,6 +733,16 @@ $asunto = $_POST['asunto'];
 	    }
 
 	    return $contador;
+	}
+
+	function incapacidades($conexion,$usuarioId,$inicioMes,$finMes){
+		$total = 0;
+		$sql1 = "SELECT * FROM incapacidades WHERE usuarioId = $usuarioId and estatus = 1 and fechaInicio BETWEEN '$inicioMes' AND '$finMes' and fechaFin BETWEEN '$inicioMes' AND '$finMes' ";
+		$proceso1 = mysqli_query($conexion,$sql1);
+		while($row1=mysqli_fetch_array($proceso1)){
+			$total += $row1["diasTotales"];
+		}
+		return $total;
 	}
 
 

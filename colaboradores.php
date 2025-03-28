@@ -32,7 +32,11 @@ if (!isset($_SESSION['marconiId'])) {
 <body id="page-top">
 
     <div id="wrapper">
-        <?php include("menu.php"); ?>
+        <?php 
+        include("menu.php");
+        $sql1 = "SELECT * FROM cargos";
+        $sql2 = "SELECT * FROM cargos";
+        ?>
         <div id="content-wrapper" class="d-flex flex-column">
             <div id="content">
                 <?php include("header.php"); ?>
@@ -152,7 +156,7 @@ if (!isset($_SESSION['marconiId'])) {
                             </div>
                             <div class="col-md-6 form-group form-check">
                                 <label for="correo1" style="font-weight: bold;">Correo *</label>
-                                <input type="email" id="correo1" name="correo1" class="form-control" autocomplete="off" required>
+                                <input type="email" id="correo1" name="correo1" class="form-control" oninput="espaciosBlancosInicioFinal(this); limpiarEspacios(this)" autocomplete="off" required>
                             </div>
                             <div class="col-md-12 form-group form-check">
                                 <label for="provincia1" style="font-weight: bold;">Provincia *</label>
@@ -190,9 +194,14 @@ if (!isset($_SESSION['marconiId'])) {
                                 <label for="cargo1" style="font-weight: bold;">Cargo *</label>
                                 <select class="form-control" name="cargo1" id="cargo1" required>
                                     <option value="">Seleccione</option>
-                                    <option value="Cargo1">Cargo1</option>
-                                    <option value="Cargo2">Cargo2</option>
-                                    <option value="Cargo3">Cargo3</option>
+                                    <?php
+                                    $proceso1 = mysqli_query($conexion,$sql1);
+                                    while($row1=mysqli_fetch_array($proceso1)){
+                                        $cargoId = $row1["id"];
+                                        $cargoNombre = $row1["nombre"];
+                                        echo '<option value="'.$cargoId.'">'.$cargoNombre.'</option>';
+                                    }
+                                    ?>
                                 </select>
                             </div>
                             <div class="col-md-6 form-group form-check">
@@ -260,7 +269,7 @@ if (!isset($_SESSION['marconiId'])) {
                             </div>
                             <div class="col-md-6 form-group form-check">
                                 <label for="correo2" style="font-weight: bold;">Correo *</label>
-                                <input type="email" id="correo2" name="correo2" class="form-control" autocomplete="off" required>
+                                <input type="email" id="correo2" name="correo2" class="form-control" oninput="espaciosBlancosInicioFinal(this); limpiarEspacios(this)" autocomplete="off" required>
                             </div>
                             <div class="col-md-12 form-group form-check">
                                 <label for="provincia2" style="font-weight: bold;">Provincia *</label>
@@ -294,9 +303,14 @@ if (!isset($_SESSION['marconiId'])) {
                                 <label for="cargo2" style="font-weight: bold;">Cargo *</label>
                                 <select class="form-control" name="cargo2" id="cargo2" required>
                                     <option value="">Seleccione</option>
-                                    <option value="Cargo1">Cargo1</option>
-                                    <option value="Cargo2">Cargo2</option>
-                                    <option value="Cargo3">Cargo3</option>
+                                    <?php
+                                    $proceso2 = mysqli_query($conexion,$sql2);
+                                    while($row2=mysqli_fetch_array($proceso2)){
+                                        $cargoId = $row2["id"];
+                                        $cargoNombre = $row2["nombre"];
+                                        echo '<option value="'.$cargoId.'">'.$cargoNombre.'</option>';
+                                    }
+                                    ?>
                                 </select>
                             </div>
                             <div class="col-md-6 form-group form-check">
@@ -569,6 +583,7 @@ if (!isset($_SESSION['marconiId'])) {
                     $('#provincia1').val("");
                     $('#canton1').val("");
                     $('#distrito1').val("");
+                    $('#direccion1').val("");
                     $('#fechaIngreso1').val("");
                     $('#salario1').val("");
                     $('#password1').val("");
@@ -948,6 +963,17 @@ if (!isset($_SESSION['marconiId'])) {
             }
         }
     }
+
+    function espaciosBlancosInicioFinal(element) {
+        let sanitizedValue = element.value.trim();
+        element.value = sanitizedValue;
+    }
+
+    function sanitizeInput(input) {
+        let trimmedInput = input.trim();
+        return trimmedInput.length > 0 ? trimmedInput : null;
+    }
+
 
 
 </script>

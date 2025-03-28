@@ -25,6 +25,16 @@ CREATE TABLE horarios (
 INSERT INTO horarios (entrada,salida,entradaMaxima) VALUES 
 ('09:00:00','17:00:00','09:15:00');
 
+DROP TABLE IF EXISTS cargos;
+CREATE TABLE cargos (
+	id INT AUTO_INCREMENT,
+	nombre VARCHAR(250) NOT NULL,
+	PRIMARY KEY (id)
+); ALTER TABLE cargos CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+
+INSERT INTO cargos (id,nombre) VALUES 
+(1,'cargo1');
+
 DROP TABLE IF EXISTS usuarios;
 CREATE TABLE usuarios (
 	id INT AUTO_INCREMENT,
@@ -45,13 +55,14 @@ CREATE TABLE usuarios (
 	fechaRetiro DATE NOT NULL,
 	salario INT NOT NULL,
 	password VARCHAR(250) NOT NULL,
-	cargo VARCHAR(250) NOT NULL,
+	cargo INT NOT NULL,
 	estado VARCHAR(250) DEFAULT 'Activo',
 	rol INT NOT NULL,
 	horarios INT NOT NULL,
 	PRIMARY KEY (id),
 	FOREIGN KEY (rol) REFERENCES roles (id) ON UPDATE CASCADE,
-	FOREIGN KEY (horarios) REFERENCES horarios (id) ON UPDATE CASCADE
+	FOREIGN KEY (horarios) REFERENCES horarios (id) ON UPDATE CASCADE,
+	FOREIGN KEY (cargo) REFERENCES cargos (id)
 ); ALTER TABLE usuarios CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
 INSERT INTO usuarios (usuario,nombre,apellido,password,rol,horarios) VALUES 
@@ -158,6 +169,7 @@ CREATE TABLE incapacidades (
 	fechaFin DATE NOT NULL,
 	observacion TEXT NOT NULL,
 	estatus BOOLEAN DEFAULT 0,
+	diasTotales BOOLEAN DEFAULT 0,
 	PRIMARY KEY (id)
 ); ALTER TABLE incapacidades CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 

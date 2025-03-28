@@ -129,7 +129,11 @@ $asunto = $_POST['asunto'];
 				$provincia = $row2["provincia"];
 				$canton = $row2["canton"];
 				$distrito = $row2["distrito"];
-				$direccion = $provincia." ".$canton." ".$distrito;
+				$direccion = $row2["direccion"];
+				$provincia .= $provincia !== "" ? " " : "";
+				$canton .= $canton !== "" ? " " : "";
+				$distrito .= $distrito !== "" ? " " : "";
+				$direccion = $provincia.$canton.$distrito.$direccion;
 				$fechaIngreso = $row2["fechaIngreso"];
 				$estado = $row2["estado"];
 				$html .= '

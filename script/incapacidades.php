@@ -257,7 +257,21 @@ $asunto = $_POST['asunto'];
 			echo json_encode($datos);
 			exit;
 		}
-		$sql2 = "INSERT INTO incapacidades (usuarioId,fechaInicio,fechaFin,observacion) VALUES ($usuario,'$desde','$hasta','$observacion')";
+
+		$inicio = new DateTime($desde);
+		$fin = new DateTime($hasta);
+		$fin = $fin->modify('+1 day');
+		$periodo = new DatePeriod($inicio, new DateInterval('P1D'), $fin);
+		$dias_laborales = [];
+		foreach ($periodo as $fecha) {
+		    if ($fecha->format('N') != 7) {
+		        $dias_laborales[] = $fecha->format('Y-m-d');
+		    }
+		}
+
+		$diasTotalesValidos = count($dias_laborales);
+
+		$sql2 = "INSERT INTO incapacidades (usuarioId,fechaInicio,fechaFin,observacion,diasTotales) VALUES ($usuario,'$desde','$hasta','$observacion',$diasTotalesValidos)";
 		$proceso2 = mysqli_query($conexion,$sql2);
 		$datos = [
 			"estatus"	=> "ok",
