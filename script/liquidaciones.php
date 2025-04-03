@@ -245,7 +245,7 @@ $asunto = $_POST['asunto'];
 			echo json_encode($datos);
 			exit;
 		}
-		
+
 		$datos = calcularTodo($usuario,$fecha,$opcion,$conexion);
 		$salario = $datos["montoSalario"];
 		$vacaciones = $datos["montoVacaciones"];
@@ -349,6 +349,12 @@ $asunto = $_POST['asunto'];
 		$pagoCesantia = false;
 		$montoCesantia = 0;
 		$total = 0;
+		$fechaArray = explode('-',$fecha);
+		$anio = $fechaArray[0];
+		$mes = $fechaArray[1];
+		$inicioMes = $fecha . "-01";
+		$ultimoDia = date("t", strtotime($inicioMes));
+		$finMes = $fecha . "-" . $ultimoDia;
 
 		$sql1 = "SELECT * FROM usuarios WHERE id = $usuarioId and estado = 'Inactivo'";
 		$proceso1 = mysqli_query($conexion,$sql1);
@@ -361,6 +367,16 @@ $asunto = $_POST['asunto'];
 			];
 			echo json_encode($datos);
 			exit;
+		}else{
+			$sql2 = "SELECT * FROM usuarios WHERE id = $usuarioId";
+			$proceso2 = mysqli_query($conexion,$sql2);
+			while($row2 = mysqli_fetch_array($proceso2)){
+				$salarioActual = $row2['salario'];
+			}
+			$pagoAlDia = round($salarioActual/30,2);
+			$pagoDiaFeriado = $pagoAlDia*2;
+			$pagoHora = round($pagoAlDia/8,2);
+			$pagoHoraExtra = round($pagoHora*1.5,2);
 		}
 
 		if($value=="Despido sin responsabilidad patronal" or $value=="Renuncia voluntaria"){
@@ -376,15 +392,19 @@ $asunto = $_POST['asunto'];
 		}
 
 		if($pagoSalario==true){
-			$montoSalario = calcularSalario($conexion,$usuarioId,$fecha);
+			$diasTrabajados = diasLaborados($conexion,$usuarioId,$inicioMes,$finMes);
+			$horasTrabajados = horasLaborados($conexion,$usuarioId,$inicioMes,$finMes);
+			$diasMesDiferencia = $diasTrabajados["diasMesDiferencia"];
+			$diasLaborados = $diasTrabajados["diasLaborados"];
 		}
 
 		if($pagoVacaciones==true){
-			$montoVacaciones = calcularVacaciones($conexion,$usuarioId);
+			$diasVacaciones = calcularVacaciones($conexion,$usuarioId,$inicioMes,$finMes);
+			$montoVacaciones = $diasVacaciones*$pagoHora;
 		}
 
 		if($pagoAguinaldo==true){
-			$montoAguinaldo = calcularAguinaldo($conexion,$usuarioId,$fecha);
+			$montoAguinaldo = aguinaldo($conexion,$usuarioId,$anio,$mes);
 		}
 
 		if($pagoPreaviso==true){
@@ -395,11 +415,11 @@ $asunto = $_POST['asunto'];
 			$montoCesantia = calcularCesantia($conexion,$usuarioId,$fecha);
 		}
 
-		$total = round($montoSalario+$montoVacaciones+$montoAguinaldo+$montoPreaviso+$montoCesantia,2);
-		
+		$total = round($salarioActual+$montoVacaciones+$montoAguinaldo+$montoPreaviso+$montoCesantia,2);
+
 		$datos = [
 			"estatus"	=> "ok",
-			"montoSalario" => $montoSalario,
+			"montoSalario" => $salarioActual,
 			"montoVacaciones" => $montoVacaciones,
 			"montoAguinaldo" => $montoAguinaldo,
 			"montoPreaviso" => $montoPreaviso,
@@ -409,72 +429,303 @@ $asunto = $_POST['asunto'];
 		return $datos;
 	}
 
-	function calcularSalario($conexion,$usuarioId,$fecha){
-		if($fecha==""){
-			$fechaSql = "";
-		}else{
-			$fechaSql = " and fechaInicio = '".$fecha."'";
-		}
-
-		$date = new DateTime($fecha);
-		$inicioMes = $date->format("Y-m-01");
-		$finMes = $date->format("Y-m-t");
-
-		$sql1 = "SELECT * FROM turnos WHERE usuarioId = $usuarioId and fechaInicio BETWEEN '$inicioMes' AND '$fecha' and tipo = 'Entrada'";
+	function diasLaborados($conexion,$usuarioId,$inicioMes,$finMes){
+		$fechaInicio = new DateTime($inicioMes);
+		$fechaFin = new DateTime($finMes);
+		$diferencia = $fechaInicio->diff($fechaFin);
+		$diasMes = ($diferencia->days)+1;
+		$sql1 = "SELECT * FROM turnos WHERE usuarioId = $usuarioId and fechaInicio BETWEEN '$inicioMes' AND '$finMes' and tipo = 'Entrada'";
 		$proceso1 = mysqli_query($conexion,$sql1);
 		$contador1 = mysqli_num_rows($proceso1);
-
-		$sql2 = "SELECT * FROM usuarios WHERE id = $usuarioId";
-		$proceso2 = mysqli_query($conexion,$sql2);
-		while($row2=mysqli_fetch_array($proceso2)){
-			$salario = $row2["salario"];
-		}
-		$pagoDiario = ceil($salario/30);
-		$montoSalario = $pagoDiario*$contador1;
-		return $montoSalario;
+		$diasLaborados = $contador1;
+		$diasMesDiferencia = 30-$diasMes;
+		$datos = [
+			"diasMesDiferencia"	=> $diasMesDiferencia,
+			"diasLaborados"	=> $diasLaborados,
+		];
+		return $datos;
 	}
 
-	function calcularVacaciones($conexion,$usuarioId){
-		$sql1 = "SELECT * FROM usuarios WHERE id = ".$usuarioId;
+	function horasLaborados($conexion,$usuarioId,$inicioMes,$finMes){
+		$horasLaborados = 0;
+		$sql1 = "SELECT hor.entradaMaxima, hor.entrada, hor.salida FROM horarios hor INNER JOIN usuarios usu ON hor.id = usu.horarios WHERE usu.id = $usuarioId";
 		$proceso1 = mysqli_query($conexion,$sql1);
-
 		while($row1=mysqli_fetch_array($proceso1)){
-			$fechaIngreso = $row1["fechaIngreso"];
-			$salario = $row1["salario"];
+			$entradaMaxima = $row1["entradaMaxima"];
+			$entrada = $row1["entrada"];
+			$salida = $row1["salida"];
 		}
-
-		$sql2 = "SELECT id FROM vacaciones WHERE usuarioId = $usuarioId and estatus = 1";
+		$sql2 = "SELECT * FROM turnos WHERE usuarioId = $usuarioId and fechaInicio BETWEEN '$inicioMes' AND '$finMes' and tipo = 'Entrada'";
 		$proceso2 = mysqli_query($conexion,$sql2);
 		$contador2 = mysqli_num_rows($proceso2);
-
-		$fecha_objetivo = new DateTime($fechaIngreso);
-		$fecha_actual = new DateTime();
-		$diferencia = $fecha_actual->diff($fecha_objetivo);
-		$meses = ($diferencia->y * 12) + $diferencia->m;
-		$meses = $meses-$contador2;
-
-		$pagoDiario = round(($salario/30),2);
-		$montoVacaciones = round($pagoDiario*$meses,2);
-
-		return $montoVacaciones;
+		if($contador2>0){
+			while($row2=mysqli_fetch_array($proceso2)){
+				$fechaCiclo = $row2["fechaInicio"];
+				$horaInicio = $row2["horaInicio"];
+				if($horaInicio<$entrada){
+					$horaInicio = $entrada;
+				}
+				$sql3 = "SELECT * FROM turnos WHERE usuarioId = $usuarioId and fechaInicio = '$fechaCiclo' and tipo = 'Salida'";
+				$proceso3 = mysqli_query($conexion,$sql3);
+				$contador3 = mysqli_num_rows($proceso3);
+				if($contador3>0){
+					while($row3=mysqli_fetch_array($proceso3)){
+						$horaInicio2 = $row3["horaInicio"];
+						if(diferenciaHoras($horaInicio,$horaInicio2)<9){
+							$horasLaborados += diferenciaHoras($horaInicio,$horaInicio2);
+						}else if(diferenciaHoras($horaInicio,$horaInicio2)>=9){
+							$horasLaborados += 9;
+						}
+					}
+				}else{
+					if(diferenciaHoras($horaInicio,$salida)<9){
+						$horasLaborados += diferenciaHoras($horaInicio,$salida);
+					}else if(diferenciaHoras($horaInicio,$salida)>=9){
+						$horasLaborados += 9;
+					}
+				}
+				$horasLaborados -= 1;
+			}
+		}
+		return $horasLaborados;
 	}
 
-	function calcularAguinaldo($conexion,$usuarioId,$fecha){
+	function horasExtras($conexion,$usuarioId,$inicioMes,$finMes){
+		$horasExtras = 0;
+		$sql1 = "SELECT hor.entradaMaxima, hor.entrada, hor.salida FROM horarios hor INNER JOIN usuarios usu ON hor.id = usu.horarios WHERE usu.id = $usuarioId";
+		$proceso1 = mysqli_query($conexion,$sql1);
+		while($row1=mysqli_fetch_array($proceso1)){
+			$entradaMaxima = $row1["entradaMaxima"];
+			$entrada = $row1["entrada"];
+			$salida = $row1["salida"];
+		}
+		$sql2 = "SELECT * FROM turnos WHERE usuarioId = $usuarioId and fechaInicio BETWEEN '$inicioMes' AND '$finMes' and tipo = 'Entrada'";
+		$proceso2 = mysqli_query($conexion,$sql2);
+		$contador2 = mysqli_num_rows($proceso2);
+		if($contador2>0){
+			while($row2=mysqli_fetch_array($proceso2)){
+				$fechaCiclo = $row2["fechaInicio"];
+				$horaInicio = $row2["horaInicio"];
+				if($horaInicio<$entrada){
+					$horaInicio = $entrada;
+				}
+				$sql3 = "SELECT * FROM turnos WHERE usuarioId = $usuarioId and fechaInicio = '$fechaCiclo' and tipo = 'Salida' and estatusExtras = 1";
+				$proceso3 = mysqli_query($conexion,$sql3);
+				$contador3 = mysqli_num_rows($proceso3);
+				if($contador3>0){
+					while($row3=mysqli_fetch_array($proceso3)){
+						$horaInicio2 = $row3["horaInicio"];
+						if(diferenciaHoras($horaInicio,$horaInicio2)>9){
+							$horasExtras += diferenciaHoras($horaInicio,$horaInicio2)-9;
+						}
+					}
+				}else{
+					if(diferenciaHoras($horaInicio,$salida)>9){
+						$horasExtras += diferenciaHoras($horaInicio,$salida)-9;
+					}
+				}
+			}
+		}
+		return $horasExtras;
+	}
+
+	function diasFeriados($conexion,$usuarioId,$inicioMes,$finMes){
+		$diasTotales = 0;
+		$sql1 = "SELECT * FROM turnos WHERE usuarioId = $usuarioId and tipo = 'Entrada' and fechaInicio BETWEEN '$inicioMes' AND '$finMes'";
+		$proceso1 = mysqli_query($conexion,$sql1);
+		while($row1=mysqli_fetch_array($proceso1)){
+			$fechaInicio = $row1["fechaInicio"];
+			$fechaArray = explode('-',$fechaInicio);
+			$mes = $fechaArray[1];
+			$dia = $fechaArray[2];
+			$sql2 = "SELECT * FROM diasFeriados WHERE mes = '$mes' and dia = '$dia'";
+			$proceso2 = mysqli_query($conexion,$sql2);
+			$contador2 = mysqli_num_rows($proceso2);
+			if($contador2>0){
+				$diasTotales++;
+			}
+		}
+		return $diasTotales;
+	}
+
+	function diferenciaHoras($rango1,$rango2){
+		$segundos1 = strtotime($rango1);
+		$segundos2 = strtotime($rango2);
+		$diferenciaSegundos = abs($segundos2 - $segundos1);
+		$diferenciaHoras = floor($diferenciaSegundos / 3600);
+		return $diferenciaHoras;
+	}
+
+	function horasFeriados($conexion,$usuarioId,$inicioMes,$finMes){
+		$horasFeriados = 0;
+		$sql1 = "SELECT hor.entradaMaxima, hor.entrada, hor.salida FROM horarios hor INNER JOIN usuarios usu ON hor.id = usu.horarios WHERE usu.id = $usuarioId";
+		$proceso1 = mysqli_query($conexion,$sql1);
+		while($row1=mysqli_fetch_array($proceso1)){
+			$entradaMaxima = $row1["entradaMaxima"];
+			$entrada = $row1["entrada"];
+			$salida = $row1["salida"];
+		}
+		$sql4 = "SELECT * FROM diasFeriados";
+		$proceso4 = mysqli_query($conexion,$sql4);
+		while($row4=mysqli_fetch_array($proceso4)){
+			$dia = $row4["dia"];
+			$mes = $row4["mes"];
+			$anio = explode('-',$finMes);
+			$anio = $anio[0];
+			$fechaFeriado = $anio."-".$mes."-".$dia;
+			$sql2 = "SELECT * FROM turnos WHERE usuarioId = $usuarioId and fechaInicio = '$fechaFeriado' and tipo = 'Entrada'";
+			$proceso2 = mysqli_query($conexion,$sql2);
+			$contador2 = mysqli_num_rows($proceso2);
+			if($contador2>0){
+				while($row2=mysqli_fetch_array($proceso2)){
+					$fechaCiclo = $row2["fechaInicio"];
+					$horaInicio = $row2["horaInicio"];
+					if($horaInicio<$entrada){
+						$horaInicio = $entrada;
+					}
+					$sql3 = "SELECT * FROM turnos WHERE usuarioId = $usuarioId and fechaInicio = '$fechaCiclo' and tipo = 'Salida'";
+					$proceso3 = mysqli_query($conexion,$sql3);
+					$contador3 = mysqli_num_rows($proceso3);
+					if($contador3>0){
+						while($row3=mysqli_fetch_array($proceso3)){
+							$horaInicio2 = $row3["horaInicio"];
+							$horasFeriados += diferenciaHoras($horaInicio,$horaInicio2);
+						}
+					}else{
+						$horasFeriados += diferenciaHoras($horaInicio,$salida);
+					}
+				}
+			}
+		}
+		return $horasFeriados;
+	}
+
+	function aguinaldo($conexion,$usuarioId,$anio,$mes){
 		$aguinaldo = 0;
-		$fechaArray = explode('-',$fecha);
-		$anio = $fechaArray[0];
+		if($mes!=12){
+			return $aguinaldo;
+		}
+
 		$fechaInicio = ($anio - 1) . "-11-01";
 		$date = new DateTime($fechaInicio);
+
 		for($i=1;$i<=12;$i++){
 			$date->modify('+1 month');
 			$fechaResult = $date->format('Y-m-t');
 			$sql1 = "SELECT * FROM planillas WHERE usuarioId = $usuarioId and fecha = '$fechaResult'";
 			$proceso1 = mysqli_query($conexion,$sql1);
 			while($row1=mysqli_fetch_array($proceso1)){
-				$aguinaldo += $row1['total'];
+				$aguinaldo += $row1['montoLaborado'];
 			}
 		}
 		return $aguinaldo;
+	}
+
+	function isr($salario_bruto){
+		$tramos = [
+	        [922000, 0.00],
+	        [1352000, 0.10],
+	        [2373000, 0.15],
+	        [4745000, 0.20],
+	        [PHP_INT_MAX, 0.25]
+	    ];
+	    
+	    $impuesto_total = 0;
+	    $exceso_anterior = 0;
+	    
+	    foreach ($tramos as [$limite, $tasa]) {
+	        if ($salario_bruto > $limite) {
+	            $exceso = $limite - $exceso_anterior;
+	        } else {
+	            $exceso = $salario_bruto - $exceso_anterior;
+	        }
+	        
+	        if ($exceso > 0) {
+	            $impuesto_total += $exceso * $tasa;
+	        }
+	        
+	        $exceso_anterior = $limite;
+	        if ($salario_bruto <= $limite) break;
+	    }
+	    
+	    return $impuesto_total;
+
+	    /*
+		if($total<=941000){
+			$resultado = 0;
+		}else if ($total>941 and $total <=1381000){
+			$resultado = ($total*10)/100;
+		}else if ($total>1381000 and $total <=2423000){
+			$resultado = ($total*15)/100;
+		}else if ($total>2423000 and $total <=4845000){
+			$resultado = ($total*20)/100;
+		}else if ($total>4845000){
+			$resultado = ($total*25)/100;
+		}
+		return $resultado;
+		*/
+	}
+
+	function permisosSinGoce($conexion,$usuarioId,$inicioMes,$finMes){
+		$horasRestar = 0;
+		$sql1 = "SELECT * FROM permisosLaborales WHERE usuarioId = $usuarioId and tipo = 'Sin goce de salario' and fechaInicio BETWEEN '$inicioMes' AND '$finMes' and estatus = 1";
+		$proceso1 = mysqli_query($conexion,$sql1);
+		$contador1 = mysqli_num_rows($proceso1);
+		if($contador1>0){
+			while($row1=mysqli_fetch_array($proceso1)){
+				$horaInicio = $row1["horaInicio"];
+				$horaFin = $row1["horaFin"];
+				$horasRestar -= diferenciaHoras($horaInicio,$horaFin);
+			}
+		}
+		return abs($horasRestar);
+	}
+
+	function calcularHorasPermisos($conexion,$usuarioId,$inicioMes,$finMes){
+		$horasPermisos = 0;
+		$sql1 = "SELECT * FROM permisosLaborales WHERE usuarioId = $usuarioId and tipo = 'Goce de salario' and estatus = 1 and fechaInicio BETWEEN '$inicioMes' AND '$finMes'";
+		$proceso1 = mysqli_query($conexion,$sql1);
+		$contador1 = mysqli_num_rows($proceso1);
+		if($contador1>0){
+			while($row1=mysqli_fetch_array($proceso1)){
+				$horaInicio = $row1["horaInicio"];
+				$horaFin = $row1["horaFin"];
+				$horasPermisos += diferenciaHoras($horaInicio,$horaFin);
+			}
+		}
+		return $horasPermisos;
+	}
+
+	function contarDomingos($fechaInicio, $fechaFin) {
+	    $inicio = new DateTime($fechaInicio);
+	    $fin = new DateTime($fechaFin);
+	    $contador = 0;
+
+	    while ($inicio <= $fin) {
+	        if ($inicio->format('w') == 0) {
+	            $contador++;
+	        }
+	        $inicio->modify('+1 day');
+	    }
+
+	    return $contador;
+	}
+
+	function incapacidades($conexion,$usuarioId,$inicioMes,$finMes){
+		$total = 0;
+		$sql1 = "SELECT * FROM incapacidades WHERE usuarioId = $usuarioId and estatus = 1 and fechaInicio BETWEEN '$inicioMes' AND '$finMes' and fechaFin BETWEEN '$inicioMes' AND '$finMes' ";
+		$proceso1 = mysqli_query($conexion,$sql1);
+		while($row1=mysqli_fetch_array($proceso1)){
+			$total += $row1["diasTotales"];
+		}
+		return $total;
+	}
+
+	function calcularVacaciones($conexion,$usuarioId,$inicio,$fin){
+		$sql1 = "SELECT * FROM vacaciones WHERE usuarioId = $usuarioId and estatus = 1 and fechaInicio BETWEEN '$inicio' AND '$fin'";
+		$proceso1 = mysqli_query($conexion,$sql1);
+		$contador1 = mysqli_num_rows($proceso1);
+		return $contador1;
 	}
 
 	function calcularPreaviso($conexion,$usuarioId,$fecha){

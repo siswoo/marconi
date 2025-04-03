@@ -281,6 +281,15 @@ $asunto = $_POST['asunto'];
 			}
 		}
 
+		if(count($dias_laborales)==0){
+			$datos = [
+				"estatus"	=> "error",
+				"msg"	=> "Fecha pedida no es valida",
+			];
+			echo json_encode($datos);
+			exit;
+		}
+
 		foreach ($dias_laborales as $dia) {
 			$fechaArray = explode("-",$dia);
 			$diaArray = $fechaArray[2];

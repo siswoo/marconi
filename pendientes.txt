@@ -1,17 +1,21 @@
 --------------------
     18-03-2025
-            aguinaldos -> 
-                * Verificar el calculo resultante
 
-        Vacaciones -> 
-            creacion -> 
-                * Cuando es rango de un día que salgan los avisos correspondientes
+    31-03-2025
+        Colaborades->
+            creacion ->
+                * agregar campo de estado civil (casado, soltero)
+                * agregar campo de hijos (si, no)
+            edicion -> 
+                * agregar campo de estado civil (casado, soltero)
+                * agregar campo de hijos (si, no)
+            
+        planilla -> 
+            generar ->
+                * esperar el calculo para colocarlo
+                * que se envien correo electronico a cada usuario al generar planilla
 
-        Liquidaciones -> 
-            general -> 
-                * Validar todos los calculos como en planilla
-            al aceptar -> 
-                * Que salga estas seguro ?
+
 -----------------------------------
 -------------Hechos----------------
 -----------------------------------
@@ -213,6 +217,24 @@
             calculo en planilla ->
                 * Si la incapacidad es de 1 a 3 dias -> 50% de salario el dia
                 * Si es mayor a 3 días no le pagamos nada
+
+    02-04-2025
+        aguinaldos -> 
+            generar ->
+                * Verificar el calculo resultante
+
+        Vacaciones -> 
+            creacion -> 
+                * Cuando es rango de un día que salgan los avisos correspondientes
+
+        Liquidaciones -> 
+            general -> 
+                * Validar todos los calculos como en planilla
+            al aceptar -> 
+                * Que salga estas seguro ?  (este no es opcion ya que tiene un recuadro de calculos)
+
+
+
 
 
 -----------------------------------

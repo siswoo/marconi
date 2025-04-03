@@ -197,6 +197,7 @@ CREATE TABLE planillas (
 	aguinaldos DOUBLE(11,2) NOT NULL,
 	ccss DOUBLE(11,2) NOT NULL,
 	isr DOUBLE(11,2) NOT NULL,
+	montoLaborado DOUBLE(11,2) NOT NULL,
 	subTotal DOUBLE(11,2) NOT NULL,
 	total DOUBLE(11,2) NOT NULL,
 	estatus BOOLEAN DEFAULT 0,

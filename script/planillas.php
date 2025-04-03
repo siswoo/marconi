@@ -349,6 +349,7 @@ $asunto = $_POST['asunto'];
 			$calculoHorasPermisosLaborales = $horasPermisosLaborales*$pagoHora;
 
 			//$subTotal = ($pagoDiasLaborados+$calculoHorasExtras+$calculoDiasFeriadosLaborados);
+			$montoLaborado = $pagoHorasLaborados;
 			$subTotal = ($pagoHorasLaborados+$calculoHorasExtras+$calculoHorasFeriadosLaborados+$calculoHorasPermisosLaborales+$calculoDomingosPagos+$cuentasDiasIncapacidades);
 			$total = $subTotal-$calculoHorasSinGoce;
 
@@ -360,7 +361,7 @@ $asunto = $_POST['asunto'];
 
 			$total += $calculoHorasSinGoce;
 
-			$sql2 = "INSERT INTO planillas (usuarioId,fecha,pagoDia,pagoHora,horasExtras,diasFeriadosLaborados,aguinaldos,subTotal,total,estatus,ccss,isr) VALUES ($usuarioId,'$finMes','$pagoAlDia','$pagoHora',$horasExtras,$diasFeriadosLaborados,'$montoAguinaldo','$subTotal','$total',0,'$ccss','$isr')";
+			$sql2 = "INSERT INTO planillas (usuarioId,fecha,pagoDia,pagoHora,horasExtras,diasFeriadosLaborados,aguinaldos,montoLaborado,subTotal,total,estatus,ccss,isr) VALUES ($usuarioId,'$finMes','$pagoAlDia','$pagoHora',$horasExtras,$diasFeriadosLaborados,'$montoAguinaldo','$montoLaborado','$subTotal','$total',0,'$ccss','$isr')";
 			$proceso2 = mysqli_query($conexion,$sql2);
 		}
 		$datos = [
@@ -595,7 +596,7 @@ $asunto = $_POST['asunto'];
 			$sql1 = "SELECT * FROM planillas WHERE usuarioId = $usuarioId and fecha = '$fechaResult'";
 			$proceso1 = mysqli_query($conexion,$sql1);
 			while($row1=mysqli_fetch_array($proceso1)){
-				$aguinaldo += $row1['total'];
+				$aguinaldo += $row1['montoLaborado'];
 			}
 		}
 		return $aguinaldo;
