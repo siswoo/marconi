@@ -295,6 +295,8 @@ $asunto = $_POST['asunto'];
 			$horasTrabajados = horasLaborados($conexion,$usuarioId,$inicioMes,$finMes);
 			$diasMesDiferencia = $diasTrabajados["diasMesDiferencia"];
 			$diasLaborados = $diasTrabajados["diasLaborados"];
+			$civil = $row1["civil"];
+			$hijos = $row1["hijos"];
 			//$diasNoTrabajados = diasNoLaborados($conexion,$usuarioId,$inicioMes,$finMes);
 			//$calculoDiasNoTrabajados = $diasNoTrabajados*$pagoAlDia;
 
@@ -348,9 +350,24 @@ $asunto = $_POST['asunto'];
 			$horasPermisosLaborales = calcularHorasPermisos($conexion,$usuarioId,$inicioMes,$finMes);
 			$calculoHorasPermisosLaborales = $horasPermisosLaborales*$pagoHora;
 
+			if($civil == "Casado"){
+				$calculoCivil = 2600;
+			}else{
+				$calculoCivil = 0;
+			}
+
+			if($hijos>0){
+				$calculoHijos = 1720*$hijos;
+			}else{
+				$calculoHijos = 0;
+			}
+
 			//$subTotal = ($pagoDiasLaborados+$calculoHorasExtras+$calculoDiasFeriadosLaborados);
 			$montoLaborado = $pagoHorasLaborados;
 			$subTotal = ($pagoHorasLaborados+$calculoHorasExtras+$calculoHorasFeriadosLaborados+$calculoHorasPermisosLaborales+$calculoDomingosPagos+$cuentasDiasIncapacidades);
+			if($subTotal>=($calculoCivil+$calculoHijos)){
+				$subTotal = $subTotal - ($calculoCivil+$calculoHijos);
+			}
 			$total = $subTotal-$calculoHorasSinGoce;
 
 			//seguro social
