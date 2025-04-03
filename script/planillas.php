@@ -4,6 +4,9 @@ include("conexion.php");
 $fecha_creacion = date('Y-m-d');
 $hora_creacion = date('h:i:s');
 $asunto = $_POST['asunto'];
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+require '../vendor/autoload.php';
 
 	if($asunto=='table1'){
 		$pagina = $_POST["pagina"];
@@ -104,7 +107,7 @@ $asunto = $_POST['asunto'];
 				';
 			}
 		}else{
-			$html .= '<tr><td colspan="10" class="text-center" style="font-weight:bold;font-size:20px;">Sin Resultados</td></tr>';
+			$html .= '<tr><td colspan="11" class="text-center" style="font-weight:bold;font-size:20px;">Sin Resultados</td></tr>';
 		}
 
 		$html .= '
@@ -414,11 +417,7 @@ $asunto = $_POST['asunto'];
 		$fecha = $_POST['fecha'];
 		$sql1 = "UPDATE planillas SET estatus = 1 WHERE fecha = '$fecha'";
 		$proceso1 = mysqli_query($conexion,$sql1);
-		$datos = [
-			"estatus"	=> "ok",
-			"msg"	=> "Aceptados",
-		];
-		echo json_encode($datos);
+		enviarEmail($conexion,$fecha);
 	}
 
 	if($asunto=='detalle'){
@@ -761,6 +760,73 @@ $asunto = $_POST['asunto'];
 			$total += $row1["diasTotales"];
 		}
 		return $total;
+	}
+
+	function enviarEmail($conexion,$fecha){
+		$sql1 = "SELECT * FROM planillas WHERE fecha = '$fecha'";
+		$proceso1 = mysqli_query($conexion,$sql1);
+		$contador1 = mysqli_num_rows($proceso1);
+		if($contador1>0){
+			try {
+			    while($row1=mysqli_fetch_array($proceso1)){
+			    	$mail = new PHPMailer(true);
+				    $mail->isSMTP();
+				    $mail->setFrom('info@dolarsoft.com', 'DolarSoft');
+				    $mail->Host = 'mail.dolarsoft.com';
+				    $mail->SMTPAuth = true;
+				    $mail->Username = 'info@dolarsoft.com';
+				    $mail->Password = 'contaseñaDolarSoft';
+				    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+				    $mail->Port = 587;
+
+			    	$usuarioId = $row1["usuarioId"];
+			    	$aguinaldos = $row1["aguinaldos"];
+			    	$ccss = $row1["ccss"];
+			    	$isr = $row1["isr"];
+			    	$montoLaborado = $row1["montoLaborado"];
+			    	$subTotal = $row1["subTotal"];
+			    	$total = $row1["total"];
+
+			    	$sql2 = "SELECT * FROM usuarios WHERE id = $usuarioId";
+			    	$proceso2 = mysqli_query($conexion,$sql2);
+			    	while($row2=mysqli_fetch_array($proceso2)){
+			    		$nombre = $row2["nombre"];
+			    		$apellido = $row2["apellido"];
+			    		$apellido2 = $row2["apellido2"];
+			    		$correo = $row2["correo"];
+			    		$nombreCompleto = $nombre." ".$apellido." ".$apellido2;
+			    	}
+
+			    	$mail->addAddress($correo, $nombre);
+			    	$mail->isHTML(true);
+			    	$mail->Subject = 'Planilla de pago '.$fecha;
+			    	$body = '
+						<h2>Hola '.$nombreCompleto.'</h2>
+						<p>Se ha generado su planilla digital con los siguientes detalles de pago.</p>
+						<p>Aguinaldo: '.$aguinaldos.'</p>
+						<p>ccss: '.$ccss.'</p>
+						<p>isr: '.$isr.'</p>
+						<p>Monto Laborado: '.$montoLaborado.'</p>
+						<p>Sub-Total: '.$subTotal.'</p>
+						<p>Total: '.$total.'</p>
+						<h4>Para mas información o alguno inquietud comunicarse con gerencia</h4>
+					';
+			    	$mail->Body = $body;
+			    	$mail->send();
+			    }
+			    $datos = [
+					"estatus"	=> "ok",
+					"msg"	=> "Aceptados",
+				];
+				echo json_encode($datos);
+			} catch (Exception $e) {
+			    $datos = [
+					"estatus"	=> "info",
+					"msg"	=> "Algo ha fallado en el envio de los correos",
+				];
+				echo json_encode($datos);
+			}
+		}
 	}
 
 

@@ -4,7 +4,6 @@
     31-03-2025
         planilla -> 
             generar ->
-                * esperar el calculo para colocarlo
                 * que se envien correo electronico a cada usuario al generar planilla
 
 
@@ -233,6 +232,10 @@
                 * agregar campo de estado civil (casado, soltero)
                 * agregar campo de hijos (si, no)
 
+        planilla -> 
+            generar ->
+                * colocar calculo de civil
+                * colocar calculo de hijos
 
 
 
