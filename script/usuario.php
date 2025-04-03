@@ -286,6 +286,8 @@ $asunto = $_POST['asunto'];
 		$cedula = $_POST['cedula'];
 		$fechaNacimiento = $_POST['fechaNacimiento'];
 		$genero = $_POST['genero'];
+		$civil = $_POST['civil'];
+		$hijos = $_POST['hijos'];
 		$telefono = $_POST['telefono'];
 		$correo = $_POST['correo'];
 		$provincia = $_POST['provincia'];
@@ -311,7 +313,7 @@ $asunto = $_POST['asunto'];
 			exit;
 		}
 		
-		$sql1 = "INSERT INTO usuarios (nombre,usuario,apellido,apellido2,cedula,fechaNacimiento,genero,telefono,correo,provincia,canton,distrito,direccion,fechaIngreso,salario,password,cargo,rol,horarios) VALUES ('$nombre','$usuario','$apellido','$apellido1_2','$cedula','$fechaNacimiento','$genero','$telefono','$correo','$provincia','$canton','$distrito','$direccion','$fechaIngreso',$salario,'$password','$cargo',2,$horarios)";
+		$sql1 = "INSERT INTO usuarios (nombre,usuario,apellido,apellido2,cedula,fechaNacimiento,genero,civil,hijos,telefono,correo,provincia,canton,distrito,direccion,fechaIngreso,salario,password,cargo,rol,horarios) VALUES ('$nombre','$usuario','$apellido','$apellido1_2','$cedula','$fechaNacimiento','$genero','$civil','$hijos','$telefono','$correo','$provincia','$canton','$distrito','$direccion','$fechaIngreso',$salario,'$password','$cargo',2,$horarios)";
 		$proceso1 = mysqli_query($conexion,$sql1);
 
 		$datos = [
@@ -352,6 +354,8 @@ $asunto = $_POST['asunto'];
 				$cedula = $row1["cedula"];
 				$fechaNacimiento = $row1["fechaNacimiento"];
 				$genero = $row1["genero"];
+				$civil = $row1["civil"];
+				$hijos = $row1["hijos"];
 				$telefono = $row1["telefono"];
 				$correo = $row1["correo"];
 				$provincia = $row1["provincia"];
@@ -372,6 +376,8 @@ $asunto = $_POST['asunto'];
 				"cedula"		=> $cedula,
 				"fechaNacimiento"	=> $fechaNacimiento,
 				"genero"	=> $genero,
+				"civil"	=> $civil,
+				"hijos"	=> $hijos,
 				"telefono"		=> $telefono,
 				"correo"	=> $correo,
 				"provincia"	=> $provincia,
@@ -396,6 +402,8 @@ $asunto = $_POST['asunto'];
 		$cedula = $_POST['cedula'];
 		$fechaNacimiento = $_POST['fechaNacimiento'];
 		$genero = $_POST['genero'];
+		$civil = $_POST['civil'];
+		$hijos = $_POST['hijos'];
 		$telefono = $_POST['telefono'];
 		$correo = $_POST['correo'];
 		$provincia = $_POST['provincia'];
@@ -414,7 +422,7 @@ $asunto = $_POST['asunto'];
 		$cargo = $_POST['cargo'];
 		$usuario = $cedula;
 
-		$sql1 = "UPDATE usuarios SET nombre = '$nombre', usuario = '$usuario', apellido = '$apellido', apellido2 = '$apellido2_2', cedula = '$cedula', fechaNacimiento = '$fechaNacimiento', genero = '$genero', telefono = '$telefono', correo = '$correo', provincia = '$provincia', canton = '$canton', distrito = '$distrito', direccion = '$direccion', fechaIngreso = '$fechaIngreso', salario = $salario, $password cargo = '$cargo', horarios = $horarios WHERE id = ".$id;
+		$sql1 = "UPDATE usuarios SET nombre = '$nombre', usuario = '$usuario', apellido = '$apellido', apellido2 = '$apellido2_2', cedula = '$cedula', fechaNacimiento = '$fechaNacimiento', genero = '$genero', civil = '$civil', hijos = '$hijos', telefono = '$telefono', correo = '$correo', provincia = '$provincia', canton = '$canton', distrito = '$distrito', direccion = '$direccion', fechaIngreso = '$fechaIngreso', salario = $salario, $password cargo = '$cargo', horarios = $horarios WHERE id = ".$id;
 		$proceso1 = mysqli_query($conexion,$sql1);
 		$datos = [
 			"estatus"	=> "ok",

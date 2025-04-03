@@ -2,14 +2,6 @@
     18-03-2025
 
     31-03-2025
-        Colaborades->
-            creacion ->
-                * agregar campo de estado civil (casado, soltero)
-                * agregar campo de hijos (si, no)
-            edicion -> 
-                * agregar campo de estado civil (casado, soltero)
-                * agregar campo de hijos (si, no)
-            
         planilla -> 
             generar ->
                 * esperar el calculo para colocarlo
@@ -233,6 +225,13 @@
             al aceptar -> 
                 * Que salga estas seguro ?  (este no es opcion ya que tiene un recuadro de calculos)
 
+        Colaborades->
+            creacion ->
+                * agregar campo de estado civil (casado, soltero)
+                * agregar campo de hijos (si, no)
+            edicion -> 
+                * agregar campo de estado civil (casado, soltero)
+                * agregar campo de hijos (si, no)
 
 
 

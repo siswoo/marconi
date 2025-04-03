@@ -151,6 +151,31 @@ if (!isset($_SESSION['marconiId'])) {
                                 </select>
                             </div>
                             <div class="col-md-6 form-group form-check">
+                                <label for="civil1" style="font-weight: bold;">Estado civil *</label>
+                                <select class="form-control" name="civil1" id="civil1" required>
+                                    <option value="">Seleccione</option>
+                                    <option value="Soltero/a">Soltero/a</option>
+                                    <option value="Casado/a">Casado/a</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 form-group form-check">
+                                <label for="hijos1" style="font-weight: bold;">¿Tiene hijos? *</label>
+                                <select class="form-control" name="hijos1" id="hijos1" required>
+                                    <option value="">Seleccione</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 form-group form-check">
                                 <label for="telefono1" style="font-weight: bold;">Teléfono *</label>
                                 <input type="number" id="telefono1" name="telefono1" oninput="soloNumeros(this)" class="form-control" autocomplete="off" required>
                             </div>
@@ -261,6 +286,31 @@ if (!isset($_SESSION['marconiId'])) {
                                     <option value="">Seleccione</option>
                                     <option value="Masculino">Masculino</option>
                                     <option value="Femenino">Femenino</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 form-group form-check">
+                                <label for="civil2" style="font-weight: bold;">Estado civil *</label>
+                                <select class="form-control" name="civil2" id="civil2" required>
+                                    <option value="">Seleccione</option>
+                                    <option value="Soltero/a">Soltero/a</option>
+                                    <option value="Casado/a">Casado/a</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 form-group form-check">
+                                <label for="hijos2" style="font-weight: bold;">¿Tiene hijos? *</label>
+                                <select class="form-control" name="hijos2" id="hijos2" required>
+                                    <option value="">Seleccione</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
                                 </select>
                             </div>
                             <div class="col-md-6 form-group form-check">
@@ -411,6 +461,8 @@ if (!isset($_SESSION['marconiId'])) {
                 $('#cedula2').val(respuesta["cedula"]);
                 $('#fechaNacimiento2').val(respuesta["fechaNacimiento"]);
                 $('#genero2').val(respuesta["genero"]);
+                $('#civil2').val(respuesta["civil"]);
+                $('#hijos2').val(respuesta["hijos"]);
                 $('#telefono2').val(respuesta["telefono"]);
                 $('#correo2').val(respuesta["correo"]);
                 $('#provincia2').val(respuesta["provincia"]);
@@ -464,6 +516,8 @@ if (!isset($_SESSION['marconiId'])) {
         var cedula = $('#cedula1').val();
         var fechaNacimiento = $('#fechaNacimiento1').val();
         var genero = $('#genero1').val();
+        var civil = $('#civil1').val();
+        var hijos = $('#hijos1').val();
         var telefono = $('#telefono1').val();
         var correo = $('#correo1').val();
         var provincia = $('#provincia1').val();
@@ -548,6 +602,8 @@ if (!isset($_SESSION['marconiId'])) {
                 "cedula": cedula,
                 "fechaNacimiento": fechaNacimiento,
                 "genero": genero,
+                "civil": civil,
+                "hijos": hijos,
                 "telefono": telefono,
                 "correo": correo,
                 "provincia": provincia,
@@ -578,6 +634,8 @@ if (!isset($_SESSION['marconiId'])) {
                     $('#cedula1').val("");
                     $('#fechaNacimiento1').val("");
                     $('#genero1').val("");
+                    $('#civil1').val("");
+                    $('#hijos1').val("");
                     $('#telefono1').val("");
                     $('#correo1').val("");
                     $('#provincia1').val("");
@@ -616,6 +674,8 @@ if (!isset($_SESSION['marconiId'])) {
         var cedula = $('#cedula2').val();
         var fechaNacimiento = $('#fechaNacimiento2').val();
         var genero = $('#genero2').val();
+        var civil = $('#civil2').val();
+        var hijos = $('#hijos2').val();
         var telefono = $('#telefono2').val();
         var correo = $('#correo2').val();
         var provincia = $('#provincia2').val();
@@ -701,6 +761,8 @@ if (!isset($_SESSION['marconiId'])) {
                 "cedula": cedula,
                 "fechaNacimiento": fechaNacimiento,
                 "genero": genero,
+                "civil": civil,
+                "hijos": hijos,
                 "telefono": telefono,
                 "correo": correo,
                 "provincia": provincia,

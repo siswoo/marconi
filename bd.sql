@@ -45,6 +45,8 @@ CREATE TABLE usuarios (
 	cedula VARCHAR(250) NOT NULL,
 	fechaNacimiento DATE NOT NULL,
 	genero VARCHAR(250) NOT NULL,
+	civil VARCHAR(250) NOT NULL,
+	hijos INT NOT NULL,
 	telefono VARCHAR(250) NOT NULL,
 	correo VARCHAR(250) NOT NULL,
 	provincia VARCHAR(250) NOT NULL,
