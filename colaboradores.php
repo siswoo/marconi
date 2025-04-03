@@ -197,7 +197,7 @@ if (!isset($_SESSION['marconiId'])) {
                             </div>
                             <div class="col-md-12 form-group form-check">
                                 <label for="direccion1" style="font-weight: bold;">Dirección exacta *</label>
-                                <input type="text" id="direccion1" name="direccion1" class="form-control" autocomplete="off" required>
+                                <input type="text" id="direccion1" name="direccion1" class="form-control" oninput="limpiarEspacios(this)" autocomplete="off" required>
                             </div>
                             <div class="col-md-6 form-group form-check">
                                 <label for="fechaIngreso1" style="font-weight: bold;">Fecha Ingreso *</label>
@@ -335,7 +335,7 @@ if (!isset($_SESSION['marconiId'])) {
                             </div>
                             <div class="col-md-12 form-group form-check">
                                 <label for="direccion2" style="font-weight: bold;">Dirección exacta *</label>
-                                <input type="text" id="direccion2" name="direccion2" class="form-control" autocomplete="off" required>
+                                <input type="text" id="direccion2" name="direccion2" class="form-control" oninput="limpiarEspacios(this)" autocomplete="off" required>
                             </div>
                             <div class="col-md-6 form-group form-check">
                                 <label for="fechaIngreso2" style="font-weight: bold;">Fecha Ingreso *</label>
@@ -645,6 +645,7 @@ if (!isset($_SESSION['marconiId'])) {
                     $('#fechaIngreso1').val("");
                     $('#salario1').val("");
                     $('#password1').val("");
+                    $('#Cpassword1').val("");
                     $('#cargo1').val("");
                     $('#horarios1').val("");
                     filtrar1();
@@ -788,6 +789,8 @@ if (!isset($_SESSION['marconiId'])) {
                         timer: 5000
                     });
                     filtrar1();
+                    $('#password2').val("");
+                    $('#Cpassword2').val("");
                 }else if(respuesta["estatus"]=="error"){
                     Swal.fire({
                         title: 'Error',
