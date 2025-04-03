@@ -1,11 +1,4 @@
 --------------------
-    18-03-2025
-
-    31-03-2025
-        planilla -> 
-            generar ->
-                * que se envien correo electronico a cada usuario al generar planilla
-
 
 -----------------------------------
 -------------Hechos----------------
@@ -236,6 +229,7 @@
             generar ->
                 * colocar calculo de civil
                 * colocar calculo de hijos
+                * que se envien correo electronico a cada usuario al generar planilla
 
 
 

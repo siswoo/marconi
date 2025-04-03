@@ -615,7 +615,7 @@ $asunto = $_POST['asunto'];
 			$sql1 = "SELECT * FROM planillas WHERE usuarioId = $usuarioId and fecha = '$fechaResult'";
 			$proceso1 = mysqli_query($conexion,$sql1);
 			while($row1=mysqli_fetch_array($proceso1)){
-				$aguinaldo += $row1['montoLaborado'];
+				$aguinaldo += $row1['subTotal'];
 			}
 		}
 		return $aguinaldo;
