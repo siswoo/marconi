@@ -201,6 +201,8 @@ CREATE TABLE planillas (
 	isr DOUBLE(11,2) NOT NULL,
 	montoLaborado DOUBLE(11,2) NOT NULL,
 	subTotal DOUBLE(11,2) NOT NULL,
+	civil DOUBLE(11,2) NOT NULL,
+	hijos DOUBLE(11,2) NOT NULL,
 	total DOUBLE(11,2) NOT NULL,
 	estatus BOOLEAN DEFAULT 0,
 	PRIMARY KEY (id)

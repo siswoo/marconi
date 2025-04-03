@@ -300,6 +300,7 @@ require '../vendor/autoload.php';
 			$diasLaborados = $diasTrabajados["diasLaborados"];
 			$civil = $row1["civil"];
 			$hijos = $row1["hijos"];
+			$sumatoriaCivilHijos = 0;
 			//$diasNoTrabajados = diasNoLaborados($conexion,$usuarioId,$inicioMes,$finMes);
 			//$calculoDiasNoTrabajados = $diasNoTrabajados*$pagoAlDia;
 
@@ -368,10 +369,11 @@ require '../vendor/autoload.php';
 			//$subTotal = ($pagoDiasLaborados+$calculoHorasExtras+$calculoDiasFeriadosLaborados);
 			$montoLaborado = $pagoHorasLaborados;
 			$subTotal = ($pagoHorasLaborados+$calculoHorasExtras+$calculoHorasFeriadosLaborados+$calculoHorasPermisosLaborales+$calculoDomingosPagos+$cuentasDiasIncapacidades);
+
 			if($subTotal>=($calculoCivil+$calculoHijos)){
-				$subTotal = $subTotal - ($calculoCivil+$calculoHijos);
+				$sumatoriaCivilHijos = $calculoCivil+$calculoHijos;
 			}
-			$total = $subTotal-$calculoHorasSinGoce;
+			$total = ($subTotal+$sumatoriaCivilHijos)-$calculoHorasSinGoce;
 
 			//seguro social
 			$ccss = round(($total*11.16)/100,2);
@@ -381,7 +383,7 @@ require '../vendor/autoload.php';
 
 			$total += $calculoHorasSinGoce;
 
-			$sql2 = "INSERT INTO planillas (usuarioId,fecha,pagoDia,pagoHora,horasExtras,diasFeriadosLaborados,aguinaldos,montoLaborado,subTotal,total,estatus,ccss,isr) VALUES ($usuarioId,'$finMes','$pagoAlDia','$pagoHora',$horasExtras,$diasFeriadosLaborados,'$montoAguinaldo','$montoLaborado','$subTotal','$total',0,'$ccss','$isr')";
+			$sql2 = "INSERT INTO planillas (usuarioId,fecha,pagoDia,pagoHora,horasExtras,diasFeriadosLaborados,aguinaldos,montoLaborado,subTotal,total,estatus,ccss,isr,civil,hijos) VALUES ($usuarioId,'$finMes','$pagoAlDia','$pagoHora',$horasExtras,$diasFeriadosLaborados,'$montoAguinaldo','$montoLaborado','$subTotal','$total',0,'$ccss','$isr','$calculoCivil','$calculoHijos')";
 			$proceso2 = mysqli_query($conexion,$sql2);
 		}
 		$datos = [
@@ -612,9 +614,10 @@ require '../vendor/autoload.php';
 			$sql1 = "SELECT * FROM planillas WHERE usuarioId = $usuarioId and fecha = '$fechaResult'";
 			$proceso1 = mysqli_query($conexion,$sql1);
 			while($row1=mysqli_fetch_array($proceso1)){
-				$aguinaldo += $row1['montoLaborado'];
+				$aguinaldo += $row1['subTotal'];
 			}
 		}
+		$aguinaldo = round($aguinaldo/12,2);
 		return $aguinaldo;
 	}
 
