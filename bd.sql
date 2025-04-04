@@ -67,8 +67,8 @@ CREATE TABLE usuarios (
 	FOREIGN KEY (cargo) REFERENCES cargos (id)
 ); ALTER TABLE usuarios CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
-INSERT INTO usuarios (usuario,nombre,apellido,password,rol,horarios) VALUES 
-('admin','Juan','Maldonado','d964173dc44da83eeafa3aebbee9a1a0',1,1);
+INSERT INTO usuarios (usuario,nombre,apellido,password,rol,horarios,cargo) VALUES 
+('admin','Juan','Maldonado','d964173dc44da83eeafa3aebbee9a1a0',1,1,1);
 
 DROP TABLE IF EXISTS submodulos;
 CREATE TABLE submodulos (
