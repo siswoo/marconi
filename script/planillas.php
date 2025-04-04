@@ -317,11 +317,7 @@ require '../vendor/autoload.php';
 			$permisosHorasSinGoce = permisosSinGoce($conexion,$usuarioId,$inicioMes,$finMes);
 			$calculoHorasSinGoce = $pagoHora*$permisosHorasSinGoce;
 
-			$diasIncapacidades = incapacidades($conexion,$usuarioId,$inicioMes,$finMes);
-			$cuentasDiasIncapacidades = 0;
-			if($diasIncapacidades>0 and $diasIncapacidades<4){
-				$cuentasDiasIncapacidades = $diasIncapacidades*($pagoAlDia*0.5);
-			}
+			$cuentasDiasIncapacidades = incapacidades($conexion,$usuarioId,$inicioMes,$finMes,$pagoAlDia);
 
 			$domingosPagos = 0;
 			$calculoDomingosPagos = 0;
@@ -373,14 +369,16 @@ require '../vendor/autoload.php';
 			if($subTotal>=($calculoCivil+$calculoHijos)){
 				$sumatoriaCivilHijos = $calculoCivil+$calculoHijos;
 			}
-			$total = ($subTotal+$sumatoriaCivilHijos)-$calculoHorasSinGoce;
 
+			$total = $subTotal-$calculoHorasSinGoce;
 			//seguro social
 			$ccss = round(($total*11.16)/100,2);
-			//impuesto sobre la renta
-			$isr = isr(round($total,2));
-			$total = round($total-($ccss+$isr),2);
 
+			$total2 = $subTotal-($calculoHorasSinGoce+$sumatoriaCivilHijos);
+			//impuesto sobre la renta
+			$isr = isr(round($total2,2));
+
+			$total = round($total-($ccss+$isr),2);
 			$total += $calculoHorasSinGoce;
 
 			$sql2 = "INSERT INTO planillas (usuarioId,fecha,pagoDia,pagoHora,horasExtras,diasFeriadosLaborados,aguinaldos,montoLaborado,subTotal,total,estatus,ccss,isr,civil,hijos) VALUES ($usuarioId,'$finMes','$pagoAlDia','$pagoHora',$horasExtras,$diasFeriadosLaborados,'$montoAguinaldo','$montoLaborado','$subTotal','$total',0,'$ccss','$isr','$calculoCivil','$calculoHijos')";
@@ -734,7 +732,11 @@ require '../vendor/autoload.php';
 			while($row1=mysqli_fetch_array($proceso1)){
 				$horaInicio = $row1["horaInicio"];
 				$horaFin = $row1["horaFin"];
-				$horasPermisos += diferenciaHoras($horaInicio,$horaFin);
+				if(diferenciaHoras($horaInicio,$horaFin)>=9){
+					$horasPermisos += diferenciaHoras($horaInicio,$horaFin)-1;
+				}else{
+					$horasPermisos += diferenciaHoras($horaInicio,$horaFin);
+				}
 			}
 		}
 		return $horasPermisos;
@@ -755,12 +757,23 @@ require '../vendor/autoload.php';
 	    return $contador;
 	}
 
-	function incapacidades($conexion,$usuarioId,$inicioMes,$finMes){
+	function incapacidades($conexion,$usuarioId,$inicioMes,$finMes,$pagoAlDia){
 		$total = 0;
 		$sql1 = "SELECT * FROM incapacidades WHERE usuarioId = $usuarioId and estatus = 1 and fechaInicio BETWEEN '$inicioMes' AND '$finMes' and fechaFin BETWEEN '$inicioMes' AND '$finMes' ";
 		$proceso1 = mysqli_query($conexion,$sql1);
 		while($row1=mysqli_fetch_array($proceso1)){
-			$total += $row1["diasTotales"];
+			//$total += $row1["diasTotales"];
+			$fechaInicio = $row1["fechaInicio"];
+			$fechaFin = $row1["fechaFin"];
+
+			$fechaInicio = new DateTime($fechaInicio);
+			$fechaFin = new DateTime($fechaFin);
+			$diferencia = $fechaInicio->diff($fechaFin);
+			$diferenciaDias = ($diferencia->days)+1;
+
+			if($diferenciaDias>0 and $diferenciaDias<4){
+				$total += $diferenciaDias*($pagoAlDia*0.5);
+			}
 		}
 		return $total;
 	}

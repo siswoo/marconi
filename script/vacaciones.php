@@ -246,6 +246,10 @@ $asunto = $_POST['asunto'];
 
 		$inicio = new DateTime($fechaDesde);
 		$fin = new DateTime($fechaHasta);
+
+		$diferencia = $inicio->diff($fin);
+		$diferenciaDias = ($diferencia->days)+1;
+
 		$fin = $fin->modify('+1 day');
 
 		$periodo = new DatePeriod($inicio, new DateInterval('P1D'), $fin);
@@ -297,6 +301,14 @@ $asunto = $_POST['asunto'];
 			$sql3 = "SELECT * FROM diasFeriados WHERE mes = $mesArray and dia = $diaArray";
 			$proceso3 = mysqli_query($conexion,$sql3);
 			$contador3 = mysqli_num_rows($proceso3);
+			if($diferenciaDias==1 and $contador3>0){
+				$datos = [
+					"estatus"	=> "error",
+					"msg"	=> "Fecha pedida es un feriado",
+				];
+				echo json_encode($datos);
+				exit;
+			}
 			if($contador3==0){
 			    $sql2 = "INSERT INTO vacaciones (usuarioId,fechaInicio,observacion) VALUES ($usuario,'$dia','$observacion')";
 				$proceso2 = mysqli_query($conexion,$sql2);

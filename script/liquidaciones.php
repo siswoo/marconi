@@ -602,10 +602,6 @@ $asunto = $_POST['asunto'];
 
 	function aguinaldo($conexion,$usuarioId,$anio,$mes){
 		$aguinaldo = 0;
-		if($mes!=12){
-			return $aguinaldo;
-		}
-
 		$fechaInicio = ($anio - 1) . "-11-01";
 		$date = new DateTime($fechaInicio);
 
