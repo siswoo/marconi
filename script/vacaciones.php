@@ -232,6 +232,8 @@ $asunto = $_POST['asunto'];
 		$fechaHasta = $_POST['fechaHasta'];
 		$observacion = $_POST['observacion'];
 		$diasDescontar = 0;
+		$guardados = 0;
+		$domingoText = "";
 
 		$disponibles = calcularDiasDisponibles($conexion,$usuario);
 
@@ -259,6 +261,8 @@ $asunto = $_POST['asunto'];
 		foreach ($periodo as $fecha) {
 		    if ($fecha->format('N') != 7) {
 		        $dias_laborales[] = $fecha->format('Y-m-d');
+		    }else{
+		    	$domingoText = "/Domingo";
 		    }
 		}
 
@@ -350,14 +354,42 @@ $asunto = $_POST['asunto'];
 			if($contador3==0 and $contador4==0 and $contador5==0 and $contador6==0){
 			    $sql2 = "INSERT INTO vacaciones (usuarioId,fechaInicio,observacion) VALUES ($usuario,'$dia','$observacion')";
 				$proceso2 = mysqli_query($conexion,$sql2);
+				$guardados = 1;
 			}
 		}
 
-		$datos = [
-			"estatus"	=> "ok",
-			"msg"	=> "Se ha creado satisfactoriamente",
-		];
-		echo json_encode($datos);
+		if($guardados==1){
+			$datos = [
+				"estatus"	=> "ok",
+				"msg"	=> "Se ha creado satisfactoriamente",
+			];
+			echo json_encode($datos);
+		}else if($contador3>0){
+			$datos = [
+				"estatus"	=> "error",
+				"msg"	=> "No se ha guardado registros por dias feriados".$domingoText,
+			];
+			echo json_encode($datos);
+		}else if($contador4>0){
+			$datos = [
+				"estatus"	=> "error",
+				"msg"	=> "No se ha guardado registros por dias de turnos".$domingoText,
+			];
+			echo json_encode($datos);
+		}else if($contador5>0){
+			$datos = [
+				"estatus"	=> "error",
+				"msg"	=> "No se ha guardado registros por permisos Laborales".$domingoText,
+			];
+			echo json_encode($datos);
+		}else if($contador6>0){
+			$datos = [
+				"estatus"	=> "error",
+				"msg"	=> "No se ha guardado registros por incapacidades".$domingoText,
+			];
+			echo json_encode($datos);
+		}
+
 	}
 
 	if($asunto=='cambioEstatus'){
