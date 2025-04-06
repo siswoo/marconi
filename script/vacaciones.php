@@ -298,6 +298,7 @@ $asunto = $_POST['asunto'];
 			$fechaArray = explode("-",$dia);
 			$diaArray = $fechaArray[2];
 			$mesArray = $fechaArray[1];
+
 			$sql3 = "SELECT * FROM diasFeriados WHERE mes = $mesArray and dia = $diaArray";
 			$proceso3 = mysqli_query($conexion,$sql3);
 			$contador3 = mysqli_num_rows($proceso3);
@@ -309,7 +310,56 @@ $asunto = $_POST['asunto'];
 				echo json_encode($datos);
 				exit;
 			}
-			if($contador3==0){
+
+			$sql4 = "SELECT * FROM turnos WHERE usuarioId = $usuario and fechaInicio = '$dia' ";
+			$proceso4 = mysqli_query($conexion,$sql4);
+			$contador4 = mysqli_num_rows($proceso4);
+			if($diferenciaDias==1 and $contador4>0){
+				$datos = [
+					"estatus"	=> "error",
+					"msg"	=> "Fecha pedida ya tiene un turno",
+				];
+				echo json_encode($datos);
+				exit;
+			}
+
+			$sql5 = "SELECT * FROM turnos WHERE usuarioId = $usuario and fechaInicio = '$dia' ";
+			$proceso5 = mysqli_query($conexion,$sql5);
+			$contador5 = mysqli_num_rows($proceso5);
+			if($diferenciaDias==1 and $contador5>0){
+				$datos = [
+					"estatus"	=> "error",
+					"msg"	=> "Fecha pedida ya tiene un turno",
+				];
+				echo json_encode($datos);
+				exit;
+			}
+
+			$sql6 = "SELECT * FROM permisos WHERE usuarioId = $usuario and fechaInicio = '$dia' ";
+			$proceso6 = mysqli_query($conexion,$sql6);
+			$contador6 = mysqli_num_rows($proceso6);
+			if($diferenciaDias==1 and $contador6>0){
+				$datos = [
+					"estatus"	=> "error",
+					"msg"	=> "Fecha pedida ya tiene un permiso",
+				];
+				echo json_encode($datos);
+				exit;
+			}
+
+			$sql7 = "SELECT * FROM incapacidades WHERE usuarioId = $usuario and '$dia' BETWEEN fechaInicio AND fechaFin ";
+			$proceso7 = mysqli_query($conexion,$sql7);
+			$contador7 = mysqli_num_rows($proceso7);
+			if($diferenciaDias==1 and $contador7>0){
+				$datos = [
+					"estatus"	=> "error",
+					"msg"	=> "Fecha pedida ya tiene una incapacidad",
+				];
+				echo json_encode($datos);
+				exit;
+			}
+
+			if($contador3==0 and $contador4==0 and $contador5==0 and $contador6==0 and $contador7==0){
 			    $sql2 = "INSERT INTO vacaciones (usuarioId,fechaInicio,observacion) VALUES ($usuario,'$dia','$observacion')";
 				$proceso2 = mysqli_query($conexion,$sql2);
 			}
