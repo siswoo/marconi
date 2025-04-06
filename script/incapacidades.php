@@ -233,6 +233,10 @@ $asunto = $_POST['asunto'];
 		$desde = $_POST['desde'];
 		$hasta = $_POST['hasta'];
 		$observacion = $_POST['observacion'];
+		$validacion3 = 0;
+		$validacion4 = 0;
+		$validacion5 = 0;
+		$validacion6 = 0;
 
 		$date1 = new DateTime($desde);
 		$date2 = new DateTime($hasta);
@@ -261,75 +265,122 @@ $asunto = $_POST['asunto'];
 		$inicio = new DateTime($desde);
 		$fin = new DateTime($hasta);
 		$fin = $fin->modify('+1 day');
+		$diferencia = $inicio->diff($fin);
+		$diferenciaDias = ($diferencia->days);
 		$periodo = new DatePeriod($inicio, new DateInterval('P1D'), $fin);
 		$dias_laborales = [];
+		$fechas = [];
+		$guardados = 0;
 		foreach ($periodo as $fecha) {
 		    if ($fecha->format('N') != 7) {
 		        $dias_laborales[] = $fecha->format('Y-m-d');
 		    }
+
+		    $fechaArray = explode("-",$fecha->format('Y-m-d'));
+		    $fechaCompleta = $fecha->format('Y-m-d');
+			$mesArray = $fechaArray[1];
+			$diaArray = $fechaArray[2];
+			$sql3 = "SELECT * FROM diasFeriados WHERE mes = $mesArray and dia = $diaArray";
+			$proceso3 = mysqli_query($conexion,$sql3);
+			$contador3 = mysqli_num_rows($proceso3);
+			if($diferenciaDias==1 and $contador3>0){
+				$datos = [
+					"estatus"	=> "error",
+					"msg"	=> "Fecha pedida es un feriado",
+				];
+				echo json_encode($datos);
+				exit;
+			}
+
+			$sql4 = "SELECT * FROM turnos WHERE usuarioId = $usuario and fechaInicio = '$fechaCompleta' ";
+			$proceso4 = mysqli_query($conexion,$sql4);
+			$contador4 = mysqli_num_rows($proceso4);
+			if($diferenciaDias==1 and $contador4>0){
+				$datos = [
+					"estatus"	=> "error",
+					"msg"	=> "Fecha pedida ya tiene un turno",
+				];
+				echo json_encode($datos);
+				exit;
+			}
+
+			$sql5 = "SELECT * FROM permisosLaborales WHERE usuarioId = $usuario and fechaInicio = '$fechaCompleta' and estatus = 1";
+			$proceso5 = mysqli_query($conexion,$sql5);
+			$contador5 = mysqli_num_rows($proceso5);
+			if($diferenciaDias==1 and $contador5>0){
+				$datos = [
+					"estatus"	=> "error",
+					"msg"	=> "Fecha pedida ya tiene un permiso",
+				];
+				echo json_encode($datos);
+				exit;
+			}
+
+			$sql6 = "SELECT * FROM vacaciones WHERE usuarioId = $usuario and fechaInicio = '$fechaCompleta' and estatus = 1";
+			$proceso6 = mysqli_query($conexion,$sql6);
+			$contador6 = mysqli_num_rows($proceso6);
+			if($diferenciaDias==1 and $contador6>0){
+				$datos = [
+					"estatus"	=> "error",
+					"msg"	=> "Fecha pedida ya tiene una vacación",
+				];
+				echo json_encode($datos);
+				exit;
+			}
+
+			$validacion3 = ($contador3 > 0) ? 1 : 0;
+			$validacion4 = ($contador4 > 0) ? 1 : 0;
+			$validacion5 = ($contador5 > 0) ? 1 : 0;
+			$validacion6 = ($contador6 > 0) ? 1 : 0;
+
+			if($contador3==0 and $contador4==0 and $contador5==0 and $contador6==0){
+				$fechas[] = $fecha->format('Y-m-d');
+			}
 		}
 
 		$diasTotalesValidos = count($dias_laborales);
-
-		$fechaArray = explode("-",$dia);
-		$mesArray = $fechaArray[1];
-		$diaArray = $fechaArray[2];
-		$sql3 = "SELECT * FROM diasFeriados WHERE mes = $mesArray and dia = $diaArray";
-		$proceso3 = mysqli_query($conexion,$sql3);
-		$contador3 = mysqli_num_rows($proceso3);
-		if($diferenciaDias==1 and $contador3>0){
-			$datos = [
-				"estatus"	=> "error",
-				"msg"	=> "Fecha pedida es un feriado",
-			];
-			echo json_encode($datos);
-			exit;
-		}
-
-		$sql4 = "SELECT * FROM turnos WHERE usuarioId = $usuario and fechaInicio = '$dia' ";
-		$proceso4 = mysqli_query($conexion,$sql4);
-		$contador4 = mysqli_num_rows($proceso4);
-		if($diferenciaDias==1 and $contador4>0){
-			$datos = [
-				"estatus"	=> "error",
-				"msg"	=> "Fecha pedida ya tiene un turno",
-			];
-			echo json_encode($datos);
-			exit;
-		}
-
-		$sql5 = "SELECT * FROM permisosLaborales WHERE usuarioId = $usuario and fechaInicio = '$dia' and estatus = 1";
-		$proceso5 = mysqli_query($conexion,$sql5);
-		$contador5 = mysqli_num_rows($proceso5);
-		if($diferenciaDias==1 and $contador5>0){
-			$datos = [
-				"estatus"	=> "error",
-				"msg"	=> "Fecha pedida ya tiene un permiso",
-			];
-			echo json_encode($datos);
-			exit;
-		}
-
-		$sql6 = "SELECT * FROM vacaciones WHERE usuarioId = $usuario and fechaInicio = '$dia' and estatus = 1";
-		$proceso6 = mysqli_query($conexion,$sql6);
-		$contador6 = mysqli_num_rows($proceso6);
-		if($diferenciaDias==1 and $contador6>0){
-			$datos = [
-				"estatus"	=> "error",
-				"msg"	=> "Fecha pedida ya tiene una vacación",
-			];
-			echo json_encode($datos);
-			exit;
-		}
-
-		if($contador3==0 and $contador4==0 and $contador5==0 and $contador6==0){
-			$sql2 = "INSERT INTO incapacidades (usuarioId,fechaInicio,fechaFin,observacion,diasTotales) VALUES ($usuario,'$desde','$hasta','$observacion',$diasTotalesValidos)";
+		if(count($fechas)>0){
+			$primeraFecha = $fechas[0];
+			$ultimaFecha = end($fechas);
+			$sql2 = "INSERT INTO incapacidades (usuarioId,fechaInicio,fechaFin,observacion,diasTotales) VALUES ($usuario,'$primeraFecha','$ultimaFecha','$observacion',$diasTotalesValidos)";
 			$proceso2 = mysqli_query($conexion,$sql2);
+			$guardados += 1;
+		}
+
+		if($guardados>0){
 			$datos = [
 				"estatus"	=> "ok",
-				"msg"	=> "Se ha creado satisfactoriamente",
+				"msg"	=> "Se ha guardado al menos un registro",
 			];
 			echo json_encode($datos);
+		}else if($validacion3==1){
+			$datos = [
+				"estatus"	=> "error",
+				"msg"	=> "Ya tienes dias feriados en esas fechas",
+			];
+			echo json_encode($datos);
+			exit;
+		}else if($validacion4==1){
+			$datos = [
+				"estatus"	=> "error",
+				"msg"	=> "Ya tienes turnos guardados en esas fecha",
+			];
+			echo json_encode($datos);
+			exit;
+		}else if($validacion5==1){
+			$datos = [
+				"estatus"	=> "error",
+				"msg"	=> "Ya tienes permisos laborales en esas fechas",
+			];
+			echo json_encode($datos);
+			exit;
+		}else if($validacion6==1){
+			$datos = [
+				"estatus"	=> "error",
+				"msg"	=> "Ya tienes rango de vacaciones en esas fechas",
+			];
+			echo json_encode($datos);
+			exit;
 		}
 
 	}
