@@ -272,9 +272,7 @@ $asunto = $_POST['asunto'];
 		$fechas = [];
 		$guardados = 0;
 		foreach ($periodo as $fecha) {
-		    if ($fecha->format('N') != 7) {
-		        $dias_laborales[] = $fecha->format('Y-m-d');
-		    }
+			$validacionDomingo = 0;
 
 		    $fechaArray = explode("-",$fecha->format('Y-m-d'));
 		    $fechaCompleta = $fecha->format('Y-m-d');
@@ -333,12 +331,16 @@ $asunto = $_POST['asunto'];
 			$validacion5 = ($contador5 > 0) ? 1 : 0;
 			$validacion6 = ($contador6 > 0) ? 1 : 0;
 
-			if($contador3==0 and $contador4==0 and $contador5==0 and $contador6==0){
+			if ($fecha->format('N')==7) {
+		    	$validacionDomingo = 1;
+		    }
+
+			if($contador3==0 and $contador4==0 and $contador5==0 and $contador6==0 and $validacionDomingo==0){
 				$fechas[] = $fecha->format('Y-m-d');
 			}
 		}
 
-		$diasTotalesValidos = count($dias_laborales);
+		$diasTotalesValidos = count($fechas);
 		if(count($fechas)>0){
 			$primeraFecha = $fechas[0];
 			$ultimaFecha = end($fechas);
@@ -378,6 +380,13 @@ $asunto = $_POST['asunto'];
 			$datos = [
 				"estatus"	=> "error",
 				"msg"	=> "Ya tienes rango de vacaciones en esas fechas",
+			];
+			echo json_encode($datos);
+			exit;
+		}else{
+			$datos = [
+				"estatus"	=> "error",
+				"msg"	=> "Ha seleccionado solo domingos",
 			];
 			echo json_encode($datos);
 			exit;
