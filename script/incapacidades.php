@@ -271,6 +271,18 @@ $asunto = $_POST['asunto'];
 
 		$diasTotalesValidos = count($dias_laborales);
 
+		$sql3 = "SELECT * FROM diasFeriados WHERE mes = $mesArray and dia = $diaArray";
+		$proceso3 = mysqli_query($conexion,$sql3);
+		$contador3 = mysqli_num_rows($proceso3);
+		if($diferenciaDias==1 and $contador3>0){
+			$datos = [
+				"estatus"	=> "error",
+				"msg"	=> "Fecha pedida es un feriado",
+			];
+			echo json_encode($datos);
+			exit;
+		}
+
 		$sql2 = "INSERT INTO incapacidades (usuarioId,fechaInicio,fechaFin,observacion,diasTotales) VALUES ($usuario,'$desde','$hasta','$observacion',$diasTotalesValidos)";
 		$proceso2 = mysqli_query($conexion,$sql2);
 		$datos = [

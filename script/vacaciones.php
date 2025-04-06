@@ -335,7 +335,7 @@ $asunto = $_POST['asunto'];
 				exit;
 			}
 
-			$sql6 = "SELECT * FROM permisos WHERE usuarioId = $usuario and fechaInicio = '$dia' ";
+			$sql6 = "SELECT * FROM permisosLaborales WHERE usuarioId = $usuario and fechaInicio = '$dia' ";
 			$proceso6 = mysqli_query($conexion,$sql6);
 			$contador6 = mysqli_num_rows($proceso6);
 			if($diferenciaDias==1 and $contador6>0){

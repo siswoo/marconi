@@ -1,13 +1,6 @@
 --------------------
 
     06-04-2025
-        vacaciones ->
-            crear ->
-                * validar que no sea un domingo
-                * validar que no sea feriado
-                * validar que no tenga turno registrado
-                * validar que no tenga un permiso aceptada
-                * validar que no tenga una incapacidad aceptada
         incapacidades ->
             crear ->
                 * validar que no sea un domingo
@@ -260,7 +253,13 @@
                 * validar que no sea feriado
                 * validar que no tenga una vacacion aceptada
                 * validar que no tenga una incapacidad aceptada
-
+        vacaciones ->
+            crear ->
+                * validar que no sea un domingo
+                * validar que no sea feriado
+                * validar que no tenga turno registrado
+                * validar que no tenga un permiso aceptada
+                * validar que no tenga una incapacidad aceptada
 
 
 -----------------------------------
