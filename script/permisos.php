@@ -273,6 +273,18 @@ $asunto = $_POST['asunto'];
 			exit;
 		}
 
+		$sql5 = "SELECT * FROM vacaciones WHERE usuarioId = $usuario and fechaInicio = '$fecha' and estatus = 1";
+		$proceso5 = mysqli_query($conexion,$sql5);
+		$contador5 = mysqli_num_rows($proceso5);
+		if($contador5>0){
+			$datos = [
+				"estatus"	=> "error",
+				"msg"	=> "No puede elegir dias de vacaciones",
+			];
+			echo json_encode($datos);
+			exit;
+		}
+
 		$entradaMaxima = 0;
 		$sql1 = "SELECT hor.entrada, hor.salida FROM horarios hor 
 		INNER JOIN usuarios usu 
@@ -312,6 +324,43 @@ $asunto = $_POST['asunto'];
 			$datos = [
 				"estatus"	=> "error",
 				"msg"	=> "Ya ha ingreso para la fecha",
+			];
+			echo json_encode($datos);
+			exit;
+		}
+
+		if (date('w', strtotime($fecha)) == 0) {
+    		$datos = [
+				"estatus"	=> "error",
+				"msg"	=> "No se pueden elegir dias domingos",
+			];
+			echo json_encode($datos);
+			exit;
+		}
+
+		$fechaArray = explode('-',$fecha);
+		$anio = $fechaArray[0];
+		$mes = $fechaArray[1];
+		$dia = $fechaArray[2];
+		$sql5 = "SELECT * FROM diasFeriados WHERE mes = '$mes' and dia = '$dia'";
+		$proceso5 = mysqli_query($conexion,$sql5);
+		$contador5 = mysqli_num_rows($proceso5);
+		if($contador5>0){
+			$datos = [
+				"estatus"	=> "error",
+				"msg"	=> "No puede elegir dias feriados",
+			];
+			echo json_encode($datos);
+			exit;
+		}
+
+		$sql6 = "SELECT * FROM incapacidades WHERE usuarioId = $usuario and '$fecha' BETWEEN fechaInicio AND fechaFin and estatus = 1";
+		$proceso6 = mysqli_query($conexion,$sql6);
+		$contador6 = mysqli_num_rows($proceso6);
+		if($contador6>0){
+			$datos = [
+				"estatus"	=> "error",
+				"msg"	=> "No puede elegir dias de incapacidades",
 			];
 			echo json_encode($datos);
 			exit;
