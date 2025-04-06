@@ -271,6 +271,9 @@ $asunto = $_POST['asunto'];
 
 		$diasTotalesValidos = count($dias_laborales);
 
+		$fechaArray = explode("-",$dia);
+		$mesArray = $fechaArray[1];
+		$diaArray = $fechaArray[2];
 		$sql3 = "SELECT * FROM diasFeriados WHERE mes = $mesArray and dia = $diaArray";
 		$proceso3 = mysqli_query($conexion,$sql3);
 		$contador3 = mysqli_num_rows($proceso3);
@@ -283,13 +286,52 @@ $asunto = $_POST['asunto'];
 			exit;
 		}
 
-		$sql2 = "INSERT INTO incapacidades (usuarioId,fechaInicio,fechaFin,observacion,diasTotales) VALUES ($usuario,'$desde','$hasta','$observacion',$diasTotalesValidos)";
-		$proceso2 = mysqli_query($conexion,$sql2);
-		$datos = [
-			"estatus"	=> "ok",
-			"msg"	=> "Se ha creado satisfactoriamente",
-		];
-		echo json_encode($datos);
+		$sql4 = "SELECT * FROM turnos WHERE usuarioId = $usuario and fechaInicio = '$dia' ";
+		$proceso4 = mysqli_query($conexion,$sql4);
+		$contador4 = mysqli_num_rows($proceso4);
+		if($diferenciaDias==1 and $contador4>0){
+			$datos = [
+				"estatus"	=> "error",
+				"msg"	=> "Fecha pedida ya tiene un turno",
+			];
+			echo json_encode($datos);
+			exit;
+		}
+
+		$sql5 = "SELECT * FROM permisosLaborales WHERE usuarioId = $usuario and fechaInicio = '$dia' and estatus = 1";
+		$proceso5 = mysqli_query($conexion,$sql5);
+		$contador5 = mysqli_num_rows($proceso5);
+		if($diferenciaDias==1 and $contador5>0){
+			$datos = [
+				"estatus"	=> "error",
+				"msg"	=> "Fecha pedida ya tiene un permiso",
+			];
+			echo json_encode($datos);
+			exit;
+		}
+
+		$sql6 = "SELECT * FROM vacaciones WHERE usuarioId = $usuario and fechaInicio = '$dia' and estatus = 1";
+		$proceso6 = mysqli_query($conexion,$sql6);
+		$contador6 = mysqli_num_rows($proceso6);
+		if($diferenciaDias==1 and $contador6>0){
+			$datos = [
+				"estatus"	=> "error",
+				"msg"	=> "Fecha pedida ya tiene una vacación",
+			];
+			echo json_encode($datos);
+			exit;
+		}
+
+		if($contador3==0 and $contador4==0 and $contador5==0 and $contador6==0){
+			$sql2 = "INSERT INTO incapacidades (usuarioId,fechaInicio,fechaFin,observacion,diasTotales) VALUES ($usuario,'$desde','$hasta','$observacion',$diasTotalesValidos)";
+			$proceso2 = mysqli_query($conexion,$sql2);
+			$datos = [
+				"estatus"	=> "ok",
+				"msg"	=> "Se ha creado satisfactoriamente",
+			];
+			echo json_encode($datos);
+		}
+
 	}
 
 	if($asunto=='cambioEstatus'){

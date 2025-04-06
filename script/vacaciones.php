@@ -323,22 +323,10 @@ $asunto = $_POST['asunto'];
 				exit;
 			}
 
-			$sql5 = "SELECT * FROM turnos WHERE usuarioId = $usuario and fechaInicio = '$dia' ";
+			$sql5 = "SELECT * FROM permisosLaborales WHERE usuarioId = $usuario and fechaInicio = '$dia' and estatus = 1 ";
 			$proceso5 = mysqli_query($conexion,$sql5);
 			$contador5 = mysqli_num_rows($proceso5);
 			if($diferenciaDias==1 and $contador5>0){
-				$datos = [
-					"estatus"	=> "error",
-					"msg"	=> "Fecha pedida ya tiene un turno",
-				];
-				echo json_encode($datos);
-				exit;
-			}
-
-			$sql6 = "SELECT * FROM permisosLaborales WHERE usuarioId = $usuario and fechaInicio = '$dia' ";
-			$proceso6 = mysqli_query($conexion,$sql6);
-			$contador6 = mysqli_num_rows($proceso6);
-			if($diferenciaDias==1 and $contador6>0){
 				$datos = [
 					"estatus"	=> "error",
 					"msg"	=> "Fecha pedida ya tiene un permiso",
@@ -347,10 +335,10 @@ $asunto = $_POST['asunto'];
 				exit;
 			}
 
-			$sql7 = "SELECT * FROM incapacidades WHERE usuarioId = $usuario and '$dia' BETWEEN fechaInicio AND fechaFin ";
-			$proceso7 = mysqli_query($conexion,$sql7);
-			$contador7 = mysqli_num_rows($proceso7);
-			if($diferenciaDias==1 and $contador7>0){
+			$sql6 = "SELECT * FROM incapacidades WHERE usuarioId = $usuario and '$dia' BETWEEN fechaInicio AND fechaFin and estatus = 1 ";
+			$proceso6 = mysqli_query($conexion,$sql6);
+			$contador6 = mysqli_num_rows($proceso6);
+			if($diferenciaDias==1 and $contador6>0){
 				$datos = [
 					"estatus"	=> "error",
 					"msg"	=> "Fecha pedida ya tiene una incapacidad",
@@ -359,7 +347,7 @@ $asunto = $_POST['asunto'];
 				exit;
 			}
 
-			if($contador3==0 and $contador4==0 and $contador5==0 and $contador6==0 and $contador7==0){
+			if($contador3==0 and $contador4==0 and $contador5==0 and $contador6==0){
 			    $sql2 = "INSERT INTO vacaciones (usuarioId,fechaInicio,observacion) VALUES ($usuario,'$dia','$observacion')";
 				$proceso2 = mysqli_query($conexion,$sql2);
 			}
