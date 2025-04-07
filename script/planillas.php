@@ -308,7 +308,6 @@ require '../vendor/autoload.php';
 			$horasExtras = horasExtras($conexion,$usuarioId,$inicioMes,$finMes);
 			$calculoHorasExtras = $horasExtras*$pagoHoraExtra;
 			$diasFeriadosLaborados = diasFeriados($conexion,$usuarioId,$inicioMes,$finMes);
-
 			$horasFeriadosLaborados = horasFeriados($conexion,$usuarioId,$inicioMes,$finMes);
 			$calculoHorasFeriadosLaborados = $horasFeriadosLaborados*$pagoHoraFeriado;
 			$montoAguinaldo = aguinaldo($conexion,$usuarioId,$anio,$mes);
@@ -559,7 +558,15 @@ require '../vendor/autoload.php';
 			$entrada = $row1["entrada"];
 			$salida = $row1["salida"];
 		}
-		$sql4 = "SELECT * FROM diasFeriados";
+
+		$inicioMesArray = explode("-",$inicioMes);
+		$inicioMesMes = $inicioMesArray[1];
+		$inicioMesDia = $inicioMesArray[2];
+
+		$finMesArray = explode("-",$finMes);
+		$finMesDia = $finMesArray[2];
+
+		$sql4 = "SELECT * FROM diasFeriados WHERE (dia BETWEEN '$inicioMesDia' AND '$finMesDia' and mes = '$inicioMesMes')";
 		$proceso4 = mysqli_query($conexion,$sql4);
 		while($row4=mysqli_fetch_array($proceso4)){
 			$dia = $row4["dia"];
