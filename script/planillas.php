@@ -275,8 +275,8 @@ require '../vendor/autoload.php';
 		$inicioMes = $fecha . "-01";
 		$ultimoDia = date("t", strtotime($inicioMes));
 		$finMes = $fecha . "-" . $ultimoDia;
-		$sql1 = "SELECT * FROM usuarios WHERE estado = 'Activo'";
-		//$sql1 = "SELECT * FROM usuarios WHERE estado = 'Activo' and id = 2";
+		//$sql1 = "SELECT * FROM usuarios WHERE estado = 'Activo'";
+		$sql1 = "SELECT * FROM usuarios WHERE estado = 'Activo' and id = 2";
 		$proceso1 = mysqli_query($conexion,$sql1);
 		$contador1 = mysqli_num_rows($proceso1);
 		if($contador1==0){
@@ -294,7 +294,6 @@ require '../vendor/autoload.php';
 			$pagoDiaFeriado = $pagoAlDia*2;
 			$pagoHora = round($pagoAlDia/8,2);
 			$pagoHoraExtra = round($pagoHora*1.5,2);
-			$pagoHoraFeriado = round($pagoHora*2,2);
 			$diasTrabajados = diasLaborados($conexion,$usuarioId,$inicioMes,$finMes);
 			$horasTrabajados = horasLaborados($conexion,$usuarioId,$inicioMes,$finMes);
 			$diasMesDiferencia = $diasTrabajados["diasMesDiferencia"];
@@ -309,7 +308,7 @@ require '../vendor/autoload.php';
 			$calculoHorasExtras = $horasExtras*$pagoHoraExtra;
 			$diasFeriadosLaborados = diasFeriados($conexion,$usuarioId,$inicioMes,$finMes);
 			$horasFeriadosLaborados = horasFeriados($conexion,$usuarioId,$inicioMes,$finMes);
-			$calculoHorasFeriadosLaborados = $horasFeriadosLaborados*$pagoHoraFeriado;
+			$calculoHorasFeriadosLaborados = $horasFeriadosLaborados*$pagoHora;
 			$montoAguinaldo = aguinaldo($conexion,$usuarioId,$anio,$mes);
 			$permisosHorasSinGoce = permisosSinGoce($conexion,$usuarioId,$inicioMes,$finMes);
 			$calculoHorasSinGoce = $pagoHora*$permisosHorasSinGoce;
@@ -335,10 +334,11 @@ require '../vendor/autoload.php';
 
 			$pagoDiasLaborados = $diasLaborados*$pagoAlDia;
 			$pagoHorasLaborados = $horasTrabajados*$pagoHora;
-
+			/*
 			if($pagoHorasLaborados>$pagoDiasLaborados){
 				$pagoHorasLaborados = $pagoDiasLaborados;
 			}
+			*/
 
 			if($pagoDiasLaborados==0){
 				$calculoHorasSinGoce = 0;
@@ -365,6 +365,7 @@ require '../vendor/autoload.php';
 			if($subTotal>=($calculoCivil+$calculoHijos)){
 				$sumatoriaCivilHijos = $calculoCivil+$calculoHijos;
 			}
+
 
 			$total = $subTotal-$calculoHorasSinGoce;
 			//seguro social
