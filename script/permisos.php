@@ -39,12 +39,12 @@ $asunto = $_POST['asunto'];
 		}
 
 
-		$sql1 = "SELECT per.tipo as tipo, per.id as id, usu.cedula as cedula, usu.nombre as nombre, usu.apellido as apellido, usu.apellido2 as apellido2, per.fechaInicio as fechaInicio, per.horaInicio as horaInicio, per.horaFin as horaFin, per.observacion as observacion, per.estatus as estatus FROM permisosLaborales per
+		$sql1 = "SELECT per.tipo as tipo, per.id as id, usu.cedula as cedula, usu.nombre as nombre, usu.apellido as apellido, usu.apellido2 as apellido2, per.fechaInicio as fechaInicio, per.horaInicio as horaInicio, per.horaFin as horaFin, per.observacion as observacion, per.estatus as estatus FROM permisoslaborales per
 		INNER JOIN usuarios usu
 		ON per.usuarioId = usu.id 
 		WHERE ".$rolCon.$filtrado.$fecha;
 
-		$sql2 = "SELECT per.tipo as tipo, per.id as id, usu.cedula as cedula, usu.nombre as nombre, usu.apellido as apellido, usu.apellido2 as apellido2, per.fechaInicio as fechaInicio, per.horaInicio as horaInicio, per.horaFin as horaFin, per.observacion as observacion, per.estatus as estatus FROM permisosLaborales per
+		$sql2 = "SELECT per.tipo as tipo, per.id as id, usu.cedula as cedula, usu.nombre as nombre, usu.apellido as apellido, usu.apellido2 as apellido2, per.fechaInicio as fechaInicio, per.horaInicio as horaInicio, per.horaFin as horaFin, per.observacion as observacion, per.estatus as estatus FROM permisoslaborales per
 		INNER JOIN usuarios usu
 		ON per.usuarioId = usu.id 
 		WHERE ".$rolCon.$filtrado.$fecha." ORDER BY per.id DESC LIMIT ".$limit." OFFSET ".$offset;
@@ -305,7 +305,7 @@ $asunto = $_POST['asunto'];
 			exit;
 		}
 
-		$sql2 = "SELECT * FROM permisosLaborales WHERE usuarioId = $usuario and fechaInicio = '$fecha'";
+		$sql2 = "SELECT * FROM permisoslaborales WHERE usuarioId = $usuario and fechaInicio = '$fecha'";
 		$proceso2 = mysqli_query($conexion,$sql2);
 		$contador2 = mysqli_num_rows($proceso2);
 		if($contador2>0){
@@ -342,7 +342,7 @@ $asunto = $_POST['asunto'];
 		$anio = $fechaArray[0];
 		$mes = $fechaArray[1];
 		$dia = $fechaArray[2];
-		$sql5 = "SELECT * FROM diasFeriados WHERE mes = '$mes' and dia = '$dia'";
+		$sql5 = "SELECT * FROM diasferiados WHERE mes = '$mes' and dia = '$dia'";
 		$proceso5 = mysqli_query($conexion,$sql5);
 		$contador5 = mysqli_num_rows($proceso5);
 		if($contador5>0){
@@ -366,7 +366,7 @@ $asunto = $_POST['asunto'];
 			exit;
 		}
 		
-		$sql3 = "INSERT INTO permisosLaborales (usuarioId,tipo,fechaInicio,horaInicio,horaFin,observacion) VALUES ($usuario,'$tipo','$fecha','$desde','$hasta','$observacion')";
+		$sql3 = "INSERT INTO permisoslaborales (usuarioId,tipo,fechaInicio,horaInicio,horaFin,observacion) VALUES ($usuario,'$tipo','$fecha','$desde','$hasta','$observacion')";
 		$proceso3 = mysqli_query($conexion,$sql3);
 		$datos = [
 			"estatus"	=> "ok",
@@ -378,7 +378,7 @@ $asunto = $_POST['asunto'];
 	if($asunto=='cambioEstatus'){
 		$id = $_POST['id'];
 		$estatus = $_POST['estatus'];
-		$sql1 = "UPDATE permisosLaborales SET estatus = $estatus WHERE id = ".$id;
+		$sql1 = "UPDATE permisoslaborales SET estatus = $estatus WHERE id = ".$id;
 		$proceso1 = mysqli_query($conexion,$sql1);
 		$datos = [
 			"estatus"	=> "ok",
@@ -388,7 +388,7 @@ $asunto = $_POST['asunto'];
 
 	if($asunto=='eliminar'){
 		$id = $_POST['id'];
-		$sql1 = "DELETE FROM permisosLaborales WHERE id = $id";
+		$sql1 = "DELETE FROM permisoslaborales WHERE id = $id";
 		$proceso1 = mysqli_query($conexion,$sql1);
 		$datos = [
 			"estatus"	=> "ok",

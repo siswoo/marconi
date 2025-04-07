@@ -540,7 +540,7 @@ require '../vendor/autoload.php';
 			$fechaArray = explode('-',$fechaInicio);
 			$mes = $fechaArray[1];
 			$dia = $fechaArray[2];
-			$sql2 = "SELECT * FROM diasFeriados WHERE mes = '$mes' and dia = '$dia'";
+			$sql2 = "SELECT * FROM diasferiados WHERE mes = '$mes' and dia = '$dia'";
 			$proceso2 = mysqli_query($conexion,$sql2);
 			$contador2 = mysqli_num_rows($proceso2);
 			if($contador2>0){
@@ -567,7 +567,7 @@ require '../vendor/autoload.php';
 		$finMesArray = explode("-",$finMes);
 		$finMesDia = $finMesArray[2];
 
-		$sql4 = "SELECT * FROM diasFeriados WHERE (dia BETWEEN '$inicioMesDia' AND '$finMesDia' and mes = '$inicioMesMes')";
+		$sql4 = "SELECT * FROM diasferiados WHERE (dia BETWEEN '$inicioMesDia' AND '$finMesDia' and mes = '$inicioMesMes')";
 		$proceso4 = mysqli_query($conexion,$sql4);
 		while($row4=mysqli_fetch_array($proceso4)){
 			$dia = $row4["dia"];
@@ -679,7 +679,7 @@ require '../vendor/autoload.php';
 
 	function permisosSinGoce($conexion,$usuarioId,$inicioMes,$finMes){
 		$horasRestar = 0;
-		$sql1 = "SELECT * FROM permisosLaborales WHERE usuarioId = $usuarioId and tipo = 'Sin goce de salario' and fechaInicio BETWEEN '$inicioMes' AND '$finMes' and estatus = 1";
+		$sql1 = "SELECT * FROM permisoslaborales WHERE usuarioId = $usuarioId and tipo = 'Sin goce de salario' and fechaInicio BETWEEN '$inicioMes' AND '$finMes' and estatus = 1";
 		$proceso1 = mysqli_query($conexion,$sql1);
 		$contador1 = mysqli_num_rows($proceso1);
 		if($contador1>0){
@@ -738,7 +738,7 @@ require '../vendor/autoload.php';
 
 	function calcularHorasPermisos($conexion,$usuarioId,$inicioMes,$finMes){
 		$horasPermisos = 0;
-		$sql1 = "SELECT * FROM permisosLaborales WHERE usuarioId = $usuarioId and tipo = 'Goce de salario' and estatus = 1 and fechaInicio BETWEEN '$inicioMes' AND '$finMes'";
+		$sql1 = "SELECT * FROM permisoslaborales WHERE usuarioId = $usuarioId and tipo = 'Goce de salario' and estatus = 1 and fechaInicio BETWEEN '$inicioMes' AND '$finMes'";
 		$proceso1 = mysqli_query($conexion,$sql1);
 		$contador1 = mysqli_num_rows($proceso1);
 		if($contador1>0){
@@ -830,7 +830,7 @@ require '../vendor/autoload.php';
 			    	$mail->isHTML(true);
 			    	$mail->Subject = 'Planilla de pago '.$fecha;
 			    	$body = '
-						<h2>Hola '.$nombreCompleto.'</h2>
+						<h2>Estimado/a '.$nombreCompleto.'</h2>
 						<p>Se ha generado su planilla digital con los siguientes detalles de pago.</p>
 						<p>Aguinaldo: '.$aguinaldos.'</p>
 						<p>ccss: '.$ccss.'</p>

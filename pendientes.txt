@@ -1,12 +1,5 @@
 --------------------
 
-    06-04-2025
-        planillas ->
-            generar ->
-                * feriado deberia ser un dia doble
-                * validar el valor de aguinaldo
-
-
 -----------------------------------
 -------------Hechos----------------
 -----------------------------------
@@ -260,6 +253,11 @@
                 * validar que no tenga turno registrado
                 * validar que no tenga un permiso aceptada
                 * validar que no tenga una vacacion aceptada
+        planillas ->
+            generar ->
+                * feriado deberia ser un dia doble
+                * validar el valor de aguinaldo
+
 
 
 -----------------------------------

@@ -88,7 +88,7 @@ $asunto = $_POST['asunto'];
 						if($estatus==0){
 							$button = '<button class="btn btn-info ml-2" onclick="cambioEstatus('.$id.',1);">Aceptar</button>';
 						}else{
-							$button = '<button class="btn btn-primary ml-2" data-toggle="modal" data-target="#detalle" onclick="detalle('.$id.');">Detalle</button>';
+							$button = "";
 						}
 					}
 				}
@@ -267,10 +267,10 @@ $asunto = $_POST['asunto'];
 	if($asunto=='cambioEstatus'){
 		$id = $_POST['id'];
 		$estatus = $_POST['estatus'];
-		$sql1 = "UPDATE liquidaciones SET estatus = $estatus WHERE id = ".$id;
+		$sql1 = "UPDATE liquidaciones SET estatus = $estatus WHERE usuarioId = ".$id;
 		$proceso1 = mysqli_query($conexion,$sql1);
 		if($estatus==1){
-			$sql2 = "UPDATE usuarios SET estado = 'Inactivo' WHERE id = ".$id;
+			$sql2 = "UPDATE usuarios SET estado = 'Inactivo', fechaRetiro = '$fecha_creacion' WHERE id = ".$id;
 			$proceso2 = mysqli_query($conexion,$sql2);
 		}
 		$datos = [
@@ -372,6 +372,7 @@ $asunto = $_POST['asunto'];
 			$proceso2 = mysqli_query($conexion,$sql2);
 			while($row2 = mysqli_fetch_array($proceso2)){
 				$salarioActual = $row2['salario'];
+				$fechaIngreso = $row2['fechaIngreso'];
 			}
 			$pagoAlDia = round($salarioActual/30,2);
 			$pagoDiaFeriado = $pagoAlDia*2;
@@ -399,12 +400,12 @@ $asunto = $_POST['asunto'];
 		}
 
 		if($pagoVacaciones==true){
-			$diasVacaciones = calcularVacaciones($conexion,$usuarioId,$inicioMes,$finMes);
-			$montoVacaciones = $diasVacaciones*$pagoHora;
+			$diasVacaciones = calcularVacaciones($conexion,$usuarioId,$fecha,$fechaIngreso);
+			$montoVacaciones = $diasVacaciones*$pagoAlDia;
 		}
 
 		if($pagoAguinaldo==true){
-			$montoAguinaldo = aguinaldo($conexion,$usuarioId,$anio,$mes);
+			$montoAguinaldo = aguinaldo($conexion,$usuarioId,$anio,$fecha);
 		}
 
 		if($pagoPreaviso==true){
@@ -600,7 +601,7 @@ $asunto = $_POST['asunto'];
 		return $horasFeriados;
 	}
 
-	function aguinaldo($conexion,$usuarioId,$anio,$mes){
+	function aguinaldo($conexion,$usuarioId,$anio,$fecha){
 		$aguinaldo = 0;
 		$fechaInicio = ($anio - 1) . "-11-01";
 		$date = new DateTime($fechaInicio);
@@ -614,6 +615,7 @@ $asunto = $_POST['asunto'];
 				$aguinaldo += $row1['subTotal'];
 			}
 		}
+		$aguinaldo = round($aguinaldo/12,2);
 		return $aguinaldo;
 	}
 
@@ -717,11 +719,19 @@ $asunto = $_POST['asunto'];
 		return $total;
 	}
 
-	function calcularVacaciones($conexion,$usuarioId,$inicio,$fin){
-		$sql1 = "SELECT * FROM vacaciones WHERE usuarioId = $usuarioId and estatus = 1 and fechaInicio BETWEEN '$inicio' AND '$fin'";
+	function calcularVacaciones($conexion,$usuarioId,$fecha,$fechaIngreso){
+		$disponibles = 0;
+		$fecha_objetivo = new DateTime($fechaIngreso);
+		$fecha_actual = new DateTime($fecha);
+		$diferencia = $fecha_actual->diff($fecha_objetivo);
+		$meses = ($diferencia->y * 12) + $diferencia->m;
+		$sql1 = "SELECT id FROM vacaciones WHERE usuarioId = ".$usuarioId;
 		$proceso1 = mysqli_query($conexion,$sql1);
 		$contador1 = mysqli_num_rows($proceso1);
-		return $contador1;
+		if($contador1>0){
+			$disponibles = $meses-$contador1;
+		}
+		return $disponibles;
 	}
 
 	function calcularPreaviso($conexion,$usuarioId,$fecha){

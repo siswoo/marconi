@@ -102,7 +102,6 @@ $asunto = $_POST['tipo'];
 				$hojaActiva->setCellValue('H'.$fila,$estatusExtras);
 				$fila++;
 			}
-
 			header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 			header('Content-Disposition: attachment;filename=Turnos.xlsx');
 			header('Cache-Control: max-age');
