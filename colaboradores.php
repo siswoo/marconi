@@ -209,11 +209,11 @@ if (!isset($_SESSION['marconiId'])) {
                             </div>
                             <div class="col-md-6 form-group form-check">
                                 <label for="password1" style="font-weight: bold;">Contraseña *</label>
-                                <input type="password" id="password1" name="password1" class="form-control" minlength="4" autocomplete="off" required>
+                                <input type="password" id="password1" name="password1" class="form-control" minlength="8" autocomplete="off" required>
                             </div>
                             <div class="col-md-6 form-group form-check">
                                 <label for="Cpassword1" style="font-weight: bold;">Confirmar contraseña *</label>
-                                <input type="password" id="Cpassword1" name="Cpassword1" class="form-control" minlength="4" autocomplete="off" required>
+                                <input type="password" id="Cpassword1" name="Cpassword1" class="form-control" minlength="8" autocomplete="off" required>
                             </div>
                             <div class="col-md-6 form-group form-check">
                                 <label for="cargo1" style="font-weight: bold;">Cargo *</label>
@@ -365,11 +365,11 @@ if (!isset($_SESSION['marconiId'])) {
                             </div>
                             <div class="col-md-6 form-group form-check">
                                 <label for="password2" style="font-weight: bold;">Contraseña</label>
-                                <input type="password" id="password2" name="password2" class="form-control" minlength="4" autocomplete="off" >
+                                <input type="password" id="password2" name="password2" class="form-control" minlength="8" autocomplete="off" >
                             </div>
                             <div class="col-md-6 form-group form-check">
                                 <label for="Cpassword2" style="font-weight: bold;">Confirmar contraseña</label>
-                                <input type="password" id="Cpassword2" name="Cpassword2" class="form-control" minlength="4" autocomplete="off" >
+                                <input type="password" id="Cpassword2" name="Cpassword2" class="form-control" minlength="8" autocomplete="off" >
                             </div>
                             <div class="col-md-12 form-group form-check">
                                 <label for="horarios2" style="font-weight: bold;">Horarios *</label>

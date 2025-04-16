@@ -28,7 +28,7 @@
                 </div>
                 
                 <div class="wrap-input100">
-                	<input type="password" class="input100" name="password" id="password" placeholder="Clave" minlength="4" required>
+                	<input type="password" class="input100" name="password" id="password" placeholder="Clave" minlength="8" required>
                     <span class="focus-efecto"></span>
                 </div>
                 
