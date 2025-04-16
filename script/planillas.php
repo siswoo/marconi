@@ -347,6 +347,7 @@ require '../vendor/autoload.php';
 			$horasPermisosLaborales = calcularHorasPermisos($conexion,$usuarioId,$inicioMes,$finMes);
 			$calculoHorasPermisosLaborales = $horasPermisosLaborales*$pagoHora;
 
+
 			if($civil == "Casado"){
 				$calculoCivil = 2600;
 			}else{
@@ -358,7 +359,7 @@ require '../vendor/autoload.php';
 			}else{
 				$calculoHijos = 0;
 			}
-
+			
 			$montoLaborado = $pagoHorasLaborados;
 			$subTotal = ($pagoHorasLaborados+$calculoHorasExtras+$calculoHorasFeriadosLaborados+$calculoHorasPermisosLaborales+$calculoDomingosPagos+$cuentasDiasIncapacidades);
 
