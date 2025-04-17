@@ -275,8 +275,8 @@ require '../vendor/autoload.php';
 		$inicioMes = $fecha . "-01";
 		$ultimoDia = date("t", strtotime($inicioMes));
 		$finMes = $fecha . "-" . $ultimoDia;
-		$sql1 = "SELECT * FROM usuarios WHERE estado = 'Activo'";
-		//$sql1 = "SELECT * FROM usuarios WHERE estado = 'Activo' and id = 2";
+		//$sql1 = "SELECT * FROM usuarios WHERE estado = 'Activo'";
+		$sql1 = "SELECT * FROM usuarios WHERE estado = 'Activo' and id = 2";
 		$proceso1 = mysqli_query($conexion,$sql1);
 		$contador1 = mysqli_num_rows($proceso1);
 		if($contador1==0){
@@ -348,7 +348,7 @@ require '../vendor/autoload.php';
 			$calculoHorasPermisosLaborales = $horasPermisosLaborales*$pagoHora;
 
 
-			if($civil == "Casado"){
+			if($civil == "Casado/a"){
 				$calculoCivil = 2600;
 			}else{
 				$calculoCivil = 0;
@@ -372,9 +372,11 @@ require '../vendor/autoload.php';
 			//seguro social
 			$ccss = round(($total*11.16)/100,2);
 
-			$total2 = $subTotal-($calculoHorasSinGoce+$sumatoriaCivilHijos);
+			//$total2 = $subTotal-($calculoHorasSinGoce+$sumatoriaCivilHijos);
 			//impuesto sobre la renta
-			$isr = isr(round($total2,2));
+			//$isr = isr(round($total2,2));
+			$isr = isr(round($total,2));
+			$isr -= $sumatoriaCivilHijos;
 
 			$total = round($total-($ccss+$isr),2);
 			$total += $calculoHorasSinGoce;
